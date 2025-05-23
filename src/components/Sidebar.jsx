@@ -9,12 +9,14 @@ import {
   LogIn,
   UserPlus,
   User2Icon,
+  CarTaxiFront,
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
 const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' },
   { name: 'Produk', icon: <Box />, path: '/produk' },
+  { name: 'Penjualan', icon: <ShoppingCart />, path: 'penjualan' },
   { name: 'Laporan', icon: <BarChart2 />, path: '/laporan' },
    { name: 'Pelanggan', icon: <User2Icon />, path: '/pelanggan' },
 ]
