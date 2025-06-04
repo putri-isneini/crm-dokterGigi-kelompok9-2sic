@@ -1,21 +1,20 @@
+import React from 'react'
 import {
   LayoutDashboard,
-  Users,         // untuk pelanggan
-  ShoppingCart,  // untuk penjualan
-  Box,           // untuk produk
-  BarChart2,     // untuk laporan
-  Settings,      // untuk pengaturan akun
-  User,
+  Box,
+  BarChart2,
+  Settings,
   LogIn,
   UserPlus,
-  CarTaxiFront,
+  UserCheck, // icon untuk pasien
+  Users,     // icon untuk pelanggan
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
 const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' },
   { name: 'Produk', icon: <Box />, path: '/produk' },
-  { name: 'Penjualan', icon: <ShoppingCart />, path: 'penjualan' },
+  { name: 'Data Pasien', icon: <UserCheck />, path: '/pasien' },
   { name: 'Laporan', icon: <BarChart2 />, path: '/laporan' },
 ]
 
@@ -33,6 +32,7 @@ const Sidebar = () => {
   return (
     <aside className="bg-white w-64 h-screen shadow-lg px-4 py-6 hidden md:block">
       <div className="text-xl font-bold mb-8 text-purple-700">UMKM CRM</div>
+
       <nav className="space-y-1">
         {menuItems.map((item) => (
           <Link
@@ -72,5 +72,3 @@ const Sidebar = () => {
 }
 
 export default Sidebar
-
-
