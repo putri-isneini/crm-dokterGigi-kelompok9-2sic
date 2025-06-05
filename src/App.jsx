@@ -7,6 +7,12 @@ import SalesManagement from './pages/SalesManagement';
 import ProductManagement from './pages/Produk';
 import Home from './components/Home';
 import Booking from './pages/Booking';
+import './App.css'
+import { Route, Routes } from 'react-router-dom'
+import MainLayout from './components/MainLayout'
+import Dashboard from './pages/Dashboard'
+import Pasien from './pages/pasien'
+import RiwayatKunjungan from './pages/RiwayatKunjungan'  
 
 function App() {
   return (
@@ -14,13 +20,15 @@ function App() {
       {/* Halaman Home tanpa layout */}
       <Route path="/" element={<Home />} />
 
-      {/* Halaman lain dengan layout */}
+      {/* Semua halaman ini menggunakan MainLayout */}
       <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pelanggan" element={<CustomerManagement />} />
         <Route path="/penjualan" element={<SalesManagement />} />
         <Route path="/produk" element={<ProductManagement />} />
         <Route path="/booking" element={<Booking />} />
+        <Route path="/pasien" element={<Pasien />} />
+        <Route path="/riwayat" element={<RiwayatKunjungan />} />
       </Route>
     </Routes>
   );

@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -6,8 +7,10 @@ import {
   Settings,
   LogIn,
   UserPlus,
-  User2Icon,
+  User2 as User2Icon,
   CalendarCheck,
+  UserCheck,
+  Stethoscope
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -18,6 +21,8 @@ const menuItems = [
   { name: 'Laporan', icon: <BarChart2 />, path: '/laporan' },
   { name: 'Pelanggan', icon: <User2Icon />, path: '/pelanggan' },
   { name: 'Booking', icon: <CalendarCheck />, path: '/booking' },
+  { name: 'Data Pasien', icon: <UserCheck />, path: '/pasien' },
+  { name: 'Riwayat Kunjungan', icon: <Stethoscope />, path: '/riwayat' },
 ]
 
 const accountItems = [
@@ -31,12 +36,10 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path
 
   return (
-    <aside className="fixed top-0 left-0 w-48 h-screen bg-white shadow-lg px-4 py-6 z-20 hidden md:block">
-      <div className="text-xl font-bold mb-8 text-purple-700">
-        DRG.TIA DENTAL CARE
-      </div>
+    <aside className="fixed top-0 left-0 w-64 h-screen bg-white shadow-lg px-4 py-6 z-20 hidden md:block">
+      <div className="text-xl font-bold mb-8 text-purple-700">UMKM CRM</div>
 
-      <nav className="flex-1 space-y-1">
+      <nav className="space-y-1">
         {menuItems.map((item) => (
           <Link
             key={item.name}
