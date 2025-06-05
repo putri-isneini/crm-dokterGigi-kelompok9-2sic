@@ -15,12 +15,10 @@ import { Link, useLocation } from 'react-router-dom'
 
 const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/dashboard' },
-  { name: 'Produk', icon: <Box />, path: '/produk' },
   { name: 'Pelanggan', icon: <User2Icon />, path: '/pelanggan' },
   { name: 'Booking', icon: <CalendarCheck />, path: '/booking' },
   { name: 'Data Pasien', icon: <UserCheck />, path: '/pasien' },
   { name: 'Riwayat Kunjungan', icon: <Stethoscope />, path: '/riwayat' },
-  { name: 'Penjualan', icon: <ShoppingCart />, path: '/laporan' },
   { name: 'Jadwal Pasien', icon: <CalendarCheck />, path: '/jadwal' },
 ]
 

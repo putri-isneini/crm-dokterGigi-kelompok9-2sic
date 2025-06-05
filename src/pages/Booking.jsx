@@ -9,7 +9,7 @@ const initialBookings = [
     patientName: "Budi Santoso",
     date: "2025-06-05",
     time: "09:00",
-    status: "Menunggu",
+     status: "Terjadwal",
   },
   {
     id: 2,
