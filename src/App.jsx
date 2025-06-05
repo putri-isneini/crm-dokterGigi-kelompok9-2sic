@@ -7,7 +7,9 @@ import Home from './components/Home';
 import Booking from './pages/Booking';
 import { Route, Routes } from 'react-router-dom'
 import Pasien from './pages/pasien'
-import RiwayatKunjungan from './pages/RiwayatKunjungan'  
+import RiwayatKunjungan from './pages/RiwayatKunjungan'
+import JadwalPasien from './pages/JadwalPasien'
+
 function App() {
   return (
     <Routes>
@@ -23,6 +25,11 @@ function App() {
         <Route path="/pasien" element={<Pasien />} />
         <Route path="/riwayat" element={<RiwayatKunjungan />} />
       </Route>
+      <Route element={<MainLayout/>} >
+      <Route path="/" element={<Dashboard/>}/>
+      <Route path="/booking" element={<Booking/>}/>
+      <Route path="/jadwal" element={<JadwalPasien/>}/>
+    </Route>
     </Routes>
   );
 }

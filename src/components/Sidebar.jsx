@@ -3,7 +3,6 @@ import {
   LayoutDashboard,
   ShoppingCart,
   Box,
-  BarChart2,
   Settings,
   LogIn,
   UserPlus,
@@ -17,11 +16,12 @@ import { Link, useLocation } from 'react-router-dom'
 const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/dashboard' },
   { name: 'Produk', icon: <Box />, path: '/produk' },
-  // { name: 'Laporan', icon: <BarChart2 />, path: '/laporan' },
   { name: 'Pelanggan', icon: <User2Icon />, path: '/pelanggan' },
   { name: 'Booking', icon: <CalendarCheck />, path: '/booking' },
   { name: 'Data Pasien', icon: <UserCheck />, path: '/pasien' },
   { name: 'Riwayat Kunjungan', icon: <Stethoscope />, path: '/riwayat' },
+  { name: 'Penjualan', icon: <ShoppingCart />, path: '/laporan' },
+  { name: 'Jadwal Pasien', icon: <CalendarCheck />, path: '/jadwal' },
 ]
 
 const accountItems = [
@@ -35,8 +35,7 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path
 
   return (
-   <aside className="fixed top-0 left-0 w-64 h-screen bg-white shadow-lg px-3 py-4 z-20 hidden md:block">
-
+    <aside className="fixed top-0 left-0 w-64 h-screen bg-white shadow-lg px-3 py-4 z-20 hidden md:block overflow-y-auto">
       <div className="text-xl font-bold mb-8 text-purple-700">Drg.Tia Dental Care</div>
 
       <nav className="space-y-1">
