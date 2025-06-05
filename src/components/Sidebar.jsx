@@ -2,20 +2,18 @@ import React from 'react'
 import {
   LayoutDashboard,
   Box,
-  BarChart2,
   Settings,
   LogIn,
   UserPlus,
-  UserCheck, // icon untuk pasien
-  Users,     // icon untuk pelanggan
+  UserCheck,     // untuk Data Pasien
+  Stethoscope    // untuk Riwayat Kunjungan
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
 const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' },
-  { name: 'Produk', icon: <Box />, path: '/produk' },
   { name: 'Data Pasien', icon: <UserCheck />, path: '/pasien' },
-  { name: 'Laporan', icon: <BarChart2 />, path: '/laporan' },
+  { name: 'Riwayat Kunjungan', icon: <Stethoscope />, path: '/riwayat' },
 ]
 
 const accountItems = [
