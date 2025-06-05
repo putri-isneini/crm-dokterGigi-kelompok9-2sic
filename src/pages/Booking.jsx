@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
 
 const initialBookings = [
   {
@@ -6,13 +8,15 @@ const initialBookings = [
     bookingCode: "BOOK-001",
     patientName: "Budi Santoso",
     date: "2025-06-05",
-    status: "Terjadwal",
+    time: "09:00",
+    status: "Menunggu",
   },
   {
     id: 2,
     bookingCode: "BOOK-002",
     patientName: "Siti Aminah",
     date: "2025-06-06",
+    time: "13:30",
     status: "Selesai",
   },
 ];
@@ -24,16 +28,8 @@ export default function BookingAdmin() {
 
   const handleStatusChange = (id, newStatus) => {
     setBookings((prev) =>
-      prev.map((b) =>
-        b.id === id ? { ...b, status: newStatus } : b
-      )
+      prev.map((b) => (b.id === id ? { ...b, status: newStatus } : b))
     );
-  };
-
-  const handleDelete = (id) => {
-    if (window.confirm("Yakin ingin menghapus booking ini?")) {
-      setBookings(bookings.filter((b) => b.id !== id));
-    }
   };
 
   const filteredBookings = bookings.filter((b) => {
@@ -42,6 +38,14 @@ export default function BookingAdmin() {
       (filterStatus ? b.status === filterStatus : true)
     );
   });
+
+  const calendarEvents = bookings
+    .filter((b) => b.status === "Terjadwal")
+    .map((b) => ({
+      title: `${b.patientName} - ${b.time}`, // hanya nama pasien dan jam
+      start: `${b.date}T${b.time}`,
+      id: b.id.toString(),
+    }));
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -61,24 +65,25 @@ export default function BookingAdmin() {
           className="border px-3 py-2 rounded"
         >
           <option value="">Semua Status</option>
+          <option value="Menunggu">Menunggu</option>
           <option value="Terjadwal">Terjadwal</option>
           <option value="Selesai">Selesai</option>
           <option value="Dibatalkan">Dibatalkan</option>
         </select>
       </div>
 
-      {/* Total Booking */}
       <div className="mb-4 font-medium">
         Total Booking: <span className="text-indigo-600">{filteredBookings.length}</span>
       </div>
 
-      <div className="overflow-x-auto bg-white rounded shadow">
+      <div className="overflow-x-auto bg-white rounded shadow mb-8">
         <table className="min-w-full divide-y divide-gray-200 text-sm">
           <thead className="bg-gray-50 text-left">
             <tr>
               <th className="px-4 py-3">Kode Booking</th>
               <th className="px-4 py-3">Nama Pasien</th>
               <th className="px-4 py-3">Tanggal</th>
+              <th className="px-4 py-3">Jam</th>
               <th className="px-4 py-3 text-center">Status</th>
               <th className="px-4 py-3 text-center">Aksi</th>
             </tr>
@@ -89,30 +94,45 @@ export default function BookingAdmin() {
                 <td className="px-4 py-3">{b.bookingCode}</td>
                 <td className="px-4 py-3">{b.patientName}</td>
                 <td className="px-4 py-3">{b.date}</td>
+                <td className="px-4 py-3">{b.time}</td>
                 <td className="px-4 py-3 text-center">
-                  <select
-                    value={b.status}
-                    onChange={(e) => handleStatusChange(b.id, e.target.value)}
-                    className="border rounded px-2 py-1"
-                  >
-                    <option value="Terjadwal">Terjadwal</option>
-                    <option value="Selesai">Selesai</option>
-                    <option value="Dibatalkan">Dibatalkan</option>
-                  </select>
+                  {b.status === "Menunggu" ? (
+                    <span className="text-yellow-600 font-semibold">Menunggu</span>
+                  ) : (
+                    <select
+                      value={b.status}
+                      onChange={(e) => handleStatusChange(b.id, e.target.value)}
+                      className="border rounded px-2 py-1"
+                    >
+                      <option value="Terjadwal">Terjadwal</option>
+                      <option value="Selesai">Selesai</option>
+                      <option value="Dibatalkan">Dibatalkan</option>
+                    </select>
+                  )}
                 </td>
-                <td className="px-4 py-3 text-center">
-                  <button
-                    onClick={() => handleDelete(b.id)}
-                    className="text-red-600 hover:underline font-medium"
-                  >
-                    Hapus
-                  </button>
+                <td className="px-4 py-3 text-center space-x-2">
+                  {b.status === "Menunggu" && (
+                    <>
+                      <button
+                        onClick={() => handleStatusChange(b.id, "Terjadwal")}
+                        className="text-green-600 hover:underline font-medium"
+                      >
+                        Setujui
+                      </button>
+                      <button
+                        onClick={() => handleStatusChange(b.id, "Dibatalkan")}
+                        className="text-yellow-600 hover:underline font-medium"
+                      >
+                        Tolak
+                      </button>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}
             {filteredBookings.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center py-4 text-gray-500">
+                <td colSpan={6} className="text-center py-4 text-gray-500">
                   Tidak ada data booking
                 </td>
               </tr>
@@ -120,6 +140,7 @@ export default function BookingAdmin() {
           </tbody>
         </table>
       </div>
-    </div>
+      </div>
+
   );
 }

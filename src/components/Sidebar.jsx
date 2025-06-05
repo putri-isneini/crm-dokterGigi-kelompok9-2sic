@@ -16,10 +16,9 @@ import { Link, useLocation } from 'react-router-dom'
 
 const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' },
-  { name: 'Produk', icon: <Box />, path: '/produk' },
   { name: 'Penjualan', icon: <ShoppingCart />, path: '/laporan' },
-  { name: 'Booking', icon: <CalendarCheck  />, path: '/booking' },
-
+  { name: 'Booking', icon: <CalendarCheck />, path: '/booking' },
+  { name: 'Jadwal Pasien', icon: <CalendarCheck />, path: '/jadwal' }, 
 ]
 
 const accountItems = [
@@ -75,5 +74,3 @@ const Sidebar = () => {
 }
 
 export default Sidebar
-
-
