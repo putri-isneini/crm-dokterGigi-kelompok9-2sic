@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
 
 const initialBookings = [
   {
@@ -23,14 +21,9 @@ const initialBookings = [
 
 export default function BookingAdmin() {
   const [bookings, setBookings] = useState(initialBookings);
+export default function Booking({ bookings, onStatusChange }) {
   const [searchName, setSearchName] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
-
-  const handleStatusChange = (id, newStatus) => {
-    setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: newStatus } : b))
-    );
-  };
 
   const filteredBookings = bookings.filter((b) => {
     return (
@@ -39,13 +32,11 @@ export default function BookingAdmin() {
     );
   });
 
-  const calendarEvents = bookings
-    .filter((b) => b.status === "Terjadwal")
-    .map((b) => ({
-      title: `${b.patientName} - ${b.time}`, // hanya nama pasien dan jam
-      start: `${b.date}T${b.time}`,
-      id: b.id.toString(),
-    }));
+  const handleStatusChange = (id, newStatus) => {
+    if (onStatusChange) {
+      onStatusChange(id, newStatus);
+    }
+  };
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -73,7 +64,8 @@ export default function BookingAdmin() {
       </div>
 
       <div className="mb-4 font-medium">
-        Total Booking: <span className="text-indigo-600">{filteredBookings.length}</span>
+        Total Booking:{" "}
+        <span className="text-indigo-600">{filteredBookings.length}</span>
       </div>
 
       <div className="overflow-x-auto bg-white rounded shadow mb-8">
@@ -140,7 +132,6 @@ export default function BookingAdmin() {
           </tbody>
         </table>
       </div>
-      </div>
-
+    </div>
   );
-}
+}}
