@@ -7,7 +7,7 @@ const initialBookings = [
     patientName: "Budi Santoso",
     date: "2025-06-05",
     time: "09:00",
-     status: "Terjadwal",
+    status: "Terjadwal",
   },
   {
     id: 2,
@@ -19,9 +19,23 @@ const initialBookings = [
   },
 ];
 
+// Komponen induk yang kelola state
 export default function BookingAdmin() {
   const [bookings, setBookings] = useState(initialBookings);
-export default function Booking({ bookings, onStatusChange }) {
+
+  const handleStatusChange = (id, newStatus) => {
+    setBookings((prev) =>
+      prev.map((b) => (b.id === id ? { ...b, status: newStatus } : b))
+    );
+  };
+
+  return (
+    <Booking bookings={bookings} onStatusChange={handleStatusChange} />
+  );
+}
+
+// Komponen presentasi Booking
+function Booking({ bookings, onStatusChange }) {
   const [searchName, setSearchName] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
 
@@ -134,4 +148,4 @@ export default function Booking({ bookings, onStatusChange }) {
       </div>
     </div>
   );
-}}
+}

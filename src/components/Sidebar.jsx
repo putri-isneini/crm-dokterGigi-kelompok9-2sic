@@ -20,7 +20,6 @@ const menuItems = [
   { name: 'Data Pasien', icon: <UserCheck />, path: '/pasien' },
   { name: 'Riwayat Kunjungan', icon: <Stethoscope />, path: '/riwayat' },
   { name: 'Jadwal Pasien', icon: <CalendarCheck />, path: '/jadwal' },
-  { name: 'Jadwal Pasien', icon: <CalendarCheck />, path: '/jadwalpasien' },
 ]
 
 const accountItems = [
