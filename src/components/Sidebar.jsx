@@ -10,6 +10,7 @@ import {
   LogIn,
   UserPlus,
   CarTaxiFront,
+  CalendarCheck,
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -17,6 +18,8 @@ const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' },
   { name: 'Produk', icon: <Box />, path: '/produk' },
   { name: 'Penjualan', icon: <ShoppingCart />, path: '/laporan' },
+  { name: 'Booking', icon: <CalendarCheck  />, path: '/booking' },
+
 ]
 
 const accountItems = [
