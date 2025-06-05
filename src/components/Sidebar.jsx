@@ -1,29 +1,23 @@
-import { Chart } from 'chart.js'
 import {
   LayoutDashboard,
-  Users,         // untuk pelanggan
-  ShoppingCart,  // untuk penjualan
-  Box,           // untuk produk
-  BarChart2,     // untuk laporan
-  Settings,      // untuk pengaturan akun
-  User,
+  ShoppingCart,
+  Box,
+  BarChart2,
+  Settings,
   LogIn,
   UserPlus,
   User2Icon,
-  CarTaxiFront,
   CalendarCheck,
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
 const menuItems = [
-  { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' },
+  { name: 'Dashboard', icon: <LayoutDashboard />, path: '/dashboard' },
   { name: 'Produk', icon: <Box />, path: '/produk' },
-  { name: 'Penjualan', icon: <ShoppingCart />, path: 'penjualan' },
+  { name: 'Penjualan', icon: <ShoppingCart />, path: '/penjualan' },
   { name: 'Laporan', icon: <BarChart2 />, path: '/laporan' },
-   { name: 'Pelanggan', icon: <User2Icon />, path: '/pelanggan' },
-  { name: 'Penjualan', icon: <ShoppingCart />, path: '/laporan' },
-  { name: 'Booking', icon: <CalendarCheck  />, path: '/booking' },
-
+  { name: 'Pelanggan', icon: <User2Icon />, path: '/pelanggan' },
+  { name: 'Booking', icon: <CalendarCheck />, path: '/booking' },
 ]
 
 const accountItems = [
@@ -34,13 +28,15 @@ const accountItems = [
 
 const Sidebar = () => {
   const location = useLocation()
-
   const isActive = (path) => location.pathname === path
 
   return (
-    <aside className="bg-white w-64 h-screen shadow-lg px-4 py-6 hidden md:block">
-      <div className="text-xl font-bold mb-8 text-purple-700">DRG.TIA DENTAL CARE</div>
-      <nav className="space-y-1">
+    <aside className="fixed top-0 left-0 w-48 h-screen bg-white shadow-lg px-4 py-6 z-20 hidden md:block">
+      <div className="text-xl font-bold mb-8 text-purple-700">
+        DRG.TIA DENTAL CARE
+      </div>
+
+      <nav className="flex-1 space-y-1">
         {menuItems.map((item) => (
           <Link
             key={item.name}
@@ -58,7 +54,8 @@ const Sidebar = () => {
       </nav>
 
       <div className="mt-8 text-xs font-semibold text-gray-500">AKUN</div>
-      <nav className="mt-2 space-y-1">
+
+      <nav className="mt-2 space-y-1 mb-4">
         {accountItems.map((item) => (
           <Link
             key={item.name}
@@ -79,5 +76,3 @@ const Sidebar = () => {
 }
 
 export default Sidebar
-
-

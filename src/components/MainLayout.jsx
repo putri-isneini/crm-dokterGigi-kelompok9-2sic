@@ -5,11 +5,11 @@ import Header from "./header.jsx";
 
 export default function MainLayout() {
   return (
-    <div id="app-container" className="bg-gray-100 min-h-screen flex w-full">
-      <Sidebar /> {/* pastikan Sidebar punya fixed width, contoh: w-64 */}
+    <div id="app-container" className="bg-gray-100 min-h-screen flex w-full overflow-hidden">
+      <Sidebar />
       <div id="main-content" className="flex-1 flex flex-col">
         <Header />
-        <main className="flex-1 overflow-y-auto">
+       <main className="ml-35 flex-1 min-h-screen overflow-y-auto p-6 bg-gray-50">
           <div className="p-6">
             <Outlet />
           </div>
@@ -18,3 +18,4 @@ export default function MainLayout() {
     </div>
   );
 }
+
