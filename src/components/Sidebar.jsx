@@ -17,8 +17,7 @@ import { Link, useLocation } from 'react-router-dom'
 const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/dashboard' },
   { name: 'Produk', icon: <Box />, path: '/produk' },
-  { name: 'Penjualan', icon: <ShoppingCart />, path: '/penjualan' },
-  { name: 'Laporan', icon: <BarChart2 />, path: '/laporan' },
+  // { name: 'Laporan', icon: <BarChart2 />, path: '/laporan' },
   { name: 'Pelanggan', icon: <User2Icon />, path: '/pelanggan' },
   { name: 'Booking', icon: <CalendarCheck />, path: '/booking' },
   { name: 'Data Pasien', icon: <UserCheck />, path: '/pasien' },
@@ -36,8 +35,9 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path
 
   return (
-    <aside className="fixed top-0 left-0 w-64 h-screen bg-white shadow-lg px-4 py-6 z-20 hidden md:block">
-      <div className="text-xl font-bold mb-8 text-purple-700">UMKM CRM</div>
+   <aside className="fixed top-0 left-0 w-64 h-screen bg-white shadow-lg px-3 py-4 z-20 hidden md:block">
+
+      <div className="text-xl font-bold mb-8 text-purple-700">Drg.Tia Dental Care</div>
 
       <nav className="space-y-1">
         {menuItems.map((item) => (

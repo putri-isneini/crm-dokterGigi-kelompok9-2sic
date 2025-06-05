@@ -1,19 +1,13 @@
 import './App.css';
-import { Route, Routes } from 'react-router-dom';
 import MainLayout from './components/MainLayout';
 import Dashboard from './pages/Dashboard';
 import CustomerManagement from './pages/CustomerManagement';
-import SalesManagement from './pages/SalesManagement';
 import ProductManagement from './pages/Produk';
 import Home from './components/Home';
 import Booking from './pages/Booking';
-import './App.css'
 import { Route, Routes } from 'react-router-dom'
-import MainLayout from './components/MainLayout'
-import Dashboard from './pages/Dashboard'
 import Pasien from './pages/pasien'
 import RiwayatKunjungan from './pages/RiwayatKunjungan'  
-
 function App() {
   return (
     <Routes>
@@ -24,7 +18,6 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pelanggan" element={<CustomerManagement />} />
-        <Route path="/penjualan" element={<SalesManagement />} />
         <Route path="/produk" element={<ProductManagement />} />
         <Route path="/booking" element={<Booking />} />
         <Route path="/pasien" element={<Pasien />} />
