@@ -18,7 +18,7 @@ const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' },
   { name: 'Penjualan', icon: <ShoppingCart />, path: '/laporan' },
   { name: 'Booking', icon: <CalendarCheck />, path: '/booking' },
-  { name: 'Jadwal Pasien', icon: <CalendarCheck />, path: '/jadwal' }, 
+  { name: 'Jadwal Pasien', icon: <CalendarCheck />, path: '/jadwalpasien' },
 ]
 
 const accountItems = [
