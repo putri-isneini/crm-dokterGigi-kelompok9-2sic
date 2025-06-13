@@ -13,15 +13,8 @@ import Pasien from './pages/Pasien';
 import RiwayatKunjungan from './pages/RiwayatKunjungan';
 import JadwalPasien from './pages/JadwalPasien';
 import Produk from './pages/Produk';
-import './App.css'
-import { useState } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import MainLayout from './components/MainLayout'
-import Dashboard from './pages/Dashboard'
-import Booking from './pages/Booking'
-import JadwalPasien from './pages/JadwalPasien'
 import Diskon from './pages/Diskon';
-import ProdukPasien from './pages/ProdukPasien'
+import ProdukPasien from './pages/ProdukPasien';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -41,7 +34,6 @@ function App() {
     );
   };
 
-  // Komponen PrivateRoute untuk proteksi
   const PrivateRoute = ({ children }) => {
     return isLoggedIn ? children : <Navigate to="/login" />;
   };
@@ -52,8 +44,13 @@ function App() {
       <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
       <Route path="/unauthorized" element={<div>401 - Unauthorized</div>} />
 
-      {/* Semua halaman di bawah ini hanya bisa diakses setelah login */}
-      <Route element={<PrivateRoute><MainLayout /></PrivateRoute>}>
+      <Route
+        element={
+          <PrivateRoute>
+            <MainLayout />
+          </PrivateRoute>
+        }
+      >
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pelanggan" element={<CustomerManagement />} />
         <Route path="/booking" element={<Booking bookings={bookings} onStatusChange={onStatusChange} />} />
@@ -61,18 +58,6 @@ function App() {
         <Route path="/riwayat" element={<RiwayatKunjungan />} />
         <Route path="/jadwal" element={<JadwalPasien bookings={bookings} />} />
         <Route path="/produk" element={<Produk />} />
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<Dashboard />} />
-        <Route
-          path="/booking"
-          element={
-            <Booking
-              bookings={bookings}
-              onStatusChange={onStatusChange}
-            />
-          }
-        />
-        <Route path="/jadwalpasien" element={<JadwalPasien bookings={bookings} />} />
         <Route path="/diskon-membership" element={<Diskon />} />
         <Route path="/produk-pasien" element={<ProdukPasien />} />
       </Route>
