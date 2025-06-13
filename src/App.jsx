@@ -11,6 +11,14 @@ import Booking from './pages/Booking';
 import Pasien from './pages/Pasien';
 import RiwayatKunjungan from './pages/RiwayatKunjungan';
 import JadwalPasien from './pages/JadwalPasien';
+import './App.css'
+import { useState } from 'react'
+import { Route, Routes } from 'react-router-dom'
+import MainLayout from './components/MainLayout'
+import Dashboard from './pages/Dashboard'
+import Booking from './pages/Booking'
+import JadwalPasien from './pages/JadwalPasien'
+import Produk from './pages/Produk' // <--- Tambahkan ini
 
 function App() {
   const [bookings, setBookings] = useState([
@@ -62,13 +70,13 @@ function App() {
       time: "14:30",
       status: "Menunggu",
     },
-  ]);
+  ])
 
   const onStatusChange = (id, newStatus) => {
     setBookings((prev) =>
       prev.map((b) => (b.id === id ? { ...b, status: newStatus } : b))
-    );
-  };
+    )
+  }
 
   return (
     <Routes>
@@ -86,9 +94,17 @@ function App() {
         <Route path="/pasien" element={<Pasien />} />
         <Route path="/riwayat" element={<RiwayatKunjungan />} />
         <Route path="/jadwal" element={<JadwalPasien bookings={bookings} />} />
+          element={
+            <Booking
+              bookings={bookings}
+              onStatusChange={onStatusChange}
+            />
+          }
+        <Route path="/jadwalpasien" element={<JadwalPasien bookings={bookings} />} />
+        <Route path="/produk" element={<Produk />} /> {/* <-- Ini dia */}
       </Route>
     </Routes>
-  );
+  )
 }
 
-export default App;
+export default App

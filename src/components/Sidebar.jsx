@@ -23,7 +23,7 @@ const menuItems = [
 ]
 
 const accountItems = [
-  { name: 'Pengaturan Akun', icon: <Settings />, path: '/akun' },
+  { name: 'Produk', icon: <Box />, path: '/produk' },
   { name: 'Sign In', icon: <LogIn />, path: '/signin' },
   { name: 'Sign Up', icon: <UserPlus />, path: '/signup' },
 ]
@@ -36,6 +36,7 @@ const Sidebar = () => {
     <aside className="fixed top-0 left-0 w-64 h-screen bg-white shadow-lg px-3 py-4 z-20 hidden md:block overflow-y-auto">
       <div className="text-xl font-bold mb-8 text-purple-700">Drg.Tia Dental Care</div>
 
+      {/* Menu utama */}
       <nav className="space-y-1">
         {menuItems.map((item) => (
           <Link
@@ -53,8 +54,10 @@ const Sidebar = () => {
         ))}
       </nav>
 
-      <div className="mt-8 text-xs font-semibold text-gray-500">AKUN</div>
+      {/* Separator */}
+      <div className="mt-8 text-xs font-semibold text-gray-500">LAINNYA</div>
 
+      {/* Menu akun */}
       <nav className="mt-2 space-y-1 mb-4">
         {accountItems.map((item) => (
           <Link
