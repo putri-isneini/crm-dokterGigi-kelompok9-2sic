@@ -12,7 +12,7 @@ const Home = () => {
   const [contactRef, showContact] = useScrollAnimation();
 
   const handleLoginClick = () => {
-    navigate("/dashboard");
+    navigate("/login");
   };
 
   return (

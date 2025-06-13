@@ -33,44 +33,53 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path
 
   return (
-    <aside className="fixed top-0 left-0 w-64 h-screen bg-white shadow-lg px-3 py-4 z-20 hidden md:block overflow-y-auto">
-      <div className="text-xl font-bold mb-8 text-purple-700">Drg.Tia Dental Care</div>
+    <aside className="fixed top-0 left-0 w-64 h-screen bg-pink-50 shadow-xl px-4 py-6 z-30 hidden md:block overflow-y-auto border-r border-pink-100">
+      {/* Logo */}
+      <Link to="/" className="flex justify-center mb-10">
+        <img
+          src="/image/logo.png"
+          alt="Logo Drg.Tia"
+          className="w-24 h-24 object-contain rounded-full shadow-lg hover:scale-105 transition duration-300"
+        />
+      </Link>
 
       {/* Menu utama */}
-      <nav className="space-y-1">
+      <nav className="space-y-2">
         {menuItems.map((item) => (
           <Link
             key={item.name}
             to={item.path}
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-purple-100 transition ${
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base transition duration-200 ${
               isActive(item.path)
-                ? 'bg-purple-200 text-purple-800 font-semibold'
-                : 'text-gray-700'
+                ? 'bg-rose-100 text-rose-700 font-semibold shadow'
+                : 'text-gray-700 hover:bg-pink-100 hover:text-rose-600'
             }`}
           >
             <span className="w-5 h-5">{item.icon}</span>
-            {item.name}
+            <span>{item.name}</span>
           </Link>
         ))}
       </nav>
 
       {/* Separator */}
-      <div className="mt-8 text-xs font-semibold text-gray-500">LAINNYA</div>
+      <div className="mt-10 text-sm font-semibold text-pink-500 tracking-wider border-t pt-4 border-pink-100 uppercase">
+        Lainnya
+      </div>
 
       {/* Menu akun */}
-      <nav className="mt-2 space-y-1 mb-4">
+      <nav className="mt-2 space-y-2 mb-6">
         {accountItems.map((item) => (
           <Link
             key={item.name}
             to={item.path}
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-purple-100 transition ${
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base transition duration-200 ${
               isActive(item.path)
-                ? 'bg-purple-200 text-purple-800 font-semibold'
-                : 'text-gray-700'
+                ? 'bg-rose-100 text-rose-700 font-semibold shadow'
+                : 'text-gray-700 hover:bg-pink-100 hover:text-rose-600'
             }`}
           >
             <span className="w-5 h-5">{item.icon}</span>
-            {item.name}
+            <span>{item.name}</span>
           </Link>
         ))}
       </nav>
