@@ -22,7 +22,7 @@ const menuItems = [
 ]
 
 const accountItems = [
-  { name: 'Pengaturan Akun', icon: <Settings />, path: '/akun' },
+  { name: 'Produk', icon: <Box />, path: '/produk' },
   { name: 'Sign In', icon: <LogIn />, path: '/signin' },
   { name: 'Sign Up', icon: <UserPlus />, path: '/signup' },
 ]
@@ -52,7 +52,7 @@ const Sidebar = () => {
         ))}
       </nav>
 
-      <div className="mt-8 text-xs font-semibold text-gray-500">AKUN</div>
+      <div className="mt-8 text-xs font-semibold text-gray-500">LAINNYA</div>
       <nav className="mt-2 space-y-1">
         {accountItems.map((item) => (
           <Link
