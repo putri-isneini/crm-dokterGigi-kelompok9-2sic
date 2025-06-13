@@ -13,6 +13,15 @@ import Pasien from './pages/Pasien';
 import RiwayatKunjungan from './pages/RiwayatKunjungan';
 import JadwalPasien from './pages/JadwalPasien';
 import Produk from './pages/Produk';
+import './App.css'
+import { useState } from 'react'
+import { Route, Routes } from 'react-router-dom'
+import MainLayout from './components/MainLayout'
+import Dashboard from './pages/Dashboard'
+import Booking from './pages/Booking'
+import JadwalPasien from './pages/JadwalPasien'
+import Diskon from './pages/Diskon';
+import ProdukPasien from './pages/ProdukPasien'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -52,6 +61,20 @@ function App() {
         <Route path="/riwayat" element={<RiwayatKunjungan />} />
         <Route path="/jadwal" element={<JadwalPasien bookings={bookings} />} />
         <Route path="/produk" element={<Produk />} />
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Dashboard />} />
+        <Route
+          path="/booking"
+          element={
+            <Booking
+              bookings={bookings}
+              onStatusChange={onStatusChange}
+            />
+          }
+        />
+        <Route path="/jadwalpasien" element={<JadwalPasien bookings={bookings} />} />
+        <Route path="/diskon-membership" element={<Diskon />} />
+        <Route path="/produk-pasien" element={<ProdukPasien />} />
       </Route>
     </Routes>
   );
