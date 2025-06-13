@@ -18,7 +18,10 @@ import MainLayout from './components/MainLayout'
 import Dashboard from './pages/Dashboard'
 import Booking from './pages/Booking'
 import JadwalPasien from './pages/JadwalPasien'
-import Produk from './pages/Produk' // <--- Tambahkan ini
+import Produk from './pages/Produk' 
+import Pasien from './pages/Pasien'
+import Login from './components/Login'
+import RiwayatKunjungan from './pages/RiwayatKunjungan'  
 
 function App() {
   const [bookings, setBookings] = useState([
