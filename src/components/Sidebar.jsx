@@ -9,7 +9,8 @@ import {
   User2 as User2Icon,
   CalendarCheck,
   UserCheck,
-  Stethoscope
+  Stethoscope,
+  BarChart2
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 

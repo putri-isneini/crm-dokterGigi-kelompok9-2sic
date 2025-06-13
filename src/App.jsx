@@ -12,7 +12,6 @@ import Booking from './pages/Booking';
 import Pasien from './pages/Pasien';
 import RiwayatKunjungan from './pages/RiwayatKunjungan';
 import JadwalPasien from './pages/JadwalPasien';
-import Produk from './pages/Produk';
 import Diskon from './pages/Diskon';
 import ProdukPasien from './pages/ProdukPasien';
 
@@ -57,7 +56,6 @@ function App() {
         <Route path="/pasien" element={<Pasien />} />
         <Route path="/riwayat" element={<RiwayatKunjungan />} />
         <Route path="/jadwal" element={<JadwalPasien bookings={bookings} />} />
-        <Route path="/produk" element={<Produk />} />
         <Route path="/diskon-membership" element={<Diskon />} />
         <Route path="/produk-pasien" element={<ProdukPasien />} />
       </Route>
