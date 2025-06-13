@@ -11,27 +11,46 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      {/* Tombol Login */}
-      <div className="login-button-container">
-        <button className="btn-login" onClick={handleLoginClick}>
-          Masuk ke Dashboard
-        </button>
-      </div>
+      {/* Navbar */}
+      <header className="navbar">
+        <div className="navbar-left">
+          <img
+            src="https://cdn-icons-png.flaticon.com/128/2917/2917242.png"
+            alt="Logo"
+            className="logo"
+          />
+          <span className="clinic-name">Drg. Tia Dental Care</span>
+        </div>
+
+        <nav className="navbar-center">
+          <a href="#home">Home</a>
+          <a href="#about">About Us</a>
+          <a href="#reservation">Reservation</a>
+          <a href="#product">Product</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <div className="navbar-right">
+          <button className="btn-login" onClick={handleLoginClick}>
+            Masuk ke Dashboard
+          </button>
+        </div>
+      </header>
 
       {/* Hero Section */}
-      <header className="hero-section">
+      <section id="home" className="hero-section">
         <div className="overlay" />
         <div className="hero-content">
           <h1>Drg. Tia Dental Care</h1>
           <p>Perawatan gigi profesional untuk senyuman terbaik Anda.</p>
-          <a href="/janji" className="btn-booking">
+          <a href="#reservation" className="btn-booking">
             Buat Janji Sekarang
           </a>
         </div>
-      </header>
+      </section>
 
       {/* About Us */}
-      <section className="about-section">
+      <section id="about" className="about-section">
         <div className="about-content">
           <img
             src="https://lh3.googleusercontent.com/p/AF1QipMOgcjHs6cmQ7oGb-lN_50OtpaE7djoJc-sCVqm=s680-w680-h510-rw"
@@ -55,7 +74,7 @@ const Home = () => {
       </section>
 
       {/* Services */}
-      <section className="services-section">
+      <section id="product" className="services-section">
         <h2>Layanan Kami</h2>
         <div className="service-cards">
           <div className="service-card">
@@ -85,12 +104,11 @@ const Home = () => {
             <h3>Perawatan Estetik</h3>
             <p>Pemutihan gigi, veneer, dan penataan senyum profesional.</p>
           </div>
-
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="footer">
+      <footer id="contact" className="footer">
         <p>&copy; 2025 Klinik Gigi Sehat. Senyum sehat, hidup lebih baik.</p>
       </footer>
     </div>
