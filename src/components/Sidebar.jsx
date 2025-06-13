@@ -27,6 +27,9 @@ const accountItems = [
    { name: 'Diskon Membership', icon: <BarChart2 />, path: '/diskon-membership' },,
   { name: 'Produk Pasien', icon: <Box />, path: '/produk-pasien' },
   { name: 'Sign Up', icon: <UserPlus />, path: '/signup' },
+  { name: 'Pengaturan Akun', icon: <Settings />, path: '/akun' },
+  { name: 'Sign In', icon: <LogIn />, path: '/signin' },
+  { name: 'Data Dokter', icon: <UserPlus />, path: '/datadokter' },
 ]
 
 const Sidebar = () => {

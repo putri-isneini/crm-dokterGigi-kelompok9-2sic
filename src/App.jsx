@@ -14,6 +14,14 @@ import RiwayatKunjungan from './pages/RiwayatKunjungan';
 import JadwalPasien from './pages/JadwalPasien';
 import Diskon from './pages/Diskon';
 import ProdukPasien from './pages/ProdukPasien';
+import './App.css'
+import { Route, Routes } from 'react-router-dom'
+import MainLayout from './components/MainLayout'
+import Dashboard from './pages/Dashboard'
+import Pasien from './pages/Pasien'
+import Login from './components/Login'
+import RiwayatKunjungan from './pages/RiwayatKunjungan'  
+import DataDokter from './pages/DataDokter'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -58,6 +66,7 @@ function App() {
         <Route path="/jadwal" element={<JadwalPasien bookings={bookings} />} />
         <Route path="/diskon-membership" element={<Diskon />} />
         <Route path="/produk-pasien" element={<ProdukPasien />} />
+        <Route path="/datadokter" element={<DataDokter />} />
       </Route>
     </Routes>
   );
