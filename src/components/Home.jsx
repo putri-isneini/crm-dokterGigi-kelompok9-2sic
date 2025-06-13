@@ -19,13 +19,13 @@ const Home = () => {
     <div className="home-container">
       {/* Navbar */}
       <header className="navbar">
-        <a href="" className="navbar-left">
-          <img src="/public/image/logo.png" alt="Logo" className="logo" />
+        <div className="navbar-left">
+          <img src="/image/logo.png" alt="Logo" className="logo" />
           <span className="clinic-name">Drg. Tia Dental Care</span>
-        </a>
+        </div>
 
         <nav className="navbar-center">
-          <a href="">Home</a>
+          <a href="#home">Home</a>
           <a href="#about">About Us</a>
           <a href="#reservation">Reservation</a>
           <a href="#produk">Product</a>
@@ -40,7 +40,7 @@ const Home = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="hero-section">
+      <section id="home" className="hero-section">
         <div className="overlay" />
         <div className="hero-content">
           <h1>Drg. Tia Dental Care</h1>
@@ -68,9 +68,7 @@ const Home = () => {
             <p>
               Di <strong>Drg. Tia Dental Care</strong>, kami percaya bahwa
               senyum sehat adalah awal dari kepercayaan diri dan kualitas hidup
-              yang lebih baik. Klinik kami menyediakan layanan perawatan gigi
-              modern dengan pendekatan ramah, aman, dan nyaman bagi seluruh
-              keluarga.
+              yang lebih baik.
             </p>
             <ul>
               <li>💎 Pelayanan ramah dan profesional</li>
@@ -82,7 +80,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* Services */}
       <section
         id="reservation"
         ref={serviceRef}
@@ -97,9 +95,7 @@ const Home = () => {
               className="service-icon"
             />
             <h3>Perawatan Umum</h3>
-            <p>
-              Pemeriksaan rutin, pembersihan karang gigi, dan penambalan.
-            </p>
+            <p>Pemeriksaan rutin, pembersihan karang gigi, dan penambalan.</p>
           </div>
           <div className="service-card">
             <img
@@ -108,9 +104,7 @@ const Home = () => {
               className="service-icon"
             />
             <h3>Behel Gigi</h3>
-            <p>
-              Solusi estetika dan kesehatan dengan pemasangan kawat gigi.
-            </p>
+            <p>Solusi estetika dan kesehatan dengan pemasangan kawat gigi.</p>
           </div>
           <div className="service-card">
             <img
@@ -119,14 +113,12 @@ const Home = () => {
               className="service-icon"
             />
             <h3>Perawatan Estetik</h3>
-            <p>
-              Pemutihan gigi, veneer, dan penataan senyum profesional.
-            </p>
+            <p>Pemutihan gigi, veneer, dan penataan senyum profesional.</p>
           </div>
         </div>
       </section>
 
-      {/* Produk Section */}
+      {/* Produk */}
       <section
         id="produk"
         ref={produkRef}
@@ -164,7 +156,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* Contact */}
       <section
         id="contact"
         ref={contactRef}
