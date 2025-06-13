@@ -1,9 +1,10 @@
 import './App.css';
 import { useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import MainLayout from './components/MainLayout';
 import Home from './components/Home';
+
 import Dashboard from './pages/Dashboard';
 import CustomerManagement from './pages/CustomerManagement';
 import Booking from './pages/Booking';
