@@ -11,16 +11,15 @@ export default function useScrollAnimation() {
         setIsVisible(entry.isIntersecting);
       },
       {
-        threshold: 0.3,
+        threshold: 0.3, // aktif saat 30% elemen muncul di viewport
       }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+    const element = ref.current;
+    if (element) observer.observe(element);
 
     return () => {
-      if (ref.current) observer.unobserve(ref.current);
+      if (element) observer.unobserve(element);
     };
   }, []);
 

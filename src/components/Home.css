@@ -1,24 +1,23 @@
 /* Global Styles */
 body {
   margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background-color: #fffafc;
   font-family: 'Lato', sans-serif;
   background-color: #fff0f5;
   color: #333;
   line-height: 1.6;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 130px;
+}
+
+/* Logo */
 .logo {
   width: 80px;
   height: 80px;
   object-fit: cover;
   border-radius: 12px;
-}
-
-
-.home-container {
-  overflow-x: hidden;
 }
 
 /* Navbar */
@@ -28,76 +27,82 @@ body {
   align-items: center;
   padding: 1.2rem 2rem;
   background-color: #fff0f5;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  position: sticky;
+  box-shadow: 0 2px 8px rgba(255, 105, 180, 0.1);
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
 .navbar-left {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  text-decoration: none;
   color: #db2777;
 }
-
 
 .clinic-name {
   font-weight: 700;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
 }
 
-.navbar-center a {
-  margin: 0 1rem;
-  text-decoration: none;
+.navbar-center {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navbar-center a,
+.navbar-center button {
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: none;
+  border: none;
+  font: inherit;
   color: #6b7280;
-  font-weight: 500;
-  transition: color 0.3s;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
 
-.navbar-center a:hover {
+.navbar-center a:hover,
+.navbar-center button:hover {
   color: #db2777;
 }
 
-.btn-login {
+.navbar-right .btn-login {
   background-color: #db2777;
+  color: white;
   border: none;
   padding: 0.6rem 1.2rem;
+  font-size: 1rem;
   border-radius: 30px;
-  color: white;
-  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 6px rgba(255, 105, 180, 0.3);
+  transition: all 0.3s ease;
 }
 
-.btn-login:hover {
+.navbar-right .btn-login:hover {
+  transform: scale(1.05);
   background-color: #be185d;
-  transform: translateY(-1px);
 }
 
-/* Hero Section (Updated + Aesthetic) */
+/* Hero Section */
 .hero-section {
   position: relative;
-  background-image: url("/image/bg1.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: url("/image/bg1.jpg") center/cover no-repeat;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   overflow: hidden;
+  padding-top: 130px;
 }
 
 .hero-section::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(255, 182, 193, 0.45);
   z-index: 1;
 }
@@ -111,16 +116,16 @@ body {
 }
 
 .hero-content h1 {
-  font-size: 4.5rem;
+  font-size: 5rem;
   font-weight: 800;
-  color: #ffffff;
+  color: #fff;
   margin-bottom: 1rem;
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   animation: zoomIn 1s ease forwards;
 }
 
 .hero-content p {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   color: #fffefc;
   margin-bottom: 2rem;
   opacity: 0.95;
@@ -131,18 +136,208 @@ body {
   background-color: #db2777;
   padding: 0.9rem 2.4rem;
   border-radius: 50px;
-  text-decoration: none;
   color: white;
   font-weight: 600;
   font-size: 1.1rem;
-  transition: all 0.4s ease;
   box-shadow: 0 8px 20px rgba(219, 39, 119, 0.35);
+  text-decoration: none;
+  transition: all 0.4s ease;
   animation: fadeIn 2.4s ease forwards;
 }
 
 .btn-booking:hover {
   background-color: #be185d;
   transform: translateY(-3px) scale(1.03);
+}
+
+/* Section Spacing */
+.about-section,
+.services-section,
+.produk-section,
+.contact-section {
+  padding: 120px 20px;
+  scroll-margin-top: 130px;
+}
+
+/* About Section */
+.about-section {
+  background-color: #fff;
+  text-align: center;
+}
+
+.about-content {
+  display: flex;
+  gap: 2rem;
+  max-width: 1000px;
+  margin: auto;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.about-img {
+  max-width: 400px;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.about-text {
+  flex: 1;
+  text-align: left;
+}
+
+.about-text h2 {
+  color: #db2777;
+  margin-bottom: 1rem;
+  font-size: 2.75rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.about-text p,
+.about-text ul {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  list-style: none;
+  padding: 0;
+  line-height: 1.8;
+}
+
+/* Services Section */
+.services-section {
+  background-color: #fffafc;
+  text-align: center;
+}
+
+.services-section h2 {
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: #db2777;
+  margin-bottom: 2rem;
+}
+
+.services-section p {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.service-cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.service-card {
+  background: white;
+  padding: 2rem 1.5rem;
+  border-radius: 20px;
+  width: 280px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+}
+
+.service-img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+/* Produk Section */
+.produk-section {
+  background-color: #fff;
+  text-align: center;
+}
+
+.produk-section h2 {
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: #db2777;
+  margin-bottom: 1rem;
+}
+
+.produk-desc {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: #555;
+}
+
+.produk-cards {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.produk-card {
+  background-color: #fff0f5;
+  padding: 2rem 1.5rem;
+  border-radius: 20px;
+  width: 240px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.produk-card:hover {
+  transform: translateY(-6px);
+}
+
+.produk-img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+/* Contact Section */
+.contact-section {
+  background-color: #fffafc;
+  text-align: center;
+}
+
+.contact-section h2 {
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: #db2777;
+  margin-bottom: 1rem;
+}
+
+.contact-section p {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.contact-instagram {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #db2777;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1.25rem;
+}
+
+.contact-instagram img {
+  width: 28px;
+}
+
+/* Footer */
+.footer {
+  background-color: #db2777;
+  padding: 1rem;
+  text-align: center;
+  color: white;
+  font-size: 1.1rem;
+  margin-top: 2rem;
 }
 
 /* Animations */
@@ -158,191 +353,42 @@ body {
 }
 
 @keyframes zoomIn {
-  0% {
+  from {
     transform: scale(0.9);
     opacity: 0;
   }
-  100% {
+  to {
     transform: scale(1);
     opacity: 1;
   }
 }
 
 @keyframes fadeIn {
-  0% {
+  from {
     opacity: 0;
   }
-  100% {
+  to {
     opacity: 1;
   }
 }
 
-/* About Section */
-.about-section {
-  background-color: #fff;
-  padding: 4rem 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.animated-section {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  will-change: opacity, transform;
 }
 
-.about-content {
-  display: flex;
-  flex-direction: row;
-  gap: 2rem;
-  max-width: 1000px;
-  align-items: center;
-  flex-wrap: wrap;
+.animated-section.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.about-img {
-  width: 100%;
-  max-width: 400px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.about-text {
-  flex: 1;
-}
-
-.about-text h2 {
-  color: #db2777;
-  margin-bottom: 1rem;
-  font-size: 2rem;
-}
-
-.about-text ul {
-  list-style: none;
-  padding-left: 0;
-  line-height: 1.8;
-}
-
-/* Services Section */
-.services-section {
-  background-color: #fffafc;
-  padding: 4rem 2rem;
-  text-align: center;
-}
-
-.services-section h2 {
-  font-size: 2.5rem;
-  color: #db2777;
-  margin-bottom: 2rem;
-}
-
-.service-cards {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 2rem;
-}
-
-.service-card {
-  background: white;
-  padding: 2rem;
-  border-radius: 20px;
-  width: 280px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-  transition: transform 0.3s ease;
-}
-
-.service-card:hover {
-  transform: translateY(-5px);
-}
-
-.service-icon {
-  width: 60px;
-  margin-bottom: 1rem;
-}
-
-/* Produk Section */
-.produk-section {
-  padding: 4rem 2rem;
-  background-color: #fff;
-  text-align: center;
-}
-
-.produk-section h2 {
-  font-size: 2.5rem;
-  color: #db2777;
-  margin-bottom: 0.5rem;
-}
-
-.produk-desc {
-  font-size: 1rem;
-  margin-bottom: 2rem;
-  color: #555;
-}
-
-.produk-cards {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.produk-card {
-  background-color: #fff0f5;
-  padding: 2rem;
-  border-radius: 20px;
-  width: 240px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease;
-}
-
-.produk-card:hover {
-  transform: translateY(-6px);
-}
-
-.produk-card img {
-  width: 60px;
-  margin-bottom: 1rem;
-}
-
-/* Contact Section */
-.contact-section {
-  background-color: #fffafc;
-  padding: 3rem 2rem;
-  text-align: center;
-}
-
-.contact-section h2 {
-  font-size: 2rem;
-  color: #db2777;
-  margin-bottom: 1rem;
-}
-
-.contact-instagram {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #db2777;
-  font-weight: 600;
-  text-decoration: none;
-  font-size: 1.1rem;
-}
-
-.contact-instagram img {
-  width: 28px;
-.service-icon {
-  display: block;
-  margin: 0 auto 1rem auto;
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(255, 105, 180, 0.3);
-}
-}
-/* Footer */
-.footer {
-  background-color: #db2777;
-  padding: 1rem;
-  text-align: center;
-  color: white;
-  font-size: 0.9rem;
-  margin-top: 2rem;
+/* Hover Zoom Image */
+.service-card:hover img,
+.produk-card:hover img {
+  transform: scale(1.05);
+  transition: transform 0.4s ease;
 }
 
 /* Responsive */
@@ -350,6 +396,14 @@ body {
   .navbar {
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+
+  .hero-content p {
+    font-size: 1.3rem;
   }
 
   .about-content {
@@ -363,86 +417,7 @@ body {
     align-items: center;
   }
 
-  .hero-content h1 {
-    font-size: 2.75rem;
+  .about-text {
+    text-align: center;
   }
-
-  .hero-content p {
-    font-size: 1.2rem;
-  }
-}
-
-/* Tambahan efek animasi masuk dan keluar */
-.animated-section {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.animated-section.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Navbar */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(255, 105, 180, 0.1);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-.navbar-left {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.logo {
-  width: 40px;
-  height: 40px;
-}
-
-.clinic-name {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #db2777;
-}
-
-.navbar-center {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.navbar-center a {
-  text-decoration: none;
-  color: #555;
-  font-weight: 500;
-  font-family: 'Lato', sans-serif;
-  transition: color 0.3s ease;
-}
-
-.navbar-center a:hover {
-  color: #db2777;
-}
-
-.navbar-right .btn-login {
-  background-color: #ff69b4;
-  color: white;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.9rem;
-  border-radius: 30px;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(255, 105, 180, 0.3);
-  transition: transform 0.2s ease;
-}
-
-.navbar-right .btn-login:hover {
-  transform: scale(1.05);
 }

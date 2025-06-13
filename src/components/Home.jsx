@@ -1,3 +1,4 @@
+// Home.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import useScrollAnimation from "./useScrollAnimation";
@@ -19,10 +20,10 @@ const Home = () => {
     <div className="home-container">
       {/* Navbar */}
       <header className="navbar">
-        <div className="navbar-left">
+        <a href="#home" className="navbar-left">
           <img src="/image/logo.png" alt="Logo" className="logo" />
           <span className="clinic-name">Drg. Tia Dental Care</span>
-        </div>
+        </a>
 
         <nav className="navbar-center">
           <a href="#home">Home</a>
@@ -71,7 +72,7 @@ const Home = () => {
               yang lebih baik.
             </p>
             <ul>
-              <li>💎 Pelayanan ramah dan profesional</li>
+              <li>💿 Pelayanan ramah dan profesional</li>
               <li>🦷 Peralatan dan teknologi modern</li>
               <li>👨‍⚕️ Tenaga medis bersertifikat dan berpengalaman</li>
               <li>🌸 Suasana klinik yang nyaman dan Instagramable</li>
@@ -88,35 +89,41 @@ const Home = () => {
       >
         <h2>Layanan Kami</h2>
         <div className="service-cards">
+          {/* Perawatan Umum */}
           <div className="service-card">
             <img
-              src="https://cdn-icons-png.flaticon.com/128/14698/14698571.png"
-              alt="Ikon Gigi Modern"
-              className="service-icon"
+              src="/image/g1.jpg"
+              alt="Perawatan Umum"
+              className="service-photo"
             />
             <h3>Perawatan Umum</h3>
             <p>Pemeriksaan rutin, pembersihan karang gigi, dan penambalan.</p>
           </div>
+
+          {/* Behel Gigi */}
           <div className="service-card">
             <img
-              src="https://cdn-icons-png.flaticon.com/128/13351/13351215.png"
-              alt="Braces Icon"
-              className="service-icon"
+              src="/image/g2.jpg"
+              alt="Behel Gigi"
+              className="service-photo"
             />
             <h3>Behel Gigi</h3>
             <p>Solusi estetika dan kesehatan dengan pemasangan kawat gigi.</p>
           </div>
+
+          {/* Perawatan Estetik */}
           <div className="service-card">
             <img
-              src="https://cdn-icons-png.flaticon.com/128/15349/15349458.png"
-              alt="Filling Icon"
-              className="service-icon"
+              src="/image/g3.jpg"
+              alt="Perawatan Estetik"
+              className="service-photo"
             />
             <h3>Perawatan Estetik</h3>
             <p>Pemutihan gigi, veneer, dan penataan senyum profesional.</p>
           </div>
         </div>
       </section>
+
 
       {/* Produk */}
       <section
@@ -125,33 +132,21 @@ const Home = () => {
         className={`produk-section animated-section ${showProduk ? "show" : ""}`}
       >
         <h2>Produk Kami</h2>
-        <p className="produk-desc">
-          Pilih produk perawatan gigi terbaik untuk senyum Anda
-        </p>
         <div className="produk-cards">
           <div className="produk-card">
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/1730/1730806.png"
-              alt="Toothpaste"
-            />
-            <h3>Pasta Gigi Premium</h3>
-            <p>Melindungi enamel dan memutihkan gigi secara alami.</p>
+            <img src="/image/p2.jpg" alt="Pasta Gigi Premium" className="produk-img" />
+            <h3><strong>Pasta Gigi Premium</strong></h3>
+            <p><strong>Melindungi enamel & memutihkan gigi secara alami.</strong></p>
           </div>
           <div className="produk-card">
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/3798/3798228.png"
-              alt="Mouthwash"
-            />
-            <h3>Obat Kumur Herbal</h3>
-            <p>Menjaga nafas segar dan membunuh bakteri mulut.</p>
+            <img src="/image/p1.jpg" alt="Obat Kumur Herbal" className="produk-img" />
+            <h3><strong>Obat Kumur Herbal</strong></h3>
+            <p><strong>Menjaga nafas segar & membunuh bakteri mulut.</strong></p>
           </div>
           <div className="produk-card">
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/3798/3798217.png"
-              alt="Dental Floss"
-            />
-            <h3>Benang Gigi</h3>
-            <p>Membersihkan sela gigi secara menyeluruh dan lembut.</p>
+            <img src="/image/p3.jpg" alt="Benang Gigi" className="produk-img" />
+            <h3><strong>Benang Gigi</strong></h3>
+            <p><strong>Membersihkan sela gigi secara menyeluruh & lembut.</strong></p>
           </div>
         </div>
       </section>
