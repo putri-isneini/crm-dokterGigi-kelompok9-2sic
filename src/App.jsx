@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard'
 import Pasien from './pages/pasien'
 import Login from './components/Login'
 import RiwayatKunjungan from './pages/RiwayatKunjungan'  
+import DataDokter from './pages/DataDokter'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/pasien" element={<Pasien />} />
         <Route path="/riwayat" element={<RiwayatKunjungan />} />
+        <Route path="/datadokter" element={<DataDokter />} />
       </Route>
     </Routes>
   )
