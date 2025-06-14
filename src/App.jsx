@@ -5,7 +5,8 @@ import MainLayout from './components/MainLayout'
 import Dashboard from './pages/Dashboard'
 import Booking from './pages/Booking'
 import JadwalPasien from './pages/JadwalPasien'
-import Produk from './pages/Produk' // <--- Tambahkan ini
+import Diskon from './pages/Diskon';
+import ProdukPasien from './pages/ProdukPasien'
 
 function App() {
   const [bookings, setBookings] = useState([
@@ -80,7 +81,8 @@ function App() {
           }
         />
         <Route path="/jadwalpasien" element={<JadwalPasien bookings={bookings} />} />
-        <Route path="/produk" element={<Produk />} /> {/* <-- Ini dia */}
+        <Route path="/diskon-membership" element={<Diskon />} />
+        <Route path="/produk-pasien" element={<ProdukPasien />} />
       </Route>
     </Routes>
   )

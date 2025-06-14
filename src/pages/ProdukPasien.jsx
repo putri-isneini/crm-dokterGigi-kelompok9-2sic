@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const dataAwal = [ 
+const dataAwal = [
   {
     nama: 'Sikat Gigi Ortho',
     harga: 'Rp15.000',
@@ -69,29 +69,29 @@ const dataAwal = [
   },
 ]
 
-const Produk = () => {
+const ProdukPasien = () => {
   const [produk, setProduk] = useState([])
   const [search, setSearch] = useState('')
   const [form, setForm] = useState({ nama: '', harga: '', stok: '', gambar: '' })
   const [editIndex, setEditIndex] = useState(null)
 
   useEffect(() => {
-    const dataLocal = localStorage.getItem('produk')
+    const dataLocal = localStorage.getItem('produkPasien')
     if (dataLocal) {
       setProduk(JSON.parse(dataLocal))
     } else {
       setProduk(dataAwal)
-      localStorage.setItem('produk', JSON.stringify(dataAwal))
+      localStorage.setItem('produkPasien', JSON.stringify(dataAwal))
     }
   }, [])
 
   const simpanLocal = (data) => {
-    localStorage.setItem('produk', JSON.stringify(data))
+    localStorage.setItem('produkPasien', JSON.stringify(data))
   }
 
   const resetDataAwal = () => {
     if (confirm('Yakin ingin reset ke data awal? Semua data akan diganti.')) {
-      localStorage.setItem('produk', JSON.stringify(dataAwal))
+      localStorage.setItem('produkPasien', JSON.stringify(dataAwal))
       setProduk(dataAwal)
       setForm({ nama: '', harga: '', stok: '', gambar: '' })
       setEditIndex(null)
@@ -144,7 +144,7 @@ const Produk = () => {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold text-pink-800 mb-4">
-        Produk yang tersedia
+        Produk Pasien
       </h1>
 
       {/* Form Tambah/Edit */}
@@ -250,8 +250,15 @@ const Produk = () => {
           )}
         </tbody>
       </table>
+
+      <button
+        onClick={resetDataAwal}
+        className="mt-6 bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+      >
+        Reset ke Produk Awal
+      </button>
     </div>
   )
 }
 
-export default Produk
+export default ProdukPasien
