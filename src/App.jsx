@@ -14,14 +14,12 @@ import RiwayatKunjungan from './pages/RiwayatKunjungan';
 import JadwalPasien from './pages/JadwalPasien';
 import Diskon from './pages/Diskon';
 import ProdukPasien from './pages/ProdukPasien';
-import './App.css'
-import { Route, Routes } from 'react-router-dom'
-import MainLayout from './components/MainLayout'
-import Dashboard from './pages/Dashboard'
-import Pasien from './pages/Pasien'
-import Login from './components/Login'
-import RiwayatKunjungan from './pages/RiwayatKunjungan'  
-import DataDokter from './pages/DataDokter'
+import FAQList from './pages/faq/FAQList';
+import TambahFAQ from './pages/faq/TambahFAQ';
+import EditFAQ from './pages/faq/EditFAQ';
+import DataDokter from './pages/dokter/DataDokter';
+import TambahDokter from './pages/dokter/TambahDokter';
+import EditDokter from './pages/dokter/EditDokter';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -66,7 +64,16 @@ function App() {
         <Route path="/jadwal" element={<JadwalPasien bookings={bookings} />} />
         <Route path="/diskon-membership" element={<Diskon />} />
         <Route path="/produk-pasien" element={<ProdukPasien />} />
-        <Route path="/datadokter" element={<DataDokter />} />
+
+        {/* Dokter CRUD */}
+        <Route path="/data-dokter" element={<DataDokter />} />
+        <Route path="/data-dokter/tambah" element={<TambahDokter />} />
+        <Route path="/data-dokter/edit/:id" element={<EditDokter />} />
+
+        {/* FAQ CRUD */}
+        <Route path="/faq" element={<FAQList />} />
+        <Route path="/faq/tambah" element={<TambahFAQ />} />
+        <Route path="/faq/edit/:id" element={<EditFAQ />} />
       </Route>
     </Routes>
   );

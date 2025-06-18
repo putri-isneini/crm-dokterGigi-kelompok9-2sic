@@ -10,26 +10,24 @@ import {
   CalendarCheck,
   UserCheck,
   Stethoscope,
-  BarChart2
+  BarChart2,
+  HelpCircle
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
 const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/dashboard' },
-  { name: 'Pelanggan', icon: <User2Icon />, path: '/pelanggan' },
-  { name: 'Booking', icon: <CalendarCheck />, path: '/booking' },
+  { name: 'Booking Pasien', icon: <CalendarCheck />, path: '/booking' },
   { name: 'Data Pasien', icon: <UserCheck />, path: '/pasien' },
   { name: 'Riwayat Kunjungan', icon: <Stethoscope />, path: '/riwayat' },
-  { name: 'Jadwal Pasien', icon: <CalendarCheck />, path: '/jadwal' },
+  { name: 'Jadwal Praktik', icon: <CalendarCheck />, path: '/jadwal' },
 ]
 
 const accountItems = [
-   { name: 'Diskon Membership', icon: <BarChart2 />, path: '/diskon-membership' },,
-  { name: 'Produk Pasien', icon: <Box />, path: '/produk-pasien' },
-  { name: 'Sign Up', icon: <UserPlus />, path: '/signup' },
-  { name: 'Pengaturan Akun', icon: <Settings />, path: '/akun' },
-  { name: 'Sign In', icon: <LogIn />, path: '/signin' },
   { name: 'Data Dokter', icon: <UserPlus />, path: '/datadokter' },
+  { name: 'Diskon & Membership', icon: <BarChart2 />, path: '/diskon-membership' },
+  { name: 'Produk & Obat Pasien', icon: <Box />, path: '/produk-pasien' },
+  { name: 'FAQ (Bantuan)', icon: <HelpCircle />, path: '/faq' },
 ]
 
 const Sidebar = () => {
@@ -53,11 +51,10 @@ const Sidebar = () => {
           <Link
             key={item.name}
             to={item.path}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base transition duration-200 ${
-              isActive(item.path)
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base transition duration-200 ${isActive(item.path)
                 ? 'bg-rose-100 text-rose-700 font-semibold shadow'
                 : 'text-gray-700 hover:bg-pink-100 hover:text-rose-600'
-            }`}
+              }`}
           >
             <span className="w-5 h-5">{item.icon}</span>
             <span>{item.name}</span>
@@ -76,11 +73,10 @@ const Sidebar = () => {
           <Link
             key={item.name}
             to={item.path}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base transition duration-200 ${
-              isActive(item.path)
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base transition duration-200 ${isActive(item.path)
                 ? 'bg-rose-100 text-rose-700 font-semibold shadow'
                 : 'text-gray-700 hover:bg-pink-100 hover:text-rose-600'
-            }`}
+              }`}
           >
             <span className="w-5 h-5">{item.icon}</span>
             <span>{item.name}</span>
