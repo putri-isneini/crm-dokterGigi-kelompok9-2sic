@@ -10,16 +10,24 @@ import Dashboard from './pages/Dashboard';
 import CustomerManagement from './pages/CustomerManagement';
 import Booking from './pages/Booking';
 import Pasien from './pages/Pasien';
-import RiwayatKunjungan from './pages/RiwayatKunjungan';
 import JadwalPasien from './pages/JadwalPasien';
 import Diskon from './pages/Diskon';
 import ProdukPasien from './pages/ProdukPasien';
+
+// FAQ
 import FAQList from './pages/faq/FAQList';
 import TambahFAQ from './pages/faq/TambahFAQ';
 import EditFAQ from './pages/faq/EditFAQ';
+
+// Dokter
 import DataDokter from './pages/dokter/DataDokter';
 import TambahDokter from './pages/dokter/TambahDokter';
 import EditDokter from './pages/dokter/EditDokter';
+
+// Riwayat Kunjungan
+import RiwayatKunjungan from './pages/riwayatkunjungan/RiwayatKunjungan';
+import TambahRiwayat from './pages/riwayatkunjungan/TambahRiwayat';
+import EditRiwayat from './pages/riwayatkunjungan/EditRiwayat';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -56,11 +64,11 @@ function App() {
           </PrivateRoute>
         }
       >
+        {/* Halaman utama */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pelanggan" element={<CustomerManagement />} />
         <Route path="/booking" element={<Booking bookings={bookings} onStatusChange={onStatusChange} />} />
         <Route path="/pasien" element={<Pasien />} />
-        <Route path="/riwayat" element={<RiwayatKunjungan />} />
         <Route path="/jadwal" element={<JadwalPasien bookings={bookings} />} />
         <Route path="/diskon-membership" element={<Diskon />} />
         <Route path="/produk-pasien" element={<ProdukPasien />} />
@@ -74,6 +82,11 @@ function App() {
         <Route path="/faq" element={<FAQList />} />
         <Route path="/faq/tambah" element={<TambahFAQ />} />
         <Route path="/faq/edit/:id" element={<EditFAQ />} />
+
+        {/* Riwayat Kunjungan CRUD */}
+        <Route path="/riwayat-kunjungan" element={<RiwayatKunjungan />} />
+        <Route path="/riwayat-kunjungan/tambah" element={<TambahRiwayat />} />
+        <Route path="/riwayat-kunjungan/edit/:id" element={<EditRiwayat />} />
       </Route>
     </Routes>
   );
