@@ -68,7 +68,7 @@ function App() {
         <Route path="/produk-pasien" element={<ProdukPasien />} />
 
         {/* Dokter CRUD */}
-        <Route path="/data-dokter" element={<DataDokter />} />
+        <Route path="/datadokter" element={<DataDokter />} />
         <Route path="/data-dokter/tambah" element={<TambahDokter />} />
         <Route path="/data-dokter/edit/:id" element={<EditDokter />} />
 
