@@ -18,8 +18,10 @@ export default function Booking({ bookings, onStatusChange }) {
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-4">Halaman Booking - Admin</h1>
+    <div className="p-6 max-w-6xl mx-auto min-h-screen bg-[#ffeef6]">
+      <h1 className="text-2xl font-bold mb-4 text-pink-600">
+        Halaman Booking - Admin
+      </h1>
 
       <div className="flex gap-4 mb-4">
         <input
@@ -68,12 +70,16 @@ export default function Booking({ bookings, onStatusChange }) {
                 <td className="px-4 py-3">{b.time}</td>
                 <td className="px-4 py-3 text-center">
                   {b.status === "Menunggu" ? (
-                    <span className="text-yellow-600 font-semibold">Menunggu</span>
+                    <span className="bg-pink-100 text-pink-600 font-semibold px-2 py-1 rounded">
+                      Menunggu
+                    </span>
                   ) : (
                     <select
                       value={b.status}
-                      onChange={(e) => handleStatusChange(b.id, e.target.value)}
-                      className="border rounded px-2 py-1"
+                      onChange={(e) =>
+                        handleStatusChange(b.id, e.target.value)
+                      }
+                      className="bg-pink-100 text-pink-600 font-medium border rounded px-2 py-1"
                     >
                       <option value="Terjadwal">Terjadwal</option>
                       <option value="Selesai">Selesai</option>
@@ -85,14 +91,18 @@ export default function Booking({ bookings, onStatusChange }) {
                   {b.status === "Menunggu" && (
                     <>
                       <button
-                        onClick={() => handleStatusChange(b.id, "Terjadwal")}
-                        className="text-green-600 hover:underline font-medium"
+                        onClick={() =>
+                          handleStatusChange(b.id, "Terjadwal")
+                        }
+                        className="text-red-600 hover:underline font-medium"
                       >
                         Setujui
                       </button>
                       <button
-                        onClick={() => handleStatusChange(b.id, "Dibatalkan")}
-                        className="text-yellow-600 hover:underline font-medium"
+                        onClick={() =>
+                          handleStatusChange(b.id, "Dibatalkan")
+                        }
+                        className="text-black hover:underline font-medium"
                       >
                         Tolak
                       </button>
