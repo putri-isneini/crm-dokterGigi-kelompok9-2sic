@@ -5,7 +5,6 @@ import MainLayout from './components/MainLayout'
 import Dashboard from './pages/Dashboard'
 import Booking from './pages/Booking'
 import JadwalPasien from './pages/JadwalPasien'
-import Diskon from './pages/Diskon';
 import ProdukPasien from './pages/ProdukPasien'
 
 function App() {
@@ -81,7 +80,6 @@ function App() {
           }
         />
         <Route path="/jadwalpasien" element={<JadwalPasien bookings={bookings} />} />
-        <Route path="/diskon-membership" element={<Diskon />} />
         <Route path="/produk-pasien" element={<ProdukPasien />} />
       </Route>
     </Routes>

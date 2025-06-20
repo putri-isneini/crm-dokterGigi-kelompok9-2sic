@@ -1,80 +1,80 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
 
 const dataAwal = [
-  // ... (tidak ada perubahan pada data)
-]
+
+];
 
 const ProdukPasien = () => {
-  const [produk, setProduk] = useState([])
-  const [search, setSearch] = useState('')
-  const [form, setForm] = useState({ nama: '', harga: '', stok: '', gambar: '' })
-  const [editIndex, setEditIndex] = useState(null)
+  const [produk, setProduk] = useState([]);
+  const [search, setSearch] = useState('');
+  const [form, setForm] = useState({ nama: '', harga: '', stok: '', gambar: '' });
+  const [editIndex, setEditIndex] = useState(null);
 
   useEffect(() => {
-    const dataLocal = localStorage.getItem('produkPasien')
+    const dataLocal = localStorage.getItem('produkPasien');
     if (dataLocal) {
-      setProduk(JSON.parse(dataLocal))
+      setProduk(JSON.parse(dataLocal));
     } else {
-      setProduk(dataAwal)
-      localStorage.setItem('produkPasien', JSON.stringify(dataAwal))
+      setProduk(dataAwal);
+      localStorage.setItem('produkPasien', JSON.stringify(dataAwal));
     }
-  }, [])
+  }, []);
 
   const simpanLocal = (data) => {
-    localStorage.setItem('produkPasien', JSON.stringify(data))
-  }
+    localStorage.setItem('produkPasien', JSON.stringify(data));
+  };
 
   const resetDataAwal = () => {
     if (confirm('Yakin ingin reset ke data awal? Semua data akan diganti.')) {
-      localStorage.setItem('produkPasien', JSON.stringify(dataAwal))
-      setProduk(dataAwal)
-      setForm({ nama: '', harga: '', stok: '', gambar: '' })
-      setEditIndex(null)
+      localStorage.setItem('produkPasien', JSON.stringify(dataAwal));
+      setProduk(dataAwal);
+      setForm({ nama: '', harga: '', stok: '', gambar: '' });
+      setEditIndex(null);
     }
-  }
+  };
 
   const handleTambahAtauEdit = () => {
     if (!form.nama || !form.harga || !form.stok || !form.gambar) {
-      alert('Harap lengkapi semua field.')
-      return
+      alert('Harap lengkapi semua field.');
+      return;
     }
 
-    const produkBaru = { ...form, stok: parseInt(form.stok) }
+    const produkBaru = { ...form, stok: parseInt(form.stok) };
 
+    let data;
     if (editIndex !== null) {
-      const data = [...produk]
-      data[editIndex] = produkBaru
-      setProduk(data)
-      simpanLocal(data)
-      setEditIndex(null)
+      data = [...produk];
+      data[editIndex] = produkBaru;
+      setEditIndex(null);
     } else {
-      const data = [...produk, produkBaru]
-      setProduk(data)
-      simpanLocal(data)
+      data = [...produk, produkBaru];
     }
 
-    setForm({ nama: '', harga: '', stok: '', gambar: '' })
-  }
+    setProduk(data);
+    simpanLocal(data);
+    setForm({ nama: '', harga: '', stok: '', gambar: '' });
+  };
 
   const handleHapus = (index) => {
-    const konfirmasi = confirm('Yakin ingin menghapus produk ini?')
-    if (!konfirmasi) return
+    const konfirmasi = confirm('Yakin ingin menghapus produk ini?');
+    if (!konfirmasi) return;
 
-    const baru = [...produk]
-    baru.splice(index, 1)
-    setProduk(baru)
-    simpanLocal(baru)
-  }
+    const baru = [...produk];
+    baru.splice(index, 1);
+    setProduk(baru);
+    simpanLocal(baru);
+  };
 
   const handleEdit = (index) => {
-    const item = produk[index]
-    setForm({ ...item, stok: item.stok.toString() })
-    setEditIndex(index)
-  }
+    const item = produk[index];
+    setForm({ ...item, stok: item.stok.toString() });
+    setEditIndex(index);
+  };
 
   const produkFilter = produk.filter((item) =>
     item.nama.toLowerCase().includes(search.toLowerCase())
-  )
+  );
 
   return (
     <div className="bg-pink-50 min-h-screen p-6">
@@ -159,19 +159,23 @@ const ProdukPasien = () => {
                   >
                     {item.stok}
                   </td>
-                  <td className="border p-2 space-x-2">
-                    <button
-                      onClick={() => handleEdit(index)}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleHapus(index)}
-                      className="text-red-600 hover:underline"
-                    >
-                      Hapus
-                    </button>
+                  <td className="border p-2">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(index)}
+                        className="text-blue-600 hover:bg-blue-100 p-1 rounded"
+                        title="Edit"
+                      >
+                        <Pencil size={18} />
+                      </button>
+                      <button
+                        onClick={() => handleHapus(index)}
+                        className="text-red-600 hover:bg-red-100 p-1 rounded"
+                        title="Hapus"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -193,7 +197,7 @@ const ProdukPasien = () => {
         Reset ke Produk Awal
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default ProdukPasien
+export default ProdukPasien;

@@ -22,8 +22,7 @@ const menuItems = [
 ]
 
 const accountItems = [
-   { name: 'Diskon Membership', icon: <BarChart2 />, path: '/diskon-membership' },,
-  { name: 'Produk Pasien', icon: <Box />, path: '/produk-pasien' },
+  { name: 'Produk Pasien', icon: <Box />, path: '/produk-pasien' },,
   { name: 'Sign Up', icon: <UserPlus />, path: '/signup' },
 ]
 

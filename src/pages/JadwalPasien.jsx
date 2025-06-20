@@ -17,7 +17,9 @@ export default function JadwalPasien({ bookings = [] }) {
   return (
     <div className="min-h-screen bg-[#ffeef6] p-6">
       <div className="bg-white p-4 rounded shadow">
-        <h2 className="text-3xl font-bold text-pink-600 mb-4">Jadwal Pasien</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-3xl font-bold text-pink-600">Jadwal Pasien</h2>
+        </div>
         <FullCalendar
           plugins={[dayGridPlugin]}
           initialView="dayGridMonth"
@@ -25,9 +27,8 @@ export default function JadwalPasien({ bookings = [] }) {
           displayEventTime={false}
           height="auto"
           headerToolbar={{
-            start: "prev,next today",
-            center: "title",
-            end: ""
+            start: "title",
+            end: "today prev,next",
           }}
           buttonText={{
             today: "Hari Ini",
