@@ -12,16 +12,22 @@ import Booking from './pages/Booking';
 import JadwalPasien from './pages/JadwalPasien';
 import Diskon from './pages/Diskon';
 import ProdukPasien from './pages/ProdukPasien';
+
 import FAQList from './pages/faq/FAQList';
 import TambahFAQ from './pages/faq/TambahFAQ';
 import EditFAQ from './pages/faq/EditFAQ';
+
 import DataDokter from './pages/dokter/DataDokter';
 import TambahDokter from './pages/dokter/TambahDokter';
 import EditDokter from './pages/dokter/EditDokter';
+
 import RiwayatKunjungan from './pages/riwayatkunjungan/RiwayatKunjungan';
 import TambahRiwayat from './pages/riwayatkunjungan/TambahRiwayat';
 import EditRiwayat from './pages/riwayatkunjungan/EditRiwayat';
-import Pasien from './pages/pasien';
+
+import Pasien from './pages/pasien/pasien';
+import TambahPasien from './pages/pasien/TambahPasien';
+import EditPasien from './pages/pasien/EditPasien';
 import ListPasien from './pages/ListPasien';
 import PasienForm from './components/PasienForm';
 
@@ -49,10 +55,12 @@ function App() {
 
   return (
     <Routes>
+      {/* Public Routes */}
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
       <Route path="/unauthorized" element={<div>401 - Unauthorized</div>} />
 
+      {/* Protected Routes */}
       <Route
         element={
           <PrivateRoute>
@@ -60,31 +68,35 @@ function App() {
           </PrivateRoute>
         }
       >
-        {/* Halaman utama */}
+        {/* Dashboard dan Umum */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pelanggan" element={<CustomerManagement />} />
         <Route path="/booking" element={<Booking bookings={bookings} onStatusChange={onStatusChange} />} />
-        <Route path="/pasien" element={<Pasien />} />
-        <Route path="/listpasien" element={<ListPasien />} />
-        <Route path="/formpasien" element={<PasienForm />} />
         <Route path="/jadwal" element={<JadwalPasien bookings={bookings} />} />
         <Route path="/diskon-membership" element={<Diskon />} />
         <Route path="/produk-pasien" element={<ProdukPasien />} />
 
-        {/* Dokter CRUD */}
+        {/* Pasien */}
+        <Route path="/pasien" element={<Pasien />} />
+        <Route path="/listpasien" element={<ListPasien />} />
+        <Route path="/formpasien" element={<PasienForm />} />
+        <Route path="/pasien/tambah" element={<TambahPasien />} />
+        <Route path="/pasien/edit/:id" element={<EditPasien />} />
+
+        {/* Dokter */}
         <Route path="/datadokter" element={<DataDokter />} />
         <Route path="/data-dokter/tambah" element={<TambahDokter />} />
         <Route path="/data-dokter/edit/:id" element={<EditDokter />} />
 
-        {/* FAQ CRUD */}
-        <Route path="/faq" element={<FAQList />} />
-        <Route path="/faq/tambah" element={<TambahFAQ />} />
-        <Route path="/faq/edit/:id" element={<EditFAQ />} />
-
-        {/* Riwayat Kunjungan CRUD */}
+        {/* Riwayat Kunjungan */}
         <Route path="/riwayat" element={<RiwayatKunjungan />} />
         <Route path="/riwayat-kunjungan/tambah" element={<TambahRiwayat />} />
         <Route path="/riwayat-kunjungan/edit/:id" element={<EditRiwayat />} />
+
+        {/* FAQ */}
+        <Route path="/faq" element={<FAQList />} />
+        <Route path="/faq/tambah" element={<TambahFAQ />} />
+        <Route path="/faq/edit/:id" element={<EditFAQ />} />
       </Route>
     </Routes>
   );

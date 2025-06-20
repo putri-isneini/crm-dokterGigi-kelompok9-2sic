@@ -19,7 +19,7 @@ const TambahRiwayat = () => {
     e.preventDefault();
     // Simpan logika submit ke database jika sudah ada
     console.log('Data disimpan:', form);
-    navigate('/riwayat-kunjungan');
+    navigate('/riwayatkunjungan');
   };
 
   return (
