@@ -41,7 +41,7 @@ const Sidebar = () => {
         <img
           src="/image/logo.png"
           alt="Logo Drg.Tia"
-          className="w-24 h-24 object-contain rounded-full shadow-lg hover:scale-105 transition duration-300"
+          className="w-32 h-30 object-contain hover:scale-105 transition duration-300"
         />
       </Link>
 
@@ -51,10 +51,11 @@ const Sidebar = () => {
           <Link
             key={item.name}
             to={item.path}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base transition duration-200 ${isActive(item.path)
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base transition duration-200 ${
+              isActive(item.path)
                 ? 'bg-rose-100 text-rose-700 font-semibold shadow'
                 : 'text-gray-700 hover:bg-pink-100 hover:text-rose-600'
-              }`}
+            }`}
           >
             <span className="w-5 h-5">{item.icon}</span>
             <span>{item.name}</span>
@@ -73,10 +74,11 @@ const Sidebar = () => {
           <Link
             key={item.name}
             to={item.path}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base transition duration-200 ${isActive(item.path)
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base transition duration-200 ${
+              isActive(item.path)
                 ? 'bg-rose-100 text-rose-700 font-semibold shadow'
                 : 'text-gray-700 hover:bg-pink-100 hover:text-rose-600'
-              }`}
+            }`}
           >
             <span className="w-5 h-5">{item.icon}</span>
             <span>{item.name}</span>

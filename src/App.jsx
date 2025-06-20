@@ -9,7 +9,6 @@ import Login from './components/Login';
 import Dashboard from './pages/Dashboard';
 import CustomerManagement from './pages/CustomerManagement';
 import Booking from './pages/Booking';
-import Pasien from './pages/Pasien';
 import JadwalPasien from './pages/JadwalPasien';
 import Diskon from './pages/Diskon';
 import ProdukPasien from './pages/ProdukPasien';
@@ -22,6 +21,9 @@ import EditDokter from './pages/dokter/EditDokter';
 import RiwayatKunjungan from './pages/riwayatkunjungan/RiwayatKunjungan';
 import TambahRiwayat from './pages/riwayatkunjungan/TambahRiwayat';
 import EditRiwayat from './pages/riwayatkunjungan/EditRiwayat';
+import Pasien from './pages/pasien';
+import ListPasien from './pages/ListPasien';
+import PasienForm from './components/PasienForm';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -63,6 +65,8 @@ function App() {
         <Route path="/pelanggan" element={<CustomerManagement />} />
         <Route path="/booking" element={<Booking bookings={bookings} onStatusChange={onStatusChange} />} />
         <Route path="/pasien" element={<Pasien />} />
+        <Route path="/listpasien" element={<ListPasien />} />
+        <Route path="/formpasien" element={<PasienForm />} />
         <Route path="/jadwal" element={<JadwalPasien bookings={bookings} />} />
         <Route path="/diskon-membership" element={<Diskon />} />
         <Route path="/produk-pasien" element={<ProdukPasien />} />
