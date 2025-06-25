@@ -6,20 +6,25 @@ import {
   LogIn,
   UserPlus,
   UserCheck,     // untuk Data Pasien
-  Stethoscope    // untuk Riwayat Kunjungan
+  Stethoscope,    // untuk Riwayat Kunjungan
+  LucideFunctionSquare,
+  FileQuestionIcon,
+  AmpersandIcon,
+  MessagesSquareIcon
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
 const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' },
-  { name: 'Data Pasien', icon: <UserCheck />, path: '/pasien' },
-  { name: 'Riwayat Kunjungan', icon: <Stethoscope />, path: '/riwayat' },
+  { name: 'Riwayat Kunjungan', icon: <Stethoscope />, path: '/riwayat/list' },
+  { name: 'Faq', icon: <MessagesSquareIcon />, path: '/faq/list' },
+  { name: 'Admin', icon: <UserPlus />, path: '/admin/list' },
 ]
 
 const accountItems = [
   { name: 'Pengaturan Akun', icon: <Settings />, path: '/akun' },
   { name: 'Sign In', icon: <LogIn />, path: '/signin' },
-  { name: 'Data Dokter', icon: <UserPlus />, path: '/datadokter' },
+  { name: 'Form Booking', icon: <UserPlus />, path: '/bookingpasien' },
 ]
 
 const Sidebar = () => {
