@@ -1,4 +1,4 @@
-:root {
+/*:root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -65,5 +65,21 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}*/
+/*Font tambahan*/
+@font-face {
+  font-family: 'Kugile_Demo';
+  src: url('/fonts/Kugile_Demo.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
+body {
+  font-family: 'Kugile_Demo', sans-serif;
+}
+
+.fade-in-container.fade-in {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+  

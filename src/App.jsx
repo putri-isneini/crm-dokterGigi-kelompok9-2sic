@@ -1,4 +1,5 @@
 import './App.css';
+import './index.css';
 import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
@@ -7,29 +8,23 @@ import Home from './components/Home';
 import Login from './components/Login';
 
 import Dashboard from './pages/Dashboard';
-import CustomerManagement from './pages/CustomerManagement';
-import Booking from './pages/Booking';
-import JadwalPasien from './pages/JadwalPasien';
-import Diskon from './pages/Diskon';
-import ProdukPasien from './pages/ProdukPasien';
 
-import FAQList from './pages/faq/FAQList';
-import TambahFAQ from './pages/faq/TambahFAQ';
-import EditFAQ from './pages/faq/EditFAQ';
-
-import DataDokter from './pages/dokter/DataDokter';
-import TambahDokter from './pages/dokter/TambahDokter';
-import EditDokter from './pages/dokter/EditDokter';
-
-import RiwayatKunjungan from './pages/riwayatkunjungan/RiwayatKunjungan';
-import TambahRiwayat from './pages/riwayatkunjungan/TambahRiwayat';
-import EditRiwayat from './pages/riwayatkunjungan/EditRiwayat';
-
-import Pasien from './pages/pasien/pasien';
-import TambahPasien from './pages/pasien/TambahPasien';
-import EditPasien from './pages/pasien/EditPasien';
-import ListPasien from './pages/ListPasien';
-import PasienForm from './components/PasienForm';
+import LayananKami from './components/LayananKami';
+import Kontak from './components/Kontak';
+import PublicLayout from './components/PublicLayout';
+import Produk from './components/Produk';
+import Testimoni from './components/Testimoni';
+import ListPasien from './pages/pasien/ListPasien';
+import FormPasien from './pages/pasien/FormPasien';
+import ListDokter from './pages/dokter/ListDokter';
+import FormDokter from './pages/dokter/FormDokter';
+import ListLayanan from './pages/layanan/ListLayanan';
+import FormLayanan from './pages/layanan/FormLayanan';
+import ListProdukPasien from './pages/produk/ListProdukPasien';
+import FormProdukPasien from './pages/produk/FormProdukPasien';
+import TentangKami from './components/tentangkami/TentangKami';
+import ListTentangKami from './components/tentangkami/ListTentangKami';
+import FormTentangKami from './components/tentangkami/FormTentangKami';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -60,6 +55,17 @@ function App() {
       <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
       <Route path="/unauthorized" element={<div>401 - Unauthorized</div>} />
 
+      {/* Halaman dari komponen terpisah beranda */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/tentang" element={<TentangKami />} />
+        <Route path="/layanan" element={<LayananKami />} />
+        <Route path="/produk" element={<Produk />} />
+        <Route path="/testimoni" element={<Testimoni />} />
+        <Route path="/kontak" element={<Kontak />} />
+      </Route>
+
+
       {/* Protected Routes */}
       <Route
         element={
@@ -70,33 +76,30 @@ function App() {
       >
         {/* Dashboard dan Umum */}
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/pelanggan" element={<CustomerManagement />} />
-        <Route path="/booking" element={<Booking bookings={bookings} onStatusChange={onStatusChange} />} />
-        <Route path="/jadwal" element={<JadwalPasien bookings={bookings} />} />
-        <Route path="/diskon-membership" element={<Diskon />} />
-        <Route path="/produk-pasien" element={<ProdukPasien />} />
 
         {/* Pasien */}
-        <Route path="/pasien" element={<Pasien />} />
         <Route path="/listpasien" element={<ListPasien />} />
-        <Route path="/formpasien" element={<PasienForm />} />
-        <Route path="/pasien/tambah" element={<TambahPasien />} />
-        <Route path="/pasien/edit/:id" element={<EditPasien />} />
+        <Route path="/formpasien" element={<FormPasien />} />
 
         {/* Dokter */}
-        <Route path="/datadokter" element={<DataDokter />} />
-        <Route path="/data-dokter/tambah" element={<TambahDokter />} />
-        <Route path="/data-dokter/edit/:id" element={<EditDokter />} />
+        <Route path="/listdokter" element={<ListDokter />} />
+        <Route path="/formdokter" element={<FormDokter />} />
+
+        {/* tentang kami */}
+        <Route path="/listtentangkami" element={<ListTentangKami />} />
+        <Route path="/formtentangkami" element={<FormTentangKami />} />
+
+        {/* Layanan */}
+        <Route path="/listlayanan" element={<ListLayanan />} />
+        <Route path="/formdokter" element={<FormLayanan />} />
+
+        {/* ProdukPasien */}
+        <Route path="/listprodukpasien" element={<ListProdukPasien />} />
+        <Route path="/formprodukpasien" element={<FormProdukPasien/>} />
 
         {/* Riwayat Kunjungan */}
-        <Route path="/riwayat" element={<RiwayatKunjungan />} />
-        <Route path="/riwayat-kunjungan/tambah" element={<TambahRiwayat />} />
-        <Route path="/riwayat-kunjungan/edit/:id" element={<EditRiwayat />} />
 
         {/* FAQ */}
-        <Route path="/faq" element={<FAQList />} />
-        <Route path="/faq/tambah" element={<TambahFAQ />} />
-        <Route path="/faq/edit/:id" element={<EditFAQ />} />
       </Route>
     </Routes>
   );
