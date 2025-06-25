@@ -4,16 +4,18 @@ import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import MainLayout from './components/MainLayout';
+import PublicLayout from './components/PublicLayout';
+
 import Home from './components/Home';
 import Login from './components/Login';
-
-import Dashboard from './pages/Dashboard';
-
 import LayananKami from './components/LayananKami';
 import Kontak from './components/Kontak';
-import PublicLayout from './components/PublicLayout';
 import Produk from './components/Produk';
 import Testimoni from './components/Testimoni';
+import TentangKami from './components/tentangkami/TentangKami';
+
+// Halaman Admin
+import Dashboard from './pages/Dashboard';
 import ListPasien from './pages/pasien/ListPasien';
 import FormPasien from './pages/pasien/FormPasien';
 import ListDokter from './pages/dokter/ListDokter';
@@ -22,27 +24,18 @@ import ListLayanan from './pages/layanan/ListLayanan';
 import FormLayanan from './pages/layanan/FormLayanan';
 import ListProdukPasien from './pages/produk/ListProdukPasien';
 import FormProdukPasien from './pages/produk/FormProdukPasien';
-import TentangKami from './components/tentangkami/TentangKami';
 import ListTentangKami from './components/tentangkami/ListTentangKami';
 import FormTentangKami from './components/tentangkami/FormTentangKami';
 
+import BookingForm from './pages/BookingForm';
+import BookingList from './pages/BookingList';
+import DiskonForm from './pages/DiskonForm';
+import DiskonList from './pages/DiskonList';
+import JadwalDokterForm from './pages/JadwalDokterForm';
+import JadwalDokter from './pages/JadwalDokterList';
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const [bookings, setBookings] = useState([
-    { id: 1, bookingCode: "BOOK-001", patientName: "Joko Gntg", date: "2025-06-05", time: "11:00", status: "Terjadwal" },
-    { id: 2, bookingCode: "BOOK-002", patientName: "Madara", date: "2025-06-17", time: "13:30", status: "Terjadwal" },
-    { id: 3, bookingCode: "BOOK-003", patientName: "Itachi", date: "2025-06-21", time: "10:00", status: "Menunggu" },
-    { id: 4, bookingCode: "BOOK-004", patientName: "Yami-Sukehiro", date: "2025-06-27", time: "15:00", status: "Menunggu" },
-    { id: 5, bookingCode: "BOOK-005", patientName: "Dazai", date: "2025-06-30", time: "13:30", status: "Menunggu" },
-    { id: 6, bookingCode: "BOOK-006", patientName: "Minato", date: "2025-07-01", time: "14:30", status: "Menunggu" },
-  ]);
-
-  const onStatusChange = (id, newStatus) => {
-    setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: newStatus } : b))
-    );
-  };
 
   const PrivateRoute = ({ children }) => {
     return isLoggedIn ? children : <Navigate to="/login" />;
@@ -51,11 +44,8 @@ function App() {
   return (
     <Routes>
       {/* Public Routes */}
-      <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-      <Route path="/unauthorized" element={<div>401 - Unauthorized</div>} />
 
-      {/* Halaman dari komponen terpisah beranda */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/tentang" element={<TentangKami />} />
@@ -65,8 +55,7 @@ function App() {
         <Route path="/kontak" element={<Kontak />} />
       </Route>
 
-
-      {/* Protected Routes */}
+      {/* Protected/Admin Routes */}
       <Route
         element={
           <PrivateRoute>
@@ -74,7 +63,6 @@ function App() {
           </PrivateRoute>
         }
       >
-        {/* Dashboard dan Umum */}
         <Route path="/dashboard" element={<Dashboard />} />
 
         {/* Pasien */}
@@ -85,21 +73,29 @@ function App() {
         <Route path="/listdokter" element={<ListDokter />} />
         <Route path="/formdokter" element={<FormDokter />} />
 
-        {/* tentang kami */}
+        {/* Layanan */}
+        <Route path="/listlayanan" element={<ListLayanan />} />
+        <Route path="/formlayanan" element={<FormLayanan />} />
+
+        {/* Produk Pasien */}
+        <Route path="/listprodukpasien" element={<ListProdukPasien />} />
+        <Route path="/formprodukpasien" element={<FormProdukPasien />} />
+
+        {/* Tentang Kami */}
         <Route path="/listtentangkami" element={<ListTentangKami />} />
         <Route path="/formtentangkami" element={<FormTentangKami />} />
 
-        {/* Layanan */}
-        <Route path="/listlayanan" element={<ListLayanan />} />
-        <Route path="/formdokter" element={<FormLayanan />} />
+        {/* Booking */}
+        <Route path="/bookingform" element={<BookingForm />} />
+        <Route path="/bookinglist" element={<BookingList />} />
 
-        {/* ProdukPasien */}
-        <Route path="/listprodukpasien" element={<ListProdukPasien />} />
-        <Route path="/formprodukpasien" element={<FormProdukPasien/>} />
+        {/* Diskon */}
+        <Route path="/diskonform" element={<DiskonForm />} />
+        <Route path="/diskonlist" element={<DiskonList />} />
 
-        {/* Riwayat Kunjungan */}
-
-        {/* FAQ */}
+        {/* Jadwal Dokter */}
+        <Route path="/jadwaldokterform" element={<JadwalDokterForm />} />
+        <Route path="/jadwaldokterlist" element={<JadwalDokter />} />
       </Route>
     </Routes>
   );
