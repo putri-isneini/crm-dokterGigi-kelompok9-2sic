@@ -17,14 +17,11 @@ import { Link, useLocation } from 'react-router-dom'
 const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' },
   { name: 'Booking List', icon: <CalendarCheck />, path: '/bookinglist' },
-  { name: 'Tambah Booking', icon: <CalendarCheck />, path: '/bookingform' },
   { name: 'Jadwal Dokter List', icon: <CalendarCheck />, path: '/jadwaldokterlist' },
-  { name: 'Tambah Jadwal Dokter', icon: <CalendarCheck />, path: '/jadwaldokterform' },
 ]
 
 const accountItems = [
   { name: 'Diskon List', icon: <BarChart2 />, path: '/diskonlist' },
-  { name: 'Tambah Diskon', icon: <BarChart2 />, path: '/diskonform' },
 ]
 
 const Sidebar = () => {

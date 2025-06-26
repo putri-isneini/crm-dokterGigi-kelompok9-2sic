@@ -1,7 +1,7 @@
 // src/JadwalDokter.jsx
 import { useEffect, useState } from 'react';
-import { supabase } from './supabase';
-import JadwalDokterForm from './components/JadwalDokterForm';
+import { supabase } from '../supabase';
+import JadwalDokterForm from './JadwalDokterForm';
 
 function JadwalDokter() {
   const [jadwal, setJadwal] = useState([]);

@@ -12,6 +12,7 @@
   "dependencies": {
     "@fullcalendar/daygrid": "^6.1.17",
     "@fullcalendar/react": "^6.1.17",
+    "@supabase/supabase-js": "^2.50.2",
     "chart.js": "^4.4.9",
     "lucide-react": "^0.511.0",
     "react": "^19.1.0",
