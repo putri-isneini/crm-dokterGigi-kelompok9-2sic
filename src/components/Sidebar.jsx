@@ -9,13 +9,20 @@ import {
   HelpCircle,
   ScrollText,
   CalendarCheck,
-  BarChart2
+  BarChart2,
+  UserPlus,
+  Stethoscope,
+  MessagesSquare,
+  Settings,
+  LogIn
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const menuItems = [
   { name: 'Dashboard', icon: <Home size={22} />, path: '/dashboard' },
   { name: 'Data Pasien', icon: <Users size={22} />, path: '/listpasien' },
+  { name: 'Riwayat Kunjungan', icon: <Stethoscope size={22} />, path: '/riwayat/list' },
+  { name: 'Admin', icon: <UserPlus size={22} />, path: '/admin/list' },
 ];
 
 const otherItems = [
@@ -27,7 +34,10 @@ const otherItems = [
   { name: 'Booking', icon: <CalendarCheck size={22} />, path: '/bookinglist' },
   { name: 'Jadwal Dokter', icon: <CalendarCheck size={22} />, path: '/jadwaldokterlist' },
   { name: 'Diskon', icon: <BarChart2 size={22} />, path: '/diskonlist' },
-  { name: 'FAQ', icon: <HelpCircle size={22} />, path: '/faq' },
+  { name: 'FAQ', icon: <MessagesSquare size={22} />, path: '/faq/list' },
+  { name: 'Pengaturan Akun', icon: <Settings size={22} />, path: '/akun' },
+  { name: 'Form Booking', icon: <UserPlus size={22} />, path: '/bookingpasien' },
+  { name: 'Sign In', icon: <LogIn size={22} />, path: '/signin' },
 ];
 
 const Sidebar = () => {
