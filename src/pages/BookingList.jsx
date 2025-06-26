@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from './supabase';
-import BookingForm from './components/BookingForm';
+import BookingForm from './BookingForm';
 
 function BookingList() {
   const [bookings, setBookings] = useState([]);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from './supabase';
-import DiskonForm from './components/DiskonForm'; // ganti dari UserForm ke DiskonForm
+import DiskonForm from './DiskonForm'; // ganti dari UserForm ke DiskonForm
 
 function DiskonList() {
   const [diskonList, setDiskonList] = useState([]);
