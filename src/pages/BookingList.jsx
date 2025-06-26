@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from './supabase';
 import BookingForm from './components/BookingForm';
 
-function Booking() {
+function BookingList() {
   const [bookings, setBookings] = useState([]);
   const [editingBooking, setEditingBooking] = useState(null);
 
@@ -86,4 +86,4 @@ function Booking() {
   );
 }
 
-export default Booking;
+export default BookingList;

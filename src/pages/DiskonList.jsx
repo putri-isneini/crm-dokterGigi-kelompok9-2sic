@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from './supabase';
 import DiskonForm from './components/DiskonForm'; // ganti dari UserForm ke DiskonForm
 
-function Diskon() {
+function DiskonList() {
   const [diskonList, setDiskonList] = useState([]);
   const [editingDiskon, setEditingDiskon] = useState(null);
 
@@ -86,4 +86,4 @@ function Diskon() {
   );
 }
 
-export default Diskon;
+export default DiskonList;

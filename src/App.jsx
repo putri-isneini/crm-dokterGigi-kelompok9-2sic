@@ -6,9 +6,9 @@ import Dashboard from './pages/Dashboard'
 import DiskonForm from './pages/DiskonForm'
 import BookingForm from './pages/BookingForm'
 import JadwalDokter from './pages/JadwalDokterList'
-import Diskon from './pages/DiskonList'
 import JadwalDokterForm from './pages/JadwalDokterForm'
-import Booking from './pages/BookingList'
+import BookingList from './pages/BookingList'
+import DiskonList from './pages/DiskonList'
 
 function App() {
   return (
@@ -16,9 +16,9 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/diskonform" element={<DiskonForm />} />
-        <Route path="/diskonlist" element={<Diskon />} />
+        <Route path="/diskonlist" element={<DiskonList/>} />
         <Route path="/bookingform" element={<BookingForm />} />
-        <Route path="/bookinglist" element={<Booking/>} />
+        <Route path="/bookinglist" element={<BookingList/>} />
         <Route path="/Jadwaldokterform" element={<JadwalDokterForm />} />
         <Route path="/Jadwaldokterlist" element={<JadwalDokter/>} />
       </Route>
