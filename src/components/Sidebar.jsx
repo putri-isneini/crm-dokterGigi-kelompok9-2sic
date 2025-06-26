@@ -16,15 +16,15 @@ import { Link, useLocation } from 'react-router-dom'
 
 const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' },
-  { name: 'Penjualan', icon: <ShoppingCart />, path: '/laporan' },
-  { name: 'Booking', icon: <CalendarCheck />, path: '/booking' },
-  { name: 'Jadwal Pasien', icon: <CalendarCheck />, path: '/jadwalpasien' },
+  { name: 'Booking List', icon: <CalendarCheck />, path: '/bookinglist' },
+  { name: 'Tambah Booking', icon: <CalendarCheck />, path: '/bookingform' },
+  { name: 'Jadwal Dokter List', icon: <CalendarCheck />, path: '/jadwaldokterlist' },
+  { name: 'Tambah Jadwal Dokter', icon: <CalendarCheck />, path: '/jadwaldokterform' },
 ]
 
 const accountItems = [
-   { name: 'Diskon Membership', icon: <BarChart2 />, path: '/diskon-membership' },,
-  { name: 'Produk Pasien', icon: <Box />, path: '/produk-pasien' },
-  { name: 'Sign Up', icon: <UserPlus />, path: '/signup' },
+  { name: 'Diskon List', icon: <BarChart2 />, path: '/diskonlist' },
+  { name: 'Tambah Diskon', icon: <BarChart2 />, path: '/diskonform' },
 ]
 
 const Sidebar = () => {
