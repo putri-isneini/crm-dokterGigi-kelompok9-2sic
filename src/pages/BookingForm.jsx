@@ -58,7 +58,7 @@ function BookingForm({ addBooking, updateBooking, editingBooking }) {
       return;
     }
 
-    if (editingBooking) {
+    if (editingBooking) {/
       updateBooking(form);
     } else {
       addBooking(form);
