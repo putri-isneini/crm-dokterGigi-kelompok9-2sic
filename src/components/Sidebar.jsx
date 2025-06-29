@@ -16,7 +16,7 @@ import { Link, useLocation } from 'react-router-dom'
 
 const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard />, path: '/' },
-  { name: 'Booking List', icon: <CalendarCheck />, path: '/bookinglist' },
+  { name: 'Booking', icon: <CalendarCheck />, path: '/bookinglist' },
   { name: 'Jadwal Dokter List', icon: <CalendarCheck />, path: '/jadwaldokterlist' },
 ]
 
