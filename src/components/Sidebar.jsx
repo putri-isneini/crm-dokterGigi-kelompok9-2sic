@@ -9,13 +9,16 @@ import {
   HelpCircle,
   ScrollText,
   CalendarCheck,
-  BarChart2
+  BarChart2,
+  LayoutDashboard
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const menuItems = [
-  { name: 'Dashboard', icon: <Home size={22} />, path: '/dashboard' },
+  { name: 'Dashboard', icon: <LayoutDashboard size={22} />, path: '/dashboard' },
   { name: 'Data Pasien', icon: <Users size={22} />, path: '/listpasien' },
+  { name: 'Booking', icon: <CalendarCheck size={22} />, path: '/bookinglist' },
+  { name: 'Jadwal Dokter List', icon: <CalendarCheck size={22} />, path: '/jadwaldokterlist' },
 ];
 
 const otherItems = [
@@ -24,8 +27,6 @@ const otherItems = [
   { name: 'Produk Pasien', icon: <ShoppingBag size={22} />, path: '/listprodukpasien' },
   { name: 'Data Dokter', icon: <UserCircle2 size={22} />, path: '/listdokter' },
   { name: 'Rekam Medis', icon: <FolderKanban size={22} />, path: '/rekammedis' },
-  { name: 'Booking', icon: <CalendarCheck size={22} />, path: '/bookinglist' },
-  { name: 'Jadwal Dokter', icon: <CalendarCheck size={22} />, path: '/jadwaldokterlist' },
   { name: 'Diskon', icon: <BarChart2 size={22} />, path: '/diskonlist' },
   { name: 'FAQ', icon: <HelpCircle size={22} />, path: '/faq' },
 ];
