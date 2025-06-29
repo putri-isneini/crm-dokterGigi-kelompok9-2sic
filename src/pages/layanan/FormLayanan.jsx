@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 const FormLayanan = ({ addLayanan, updateLayanan, editingLayanan }) => {
   const [form, setForm] = useState({
     nama: '',
+    gambar: '',
     deskripsi: '',
     harga: '',
   });
@@ -11,12 +12,14 @@ const FormLayanan = ({ addLayanan, updateLayanan, editingLayanan }) => {
     if (editingLayanan) {
       setForm({
         nama: editingLayanan.nama || '',
+        gambar: editingLayanan.gambar || '',
         deskripsi: editingLayanan.deskripsi || '',
-        harga: editingLayanan.harga || '',
+        harga: editingLayanan.harga?.toString() || '',
       });
     } else {
       setForm({
         nama: '',
+        gambar: '',
         deskripsi: '',
         harga: '',
       });
@@ -25,16 +28,41 @@ const FormLayanan = ({ addLayanan, updateLayanan, editingLayanan }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { nama, deskripsi, harga } = form;
-    if (!nama || !harga) return;
 
-    if (editingLayanan) {
-      updateLayanan({ ...editingLayanan, ...form });
-    } else {
-      addLayanan(form);
+    // Kalau sedang menambah, wajib isi nama/gambar/harga
+    if (!form.nama && !editingLayanan) {
+      alert('Nama harus diisi.');
+      return;
+    }
+    if (!form.gambar && !editingLayanan) {
+      alert('Gambar harus diisi.');
+      return;
+    }
+    if (!form.harga && !editingLayanan) {
+      alert('Harga harus diisi.');
+      return;
     }
 
-    setForm({ nama: '', deskripsi: '', harga: '' });
+    if (editingLayanan) {
+      updateLayanan({
+        id: editingLayanan.id,
+        ...form,
+      });
+    } else {
+      addLayanan({
+        nama: form.nama,
+        gambar: form.gambar,
+        deskripsi: form.deskripsi,
+        harga: parseFloat(form.harga),
+      });
+    }
+
+    setForm({
+      nama: '',
+      gambar: '',
+      deskripsi: '',
+      harga: '',
+    });
   };
 
   return (
@@ -68,6 +96,19 @@ const FormLayanan = ({ addLayanan, updateLayanan, editingLayanan }) => {
             className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300"
             value={form.harga}
             onChange={(e) => setForm({ ...form, harga: e.target.value })}
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <label className="block text-pink-700 font-medium mb-1">
+            Link Gambar (URL)
+          </label>
+          <input
+            type="text"
+            className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300"
+            value={form.gambar}
+            onChange={(e) => setForm({ ...form, gambar: e.target.value })}
+            placeholder="https://..."
           />
         </div>
 

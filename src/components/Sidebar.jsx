@@ -21,13 +21,13 @@ const menuItems = [
 const otherItems = [
   { name: 'Tentang Kami', icon: <ScrollText size={22} />, path: '/listtentangkami' },
   { name: 'Layanan Klinik', icon: <HeartPulse size={22} />, path: '/listlayanan' },
-  { name: 'Produk Pasien', icon: <ShoppingBag size={22} />, path: '/listprodukpasien' },
+  // { name: 'Produk Pasien', icon: <ShoppingBag size={22} />, path: '/listprodukpasien' },
   { name: 'Data Dokter', icon: <UserCircle2 size={22} />, path: '/listdokter' },
-  { name: 'Rekam Medis', icon: <FolderKanban size={22} />, path: '/rekammedis' },
+  // { name: 'Rekam Medis', icon: <FolderKanban size={22} />, path: '/rekammedis' },
   { name: 'Booking', icon: <CalendarCheck size={22} />, path: '/bookinglist' },
   { name: 'Jadwal Dokter', icon: <CalendarCheck size={22} />, path: '/jadwaldokterlist' },
   { name: 'Diskon', icon: <BarChart2 size={22} />, path: '/diskonlist' },
-  { name: 'FAQ', icon: <HelpCircle size={22} />, path: '/faq' },
+  // { name: 'FAQ', icon: <HelpCircle size={22} />, path: '/faq' },
 ];
 
 const Sidebar = () => {

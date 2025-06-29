@@ -80,17 +80,23 @@ function ListTentangKami() {
         <div className="space-y-6 text-gray-800 leading-relaxed">
           <div>
             <h3 className="text-lg font-semibold text-pink-500 mb-1">Deskripsi</h3>
-            <p>{data.deskripsi || <span className="text-gray-400 italic">Belum ada data</span>}</p>
+            <p className="font-sans">
+              {data.deskripsi || <span className="text-gray-400 italic">Belum ada data</span>}
+            </p>
           </div>
 
           <div>
             <h3 className="text-lg font-semibold text-pink-500 mb-1">Visi</h3>
-            <p>{data.visi || <span className="text-gray-400 italic">Belum ada data</span>}</p>
+            <p className="font-sans">
+              {data.visi || <span className="text-gray-400 italic">Belum ada data</span>}
+            </p>
           </div>
 
           <div>
             <h3 className="text-lg font-semibold text-pink-500 mb-1">Misi</h3>
-            <p>{data.misi || <span className="text-gray-400 italic">Belum ada data</span>}</p>
+            <p className="font-sans">
+              {data.misi || <span className="text-gray-400 italic">Belum ada data</span>}
+            </p>
           </div>
         </div>
 

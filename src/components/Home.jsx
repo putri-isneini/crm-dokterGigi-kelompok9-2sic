@@ -36,7 +36,7 @@ const Home = () => {
           </motion.p>
 
           <motion.a
-            href="#reservation"
+            href="/booking"
             style={styles.btnBooking}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}

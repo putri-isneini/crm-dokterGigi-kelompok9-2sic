@@ -94,18 +94,18 @@ function ListPasien() {
             {pasienList.length > 0 ? (
               pasienList.map((pasien) => (
                 <tr key={pasien.id} className="border-t hover:bg-pink-50 transition duration-200">
-                  <td className="px-6 py-4 text-gray-700">{pasien.nama}</td>
-                  <td className="px-6 py-4 text-gray-700">{pasien.email}</td>
-                  <td className="px-6 py-4 text-gray-700">{pasien.no_hp}</td>
-                  <td className="px-6 py-4 text-gray-700">{pasien.alamat}</td>
-                  <td className="px-6 py-4 text-gray-700">{pasien.jenis_kelamin}</td>
-                  <td className="px-6 py-4 text-gray-700">
+                  <td className="px-6 py-4 text-gray-700 font-sans">{pasien.nama}</td>
+                  <td className="px-6 py-4 text-gray-700 font-sans">{pasien.email}</td>
+                  <td className="px-6 py-4 text-gray-700 font-sans">{pasien.no_hp}</td>
+                  <td className="px-6 py-4 text-gray-700 font-sans">{pasien.alamat}</td>
+                  <td className="px-6 py-4 text-gray-700 font-sans">{pasien.jenis_kelamin}</td>
+                  <td className="px-6 py-4 text-gray-700 font-sans">
                     {pasien.tanggal_lahir
                       ? new Date(pasien.tanggal_lahir).toLocaleDateString('id-ID')
                       : '-'}
                   </td>
-                  <td className="px-6 py-4 text-gray-700">{pasien.membership}</td>
-                  <td className="px-6 py-4 text-gray-700">
+                  <td className="px-6 py-4 text-gray-700 font-sans">{pasien.membership}</td>
+                  <td className="px-6 py-4 text-gray-700 font-sans">
                     {new Date(pasien.created_at).toLocaleDateString('id-ID', {
                       day: 'numeric',
                       month: 'long',
@@ -130,12 +130,13 @@ function ListPasien() {
               ))
             ) : (
               <tr>
-                <td colSpan="9" className="text-center px-6 py-8 text-gray-500 italic">
+                <td colSpan="9" className="text-center px-6 py-8 text-gray-500 italic font-sans">
                   Tidak ada data pasien.
                 </td>
               </tr>
             )}
           </tbody>
+
         </table>
       </div>
     </div>

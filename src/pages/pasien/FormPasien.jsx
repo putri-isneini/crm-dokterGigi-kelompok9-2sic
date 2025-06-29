@@ -99,7 +99,7 @@ const FormPasien = ({ addPasien, updatePasien, editingPasien }) => {
         <div>
           <label className="block text-pink-700 font-medium mb-1">Jenis Kelamin</label>
           <select
-            className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300"
+            className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300 font-poppins"
             value={form.jenis_kelamin}
             onChange={e => setForm({ ...form, jenis_kelamin: e.target.value })}
           >
@@ -113,7 +113,7 @@ const FormPasien = ({ addPasien, updatePasien, editingPasien }) => {
           <label className="block text-pink-700 font-medium mb-1">Tanggal Lahir</label>
           <input
             type="date"
-            className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300"
+            className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300 font-arial"
             value={form.tanggal_lahir}
             onChange={e => setForm({ ...form, tanggal_lahir: e.target.value })}
           />

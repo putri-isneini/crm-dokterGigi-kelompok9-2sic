@@ -55,7 +55,7 @@ const FormProdukPasien = ({ addProduk, updateProduk, editingProduk }) => {
           <label className="block text-pink-700 font-medium mb-1">Nama Produk</label>
           <input
             type="text"
-            className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300"
+            className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300 font-sans"
             value={form.nama_produk}
             onChange={(e) => setForm({ ...form, nama_produk: e.target.value })}
           />
@@ -65,7 +65,7 @@ const FormProdukPasien = ({ addProduk, updateProduk, editingProduk }) => {
           <label className="block text-pink-700 font-medium mb-1">Deskripsi</label>
           <input
             type="text"
-            className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300"
+            className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300 font-sans"
             value={form.deskripsi}
             onChange={(e) => setForm({ ...form, deskripsi: e.target.value })}
           />
@@ -75,7 +75,7 @@ const FormProdukPasien = ({ addProduk, updateProduk, editingProduk }) => {
           <label className="block text-pink-700 font-medium mb-1">Harga</label>
           <input
             type="number"
-            className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300"
+            className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300 font-sans"
             value={form.harga}
             onChange={(e) => setForm({ ...form, harga: e.target.value })}
           />
@@ -85,7 +85,7 @@ const FormProdukPasien = ({ addProduk, updateProduk, editingProduk }) => {
           <label className="block text-pink-700 font-medium mb-1">Stok</label>
           <input
             type="number"
-            className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300"
+            className="w-full p-3 border rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300 font-sans"
             value={form.stok}
             onChange={(e) => setForm({ ...form, stok: e.target.value })}
           />
@@ -94,7 +94,7 @@ const FormProdukPasien = ({ addProduk, updateProduk, editingProduk }) => {
         <div className="md:col-span-2 mt-4">
           <button
             type="submit"
-            className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-xl text-lg font-semibold transition duration-200"
+            className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-xl text-lg font-semibold transition duration-200 font-sans"
           >
             {editingProduk ? 'Perbarui Produk' : 'Tambah Produk'}
           </button>

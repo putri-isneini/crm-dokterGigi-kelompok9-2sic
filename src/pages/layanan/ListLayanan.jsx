@@ -28,15 +28,20 @@ function ListLayanan() {
     }
   };
 
-  const updateLayanan = async (layanan) => {
+  const updateLayanan = async (newData) => {
+    const oldData = editingLayanan;
+
+    const dataToUpdate = {
+      nama: newData.nama || oldData.nama,
+      gambar: newData.gambar || oldData.gambar,
+      deskripsi: newData.deskripsi || oldData.deskripsi,
+      harga: newData.harga ? parseFloat(newData.harga) : oldData.harga,
+    };
+
     const { error } = await supabase
       .from('layanan')
-      .update({
-        nama: layanan.nama,
-        deskripsi: layanan.deskripsi,
-        harga: layanan.harga,
-      })
-      .eq('id', layanan.id);
+      .update(dataToUpdate)
+      .eq('id', newData.id);
 
     if (error) {
       console.error('Gagal mengubah layanan:', error.message);
@@ -75,9 +80,10 @@ function ListLayanan() {
       </div>
 
       <div className="overflow-x-auto rounded-2xl shadow-xl border border-pink-200 bg-white">
-        <table className="w-full text-md text-left">
+        <table className="w-full text-md text-left font-sans">
           <thead className="bg-pink-100 text-pink-800">
             <tr>
+              <th className="px-6 py-4">Gambar</th>
               <th className="px-6 py-4">Nama</th>
               <th className="px-6 py-4">Deskripsi</th>
               <th className="px-6 py-4">Harga</th>
@@ -89,6 +95,17 @@ function ListLayanan() {
             {layananList.length > 0 ? (
               layananList.map((layanan) => (
                 <tr key={layanan.id} className="border-t hover:bg-pink-50 transition duration-200">
+                  <td className="px-6 py-4">
+                    {layanan.gambar ? (
+                      <img
+                        src={layanan.gambar}
+                        alt="Gambar Layanan"
+                        className="w-20 h-20 object-cover rounded-xl shadow"
+                      />
+                    ) : (
+                      <span className="text-gray-400 italic">Tidak ada gambar</span>
+                    )}
+                  </td>
                   <td className="px-6 py-4 text-gray-700">{layanan.nama}</td>
                   <td className="px-6 py-4 text-gray-700">{layanan.deskripsi}</td>
                   <td className="px-6 py-4 text-pink-700 font-semibold">
@@ -119,7 +136,7 @@ function ListLayanan() {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="text-center px-6 py-8 text-gray-500 italic">
+                <td colSpan="6" className="text-center px-6 py-8 text-gray-500 italic">
                   Tidak ada data layanan.
                 </td>
               </tr>

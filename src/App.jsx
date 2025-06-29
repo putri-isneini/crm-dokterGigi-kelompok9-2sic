@@ -14,7 +14,6 @@ import Produk from './components/Produk';
 import Testimoni from './components/Testimoni';
 import TentangKami from './components/tentangkami/TentangKami';
 
-// Halaman Admin
 import Dashboard from './pages/Dashboard';
 import ListPasien from './pages/pasien/ListPasien';
 import FormPasien from './pages/pasien/FormPasien';
@@ -33,6 +32,10 @@ import DiskonForm from './pages/DiskonForm';
 import DiskonList from './pages/DiskonList';
 import JadwalDokterForm from './pages/JadwalDokterForm';
 import JadwalDokter from './pages/JadwalDokterList';
+import RegisterPasien from './components/RegistrasiPasien';
+import FormBooking from './components/FormBooking';
+import HasilPrediksi from './components/prediksi/HasilPrediksi';
+import PrediksiMasalahGigi from './components/prediksi/PrediksiMasalahGigi';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,7 +48,6 @@ function App() {
     <Routes>
       {/* Public Routes */}
       <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/tentang" element={<TentangKami />} />
@@ -53,9 +55,13 @@ function App() {
         <Route path="/produk" element={<Produk />} />
         <Route path="/testimoni" element={<Testimoni />} />
         <Route path="/kontak" element={<Kontak />} />
+        <Route path="/prediksi" element={<PrediksiMasalahGigi />} />
+        <Route path="/hasil-prediksi" element={<HasilPrediksi />} />
+        <Route path="/registrasi" element={<RegisterPasien />} />
+        <Route path="/booking" element={<FormBooking />} />
       </Route>
 
-      {/* Protected/Admin Routes */}
+      {/* Admin / Protected Routes */}
       <Route
         element={
           <PrivateRoute>
@@ -64,36 +70,20 @@ function App() {
         }
       >
         <Route path="/dashboard" element={<Dashboard />} />
-
-        {/* Pasien */}
         <Route path="/listpasien" element={<ListPasien />} />
         <Route path="/formpasien" element={<FormPasien />} />
-
-        {/* Dokter */}
         <Route path="/listdokter" element={<ListDokter />} />
         <Route path="/formdokter" element={<FormDokter />} />
-
-        {/* Layanan */}
         <Route path="/listlayanan" element={<ListLayanan />} />
         <Route path="/formlayanan" element={<FormLayanan />} />
-
-        {/* Produk Pasien */}
         <Route path="/listprodukpasien" element={<ListProdukPasien />} />
         <Route path="/formprodukpasien" element={<FormProdukPasien />} />
-
-        {/* Tentang Kami */}
         <Route path="/listtentangkami" element={<ListTentangKami />} />
         <Route path="/formtentangkami" element={<FormTentangKami />} />
-
-        {/* Booking */}
         <Route path="/bookingform" element={<BookingForm />} />
         <Route path="/bookinglist" element={<BookingList />} />
-
-        {/* Diskon */}
         <Route path="/diskonform" element={<DiskonForm />} />
         <Route path="/diskonlist" element={<DiskonList />} />
-
-        {/* Jadwal Dokter */}
         <Route path="/jadwaldokterform" element={<JadwalDokterForm />} />
         <Route path="/jadwaldokterlist" element={<JadwalDokter />} />
       </Route>

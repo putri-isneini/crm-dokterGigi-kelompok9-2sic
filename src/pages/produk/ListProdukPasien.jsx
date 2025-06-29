@@ -87,7 +87,7 @@ function ListProdukPasien() {
           <tbody>
             {produkList.length > 0 ? (
               produkList.map((produk) => (
-                <tr key={produk.id} className="border-t hover:bg-pink-50 transition duration-200">
+                <tr key={produk.id} className="border-t hover:bg-pink-50 transition duration-200 font-sans">
                   <td className="px-6 py-4 text-gray-700">{produk.nama_produk}</td>
                   <td className="px-6 py-4 text-gray-700">{produk.deskripsi || '-'}</td>
                   <td className="px-6 py-4 text-gray-700">{produk.harga}</td>

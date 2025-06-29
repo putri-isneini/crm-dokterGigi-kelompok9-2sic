@@ -1,8 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Footer from "./Footer";
+import PrediksiMasalahGigi from "./prediksi/PrediksiMasalahGigi"; // pastikan path sesuai
 
 const LayananKami = ({ sectionRef }) => {
   const containerRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
+  const [layananData, setLayananData] = useState([]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -13,153 +16,48 @@ const LayananKami = ({ sectionRef }) => {
       },
       { threshold: 0.2 }
     );
-
     if (containerRef.current) {
       observer.observe(containerRef.current);
     }
   }, []);
 
-  const layananData = [
-    {
-      img: "/image/g1.jpg",
-      title: "Perawatan Gigi Umum",
-      desc: "Pemeriksaan rutin, scaling, tambal gigi, dan edukasi kesehatan gigi.",
-      rating: 4.7,
-    },
-    {
-      img: "/image/g2.jpg",
-      title: "Behel & Ortodonti",
-      desc: "Solusi behel metal, ceramic, hingga clear aligner.",
-      rating: 5.0,
-    },
-    {
-      img: "/image/g3.jpg",
-      title: "Estetika Gigi",
-      desc: "Whitening, veneer, smile design untuk senyum lebih percaya diri.",
-      rating: 4.9,
-    },
-    {
-      img: "/image/g4.jpg",
-      title: "Perawatan Gusi & Saraf",
-      desc: "Penanganan gusi berdarah, infeksi, hingga perawatan saluran akar.",
-      rating: 4.8,
-    },
-  ];
+  useEffect(() => {
+    const fetchLayanan = async () => {
+      try {
+        const res = await fetch("/api/layanan"); // ubah sesuai endpoint kamu
+        const data = await res.json();
+        setLayananData(data);
+      } catch (error) {
+        console.error("Gagal mengambil data layanan:", error);
+      }
+    };
+    fetchLayanan();
+  }, []);
 
-  const produkData = [
-    {
-      img: "/image/p1.jpg",
-      title: "Obat Kumur Herbal",
-      desc: "Nafas segar & antibakteri tanpa alkohol.",
-      rating: 4.8,
-      harga: "Rp 35.000",
-    },
-    {
-      img: "/image/p2.jpg",
-      title: "Pasta Gigi Premium",
-      desc: "Memutihkan gigi secara alami dengan bahan herbal.",
-      rating: 4.6,
-      harga: "Rp 45.000",
-    },
-    {
-      img: "/image/p3.jpg",
-      title: "Benang Gigi Halus",
-      desc: "Membersihkan sela gigi dengan lembut dan efisien.",
-      rating: 4.4,
-      harga: "Rp 25.000",
-    },
-    {
-      img: "/image/p4.jpg",
-      title: "Tooth Foam Whitening",
-      desc: "Pemutih gigi praktis dengan rasa mint segar.",
-      rating: 4.9,
-      harga: "Rp 65.000",
-    },
-    {
-      img: "/image/p5.jpg",
-      title: "Spray Nafas Fresh",
-      desc: "Mini spray untuk nafas segar seketika.",
-      rating: 4.7,
-      harga: "Rp 30.000",
-    },
-  ];
-
-  const renderCard = (item, isProduk = false) => (
+  const renderCard = (item) => (
     <div
-      key={item.title}
+      key={item.id}
       style={{
-        backgroundColor: "#fff",
-        borderRadius: "28px",
-        padding: "2.5rem",
-        boxShadow: "0 18px 40px rgba(251, 207, 232, 0.4)",
-        display: "flex",
-        flexDirection: "column",
+        background: "#fff",
+        padding: "1.5rem",
+        borderRadius: "1rem",
+        boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
         textAlign: "left",
-        transition: "transform 0.3s ease",
       }}
-      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
-      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
     >
-      <img
-        src={item.img}
-        alt={item.title}
-        style={{
-          width: "100%",
-          height: "240px",
-          objectFit: "cover",
-          borderRadius: "18px",
-          marginBottom: "1.25rem",
-        }}
-      />
-      <h3
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          color: "#db2777",
-          marginBottom: "0.75rem",
-        }}
-      >
-        {item.title}
+      <h3 style={{ color: "#db2777", fontSize: "1.4rem", marginBottom: "0.5rem" }}>
+        {item.nama}
       </h3>
-      <p style={{ fontSize: "1.05rem", color: "#444", marginBottom: "1.2rem" }}>
-        {item.desc}
-      </p>
-      <div style={{ fontSize: "1.1rem", color: "#f59e0b", marginBottom: "0.75rem" }}>
-        {"⭐".repeat(Math.floor(item.rating))}{" "}
-        <span style={{ fontSize: "0.9rem", color: "#777" }}>({item.rating})</span>
-      </div>
-      {isProduk && (
-        <div
-          style={{
-            fontSize: "1.1rem",
-            fontWeight: "700",
-            color: "#be185d",
-            marginBottom: "1.2rem",
-          }}
-        >
-          {item.harga}
-        </div>
+      <p style={{ color: "#4b5563" }}>{item.deskripsi}</p>
+      {item.harga && (
+        <p style={{ color: "#6b021d", fontWeight: "bold", marginTop: "0.5rem" }}>
+          Rp {parseInt(item.harga).toLocaleString("id-ID")}
+        </p>
       )}
-      <button
-        style={{
-          marginTop: "auto",
-          backgroundColor: "#db2777",
-          color: "white",
-          border: "none",
-          padding: "0.85rem 1.7rem",
-          fontSize: "1.05rem",
-          fontWeight: 600,
-          borderRadius: "32px",
-          cursor: "pointer",
-          boxShadow: "0 4px 10px rgba(251, 113, 133, 0.3)",
-        }}
-      >
-        {isProduk ? "Beli Sekarang" : "Buat Janji"}
-      </button>
     </div>
   );
 
-  const renderGrid = (data, isProduk = false) => (
+  const renderGrid = (data) => (
     <div
       style={{
         display: "grid",
@@ -168,7 +66,7 @@ const LayananKami = ({ sectionRef }) => {
         marginBottom: "5rem",
       }}
     >
-      {data.map((item) => renderCard(item, isProduk))}
+      {data.map((item) => renderCard(item))}
     </div>
   );
 
@@ -182,14 +80,7 @@ const LayananKami = ({ sectionRef }) => {
           textAlign: "center",
         }}
       >
-        <h2
-          style={{
-            fontSize: "3rem",
-            fontWeight: 800,
-            color: "#db2777",
-            marginBottom: "2rem",
-          }}
-        >
+        <h2 style={{ fontSize: "3rem", fontWeight: 800, color: "#db2777", marginBottom: "2rem" }}>
           Layanan Kami
         </h2>
         <p
@@ -205,35 +96,81 @@ const LayananKami = ({ sectionRef }) => {
           Kami menyediakan berbagai layanan perawatan gigi profesional untuk
           memenuhi kebutuhan kesehatan dan estetika gigi Anda.
         </p>
+
         {renderGrid(layananData)}
 
-        <h2
+        {/* Tombol Cek Masalah */}
+        <button
+          onClick={() => setShowModal(true)}
           style={{
-            fontSize: "2.8rem",
-            fontWeight: 800,
-            color: "#db2777",
-            marginBottom: "2rem",
-            marginTop: "3rem",
+            backgroundColor: "#ec4899",
+            color: "white",
+            border: "none",
+            padding: "1rem 2rem",
+            fontSize: "1.15rem",
+            fontWeight: "bold",
+            borderRadius: "999px",
+            cursor: "pointer",
+            boxShadow: "0 5px 15px rgba(251, 113, 133, 0.4)",
+            marginBottom: "3rem",
+            transition: "all 0.3s",
           }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
-          Produk Unggulan
-        </h2>
-        <p
-          style={{
-            fontSize: "1.2rem",
-            color: "#6b021d",
-            marginBottom: "4rem",
-            fontWeight: 500,
-            maxWidth: "800px",
-            marginInline: "auto",
-          }}
-        >
-          Dukung kesehatan gigi Anda dengan produk pilihan kami yang aman dan
-          terpercaya.
-        </p>
-        {renderGrid(produkData, true)}
+          🔍 Cek Masalah Gigi Anda
+        </button>
       </section>
+
       <Footer />
+
+      {/* Modal Pop-Up */}
+      {showModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0,0,0,0.6)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+          }}
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#fff",
+              padding: "2rem",
+              borderRadius: "1rem",
+              width: "90%",
+              maxWidth: "700px",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              boxShadow: "0 20px 50px rgba(0,0,0,0.2)",
+            }}
+          >
+            <button
+              onClick={() => setShowModal(false)}
+              style={{
+                float: "right",
+                border: "none",
+                background: "none",
+                fontSize: "1.5rem",
+                cursor: "pointer",
+                color: "#db2777",
+              }}
+            >
+              ×
+            </button>
+            <PrediksiMasalahGigi />
+          </div>
+        </div>
+      )}
     </>
   );
 };

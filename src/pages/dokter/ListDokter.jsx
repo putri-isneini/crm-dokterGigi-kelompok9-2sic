@@ -88,9 +88,9 @@ function ListDokter() {
             {dokterList.length > 0 ? (
               dokterList.map((dokter) => (
                 <tr key={dokter.id} className="border-t hover:bg-pink-50 transition duration-200">
-                  <td className="px-6 py-4 text-gray-700">{dokter.nama}</td>
-                  <td className="px-6 py-4 text-gray-700">{dokter.spesialis}</td>
-                  <td className="px-6 py-4 text-gray-700">{dokter.no_hp}</td>
+                  <td className="px-6 py-4 text-gray-700 font-sans">{dokter.nama}</td>
+                  <td className="px-6 py-4 text-gray-700 font-sans">{dokter.spesialis}</td>
+                  <td className="px-6 py-4 text-gray-700 font-sans">{dokter.no_hp}</td>
                   <td className="px-6 py-4">
                     {dokter.foto ? (
                       <img
@@ -99,10 +99,10 @@ function ListDokter() {
                         className="w-16 h-16 object-cover rounded-lg border"
                       />
                     ) : (
-                      <span className="text-gray-400 italic">Tidak ada</span>
+                      <span className="text-gray-400 italic font-sans">Tidak ada</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 text-gray-700">
+                  <td className="px-6 py-4 text-gray-700 font-sans">
                     {new Date(dokter.created_at).toLocaleDateString('id-ID', {
                       day: 'numeric',
                       month: 'long',
@@ -127,7 +127,7 @@ function ListDokter() {
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="text-center px-6 py-8 text-gray-500 italic">
+                <td colSpan="6" className="text-center px-6 py-8 text-gray-500 italic font-sans">
                   Tidak ada data dokter.
                 </td>
               </tr>
