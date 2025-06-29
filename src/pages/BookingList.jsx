@@ -6,6 +6,7 @@ function BookingList() {
   const [bookingList, setBookingList] = useState([]);
   const [editingBooking, setEditingBooking] = useState(null);
 
+  // Ambil data booking dari Supabase
   const fetchBooking = async () => {
     const { data, error } = await supabase
       .from('booking')
@@ -21,12 +22,20 @@ function BookingList() {
     else setBookingList(data);
   };
 
-  const addBooking = async (form) => {
-    const { error } = await supabase.from('booking').insert([form]);
+  // Fungsi buat kode booking otomatis
+  const generateKodeBooking = () => {
+    return `BK-${Date.now()}`;
+  };
+
+  // Tambah booking baru
+  const addBooking = async (booking) => {
+    booking.kode_booking = generateKodeBooking();
+    const { error } = await supabase.from('booking').insert([booking]);
     if (error) console.error('Insert error:', error);
     else fetchBooking();
   };
 
+  // Update booking
   const updateBooking = async (form) => {
     const { id, ...data } = form;
     const { error } = await supabase.from('booking').update(data).eq('id', id);
@@ -37,6 +46,7 @@ function BookingList() {
     }
   };
 
+  // Hapus booking
   const deleteBooking = async (id) => {
     const { error } = await supabase.from('booking').delete().eq('id', id);
     if (error) console.error('Delete error:', error);
@@ -52,7 +62,7 @@ function BookingList() {
       <h1 className="text-2xl font-bold text-pink-700 mb-6 text-center">Dashboard Booking Pasien</h1>
 
       <div className="flex flex-col lg:flex-row gap-8 w-full">
-        {/* Form di kiri */}
+        {/* Form Booking */}
         <div className="w-full lg:w-1/2">
           <h2 className="text-lg font-semibold mb-3 text-pink-600">
             {editingBooking ? 'Edit Booking' : 'Tambah Booking'}
@@ -64,7 +74,7 @@ function BookingList() {
           />
         </div>
 
-        {/* List di kanan */}
+        {/* List Booking */}
         <div className="w-full lg:w-1/2 space-y-4">
           <h2 className="text-lg font-semibold mb-3 text-pink-600">Daftar Booking</h2>
           {bookingList.map((booking) => (
@@ -77,9 +87,8 @@ function BookingList() {
               <p>Dokter: {booking.dokter?.nama || '-'}</p>
               <p>Layanan: {booking.layanan?.nama || '-'}</p>
               <p>Tanggal: {booking.tanggal} - {booking.jam}</p>
+              <p>Keluhan: {booking.keluhan || '-'}</p>
               <p>Status: <span className="italic">{booking.status}</span></p>
-              <p>Keluhan: {booking.keluhan}</p>
-
               <div className="space-x-3 mt-3">
                 <button
                   onClick={() => setEditingBooking(booking)}
