@@ -9,7 +9,7 @@ function BookingForm({ addBooking, updateBooking, editingBooking }) {
     tanggal: '',
     jam: '',
     status: 'Menunggu',
-    kode_booking: '',
+    keluhan: '',
   });
 
   const [pasienList, setPasienList] = useState([]);
@@ -17,21 +17,9 @@ function BookingForm({ addBooking, updateBooking, editingBooking }) {
   const [layananList, setLayananList] = useState([]);
 
   useEffect(() => {
-    const fetchOptions = async () => {
-      const pasien = await supabase.from('pasien').select('*');
-      const dokter = await supabase.from('dokter').select('*');
-      const layanan = await supabase.from('layanan').select('*');
-
-      setPasienList(pasien.data || []);
-      setDokterList(dokter.data || []);
-      setLayananList(layanan.data || []);
-    };
-    fetchOptions();
-  }, []);
-
-  useEffect(() => {
     if (editingBooking) {
-      setForm(editingBooking);
+      const { kode_booking, ...rest } = editingBooking;
+      setForm(rest);
     } else {
       setForm({
         pasien_id: '',
@@ -40,15 +28,32 @@ function BookingForm({ addBooking, updateBooking, editingBooking }) {
         tanggal: '',
         jam: '',
         status: 'Menunggu',
-        kode_booking: '',
+        keluhan: '',
       });
     }
   }, [editingBooking]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data: pasien } = await supabase.from('pasien').select('*');
+      const { data: dokter } = await supabase.from('dokter').select('*');
+      const { data: layanan } = await supabase.from('layanan').select('*');
+
+      setPasienList(pasien || []);
+      setDokterList(dokter || []);
+      setLayananList(layanan || []);
+    };
+    fetchData();
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (editingBooking) updateBooking(form);
-    else addBooking(form);
+    if (editingBooking) {
+      updateBooking({ ...form, id: editingBooking.id });
+    } else {
+      addBooking(form);
+    }
+
     setForm({
       pasien_id: '',
       dokter_id: '',
@@ -56,118 +61,99 @@ function BookingForm({ addBooking, updateBooking, editingBooking }) {
       tanggal: '',
       jam: '',
       status: 'Menunggu',
-      kode_booking: '',
+      keluhan: '',
     });
   };
 
   return (
-    <div className="w-full">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 bg-pink-100 p-6 md:p-12 lg:p-16 rounded-lg shadow-md"
+    <form onSubmit={handleSubmit} className="w-full bg-white p-6 rounded-xl border border-pink-300 shadow space-y-4">
+      <h2 className="text-2xl font-bold text-pink-700 mb-2">
+        {editingBooking ? 'Edit Booking' : 'Tambah Booking'}
+      </h2>
+
+      <div className="flex flex-col">
+        <label className="text-sm text-pink-700 mb-1">Pasien</label>
+        <select
+          value={form.pasien_id}
+          onChange={(e) => setForm({ ...form, pasien_id: e.target.value })}
+          className="border border-pink-300 p-2 rounded-md bg-white"
+          required
+        >
+          <option value="">Pilih Pasien</option>
+          {pasienList.map((p) => (
+            <option key={p.id} value={p.id}>{p.nama}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex flex-col">
+        <label className="text-sm text-pink-700 mb-1">Dokter</label>
+        <select
+          value={form.dokter_id}
+          onChange={(e) => setForm({ ...form, dokter_id: e.target.value })}
+          className="border border-pink-300 p-2 rounded-md bg-white"
+        >
+          <option value="">Pilih Dokter</option>
+          {dokterList.map((d) => (
+            <option key={d.id} value={d.id}>{d.nama}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex flex-col">
+        <label className="text-sm text-pink-700 mb-1">Layanan</label>
+        <select
+          value={form.layanan_id}
+          onChange={(e) => setForm({ ...form, layanan_id: e.target.value })}
+          className="border border-pink-300 p-2 rounded-md bg-white"
+        >
+          <option value="">Pilih Layanan</option>
+          {layananList.map((l) => (
+            <option key={l.id} value={l.id}>{l.nama}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex flex-col">
+        <label className="text-sm text-pink-700 mb-1">Tanggal</label>
+        <input
+          type="date"
+          value={form.tanggal}
+          onChange={(e) => setForm({ ...form, tanggal: e.target.value })}
+          className="border border-pink-300 p-2 rounded-md"
+          required
+        />
+      </div>
+
+      <div className="flex flex-col">
+        <label className="text-sm text-pink-700 mb-1">Jam</label>
+        <input
+          type="time"
+          value={form.jam}
+          onChange={(e) => setForm({ ...form, jam: e.target.value })}
+          className="border border-pink-300 p-2 rounded-md"
+          required
+        />
+      </div>
+
+      <div className="flex flex-col">
+        <label className="text-sm text-pink-700 mb-1">Keluhan</label>
+        <textarea
+          value={form.keluhan}
+          onChange={(e) => setForm({ ...form, keluhan: e.target.value })}
+          className="border border-pink-300 p-2 rounded-md bg-white"
+          placeholder="Masukkan keluhan pasien"
+          rows={3}
+        ></textarea>
+      </div>
+
+      <button
+        type="submit"
+        className="bg-pink-600 text-white py-2 px-4 rounded-md hover:bg-pink-700 w-full"
       >
-        <div className="flex flex-col">
-          <label className="text-sm text-pink-700 mb-1">Pasien</label>
-          <select
-            value={form.pasien_id}
-            onChange={(e) => setForm({ ...form, pasien_id: e.target.value })}
-            className="border border-pink-300 p-2 rounded-md bg-white"
-            required
-          >
-            <option value="">Pilih Pasien</option>
-            {pasienList.map((p) => (
-              <option key={p.id} value={p.id}>{p.nama}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col">
-          <label className="text-sm text-pink-700 mb-1">Dokter</label>
-          <select
-            value={form.dokter_id}
-            onChange={(e) => setForm({ ...form, dokter_id: e.target.value })}
-            className="border border-pink-300 p-2 rounded-md bg-white"
-            required
-          >
-            <option value="">Pilih Dokter</option>
-            {dokterList.map((d) => (
-              <option key={d.id} value={d.id}>{d.nama}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col">
-          <label className="text-sm text-pink-700 mb-1">Layanan</label>
-          <select
-            value={form.layanan_id}
-            onChange={(e) => setForm({ ...form, layanan_id: e.target.value })}
-            className="border border-pink-300 p-2 rounded-md bg-white"
-            required
-          >
-            <option value="">Pilih Layanan</option>
-            {layananList.map((l) => (
-              <option key={l.id} value={l.id}>{l.nama}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col">
-          <label className="text-sm text-pink-700 mb-1">Tanggal</label>
-          <input
-            type="date"
-            value={form.tanggal}
-            onChange={(e) => setForm({ ...form, tanggal: e.target.value })}
-            className="border border-pink-300 p-2 rounded-md bg-white"
-            required
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label className="text-sm text-pink-700 mb-1">Jam</label>
-          <input
-            type="time"
-            value={form.jam}
-            onChange={(e) => setForm({ ...form, jam: e.target.value })}
-            className="border border-pink-300 p-2 rounded-md bg-white"
-            required
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label className="text-sm text-pink-700 mb-1">Status</label>
-          <select
-            value={form.status}
-            onChange={(e) => setForm({ ...form, status: e.target.value })}
-            className="border border-pink-300 p-2 rounded-md bg-white"
-            required
-          >
-            <option value="Menunggu">Menunggu</option>
-            <option value="Disetujui">Disetujui</option>
-            <option value="Ditolak">Ditolak</option>
-          </select>
-        </div>
-
-        <div className="md:col-span-2 flex flex-col">
-          <label className="text-sm text-pink-700 mb-1">Kode Booking</label>
-          <input
-            type="text"
-            placeholder="Kosongkan jika ingin otomatis"
-            value={form.kode_booking}
-            onChange={(e) => setForm({ ...form, kode_booking: e.target.value })}
-            className="border border-pink-300 p-2 rounded-md bg-white"
-          />
-        </div>
-
-        <div className="md:col-span-2">
-          <button
-            type="submit"
-            className="w-full bg-pink-600 hover:bg-pink-700 text-white p-3 rounded-xl font-semibold transition"
-          >
-            {editingBooking ? 'Update Booking' : 'Tambah Booking'}
-          </button>
-        </div>
-      </form>
-    </div>
+        {editingBooking ? 'Simpan Perubahan' : 'Tambah Booking'}
+      </button>
+    </form>
   );
 }
 
