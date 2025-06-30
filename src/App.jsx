@@ -1,29 +1,104 @@
-import './App.css'
-import { useState } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import MainLayout from './components/MainLayout'
-import Dashboard from './pages/Dashboard'
-import DiskonForm from './pages/DiskonForm'
-import BookingForm from './pages/BookingForm'
-import JadwalDokter from './pages/JadwalDokterList'
-import JadwalDokterForm from './pages/JadwalDokterForm'
-import BookingList from './pages/BookingList'
-import DiskonList from './pages/DiskonList'
+import './App.css';
+import './index.css';
+import { useState } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+
+import MainLayout from './components/MainLayout';
+import PublicLayout from './components/PublicLayout';
+
+import Home from './components/Home';
+import Login from './components/Login';
+import LayananKami from './components/LayananKami';
+import Kontak from './components/Kontak';
+import Produk from './components/Produk';
+import Testimoni from './components/Testimoni';
+import TentangKami from './components/tentangkami/TentangKami';
+
+// Halaman Admin
+import Dashboard from './pages/Dashboard';
+import ListPasien from './pages/pasien/ListPasien';
+import FormPasien from './pages/pasien/FormPasien';
+import ListDokter from './pages/dokter/ListDokter';
+import FormDokter from './pages/dokter/FormDokter';
+import ListLayanan from './pages/layanan/ListLayanan';
+import FormLayanan from './pages/layanan/FormLayanan';
+import ListProdukPasien from './pages/produk/ListProdukPasien';
+import FormProdukPasien from './pages/produk/FormProdukPasien';
+import ListTentangKami from './components/tentangkami/ListTentangKami';
+import FormTentangKami from './components/tentangkami/FormTentangKami';
+
+import BookingForm from './pages/BookingForm';
+import BookingList from './pages/BookingList';
+import DiskonForm from './pages/DiskonForm';
+import DiskonList from './pages/DiskonList';
+import JadwalDokterForm from './pages/JadwalDokterForm';
+import JadwalDokter from './pages/JadwalDokterList';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const PrivateRoute = ({ children }) => {
+    return isLoggedIn ? children : <Navigate to="/login" />;
+  };
+
   return (
     <Routes>
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/diskonform" element={<DiskonForm />} />
-        <Route path="/diskonlist" element={<DiskonList/>} />
+      {/* Public Routes */}
+      <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/tentang" element={<TentangKami />} />
+        <Route path="/layanan" element={<LayananKami />} />
+        <Route path="/produk" element={<Produk />} />
+        <Route path="/testimoni" element={<Testimoni />} />
+        <Route path="/kontak" element={<Kontak />} />
+      </Route>
+
+      {/* Protected/Admin Routes */}
+      <Route
+        element={
+          <PrivateRoute>
+            <MainLayout />
+          </PrivateRoute>
+        }
+      >
+        <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* Pasien */}
+        <Route path="/listpasien" element={<ListPasien />} />
+        <Route path="/formpasien" element={<FormPasien />} />
+
+        {/* Dokter */}
+        <Route path="/listdokter" element={<ListDokter />} />
+        <Route path="/formdokter" element={<FormDokter />} />
+
+        {/* Layanan */}
+        <Route path="/listlayanan" element={<ListLayanan />} />
+        <Route path="/formlayanan" element={<FormLayanan />} />
+
+        {/* Produk Pasien */}
+        <Route path="/listprodukpasien" element={<ListProdukPasien />} />
+        <Route path="/formprodukpasien" element={<FormProdukPasien />} />
+
+        {/* Tentang Kami */}
+        <Route path="/listtentangkami" element={<ListTentangKami />} />
+        <Route path="/formtentangkami" element={<FormTentangKami />} />
+
+        {/* Booking */}
         <Route path="/bookingform" element={<BookingForm />} />
-        <Route path="/bookinglist" element={<BookingList/>} />
-        <Route path="/Jadwaldokterform" element={<JadwalDokterForm />} />
-        <Route path="/Jadwaldokterlist" element={<JadwalDokter/>} />
+        <Route path="/bookinglist" element={<BookingList />} />
+
+        {/* Diskon */}
+        <Route path="/diskonform" element={<DiskonForm />} />
+        <Route path="/diskonlist" element={<DiskonList />} />
+
+        {/* Jadwal Dokter */}
+        <Route path="/jadwaldokterform" element={<JadwalDokterForm />} />
+        <Route path="/jadwaldokterlist" element={<JadwalDokter />} />
       </Route>
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;
