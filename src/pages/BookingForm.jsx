@@ -158,3 +158,4 @@ function BookingForm({ addBooking, updateBooking, editingBooking }) {
 }
 
 export default BookingForm;
+
