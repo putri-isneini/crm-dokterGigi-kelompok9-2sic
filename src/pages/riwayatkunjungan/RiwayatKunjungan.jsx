@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../supabase';
-import RiwayatKunjunganForm from './RiwayatKunjunganForm'; // ✅ pastikan path sesuai dengan struktur folder kamu
 
 function RiwayatKunjungan() {
   const [kunjunganList, setKunjunganList] = useState([]);

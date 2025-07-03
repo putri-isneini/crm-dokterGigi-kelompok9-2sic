@@ -1,79 +1,68 @@
 import { useState, useEffect } from 'react';
 
-const FaqForm = ({ addFaq, updateFaq, editingFaq }) => {
-  const [form, setForm] = useState({
-    pertanyaan: '',
-    jawaban: '',
-    kategori: ''
-  });
+function FaqForm({ addFaq, updateFaq, editingFaq }) {
+  const [pertanyaan, setPertanyaan] = useState('');
+  const [jawaban, setJawaban] = useState('');
 
-  // Jika sedang edit, isi form-nya; jika tidak, kosongkan
   useEffect(() => {
     if (editingFaq) {
-      setForm(editingFaq);
+      setPertanyaan(editingFaq.pertanyaan);
+      setJawaban(editingFaq.jawaban);
     } else {
-      setForm({ pertanyaan: '', jawaban: '', kategori: '' });
+      setPertanyaan('');
+      setJawaban('');
     }
   }, [editingFaq]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const data = { pertanyaan, jawaban };
 
-    // Validasi input
-    if (
-      !form.pertanyaan.trim() ||
-      !form.jawaban.trim() ||
-      !form.kategori.trim()
-    ) {
-      alert('Semua kolom wajib diisi.');
-      return;
-    }
-
-    // Simpan data
     if (editingFaq) {
-      updateFaq(form);
+      updateFaq({ ...data, id: editingFaq.id });
     } else {
-      addFaq(form);
+      addFaq(data);
     }
-
-    // Reset form setelah submit
-    setForm({ pertanyaan: '', jawaban: '', kategori: '' });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
-      <input
-        type="text"
-        placeholder="Pertanyaan"
-        className="w-full p-2 border rounded"
-        value={form.pertanyaan}
-        onChange={e => setForm({ ...form, pertanyaan: e.target.value })}
-      />
+    <form onSubmit={handleSubmit} className="bg-white rounded-lg p-4 shadow">
+      <h2 className="text-pink-600 text-lg font-semibold mb-4">
+        {editingFaq ? 'Edit FAQ' : 'Tambah FAQ'}
+      </h2>
 
-      <textarea
-        placeholder="Jawaban"
-        className="w-full p-2 border rounded"
-        rows={3}
-        value={form.jawaban}
-        onChange={e => setForm({ ...form, jawaban: e.target.value })}
-      />
+      <div className="mb-3">
+        <label className="text-pink-600 text-sm block mb-1">Pertanyaan</label>
+        <input
+          type="text"
+          value={pertanyaan}
+          onChange={(e) => setPertanyaan(e.target.value)}
+          placeholder="Masukkan pertanyaan"
+          className="w-full p-2 rounded border bg-pink-50 focus:outline-pink-400"
+          required
+        />
+      </div>
 
-      <input
-        type="text"
-        placeholder="Kategori"
-        className="w-full p-2 border rounded"
-        value={form.kategori}
-        onChange={e => setForm({ ...form, kategori: e.target.value })}
-      />
+      <div className="mb-3">
+        <label className="text-pink-600 text-sm block mb-1">Jawaban</label>
+        <input
+          type="text"
+          value={jawaban}
+          onChange={(e) => setJawaban(e.target.value)}
+          placeholder="Masukkan jawaban"
+          className="w-full p-2 rounded border bg-pink-50 focus:outline-pink-400"
+          required
+        />
+      </div>
 
       <button
         type="submit"
-        className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+        className="mt-2 w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded font-semibold"
       >
-        {editingFaq ? 'Perbarui' : 'Tambah'}
+        {editingFaq ? 'Update FAQ' : 'Tambah FAQ'}
       </button>
     </form>
   );
-};
+}
 
 export default FaqForm;

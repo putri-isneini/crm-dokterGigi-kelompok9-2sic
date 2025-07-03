@@ -1,42 +1,53 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../supabase';
-import AdminUserForm from "./AdminUserForm";
+import AdminUserForm from './AdminUserForm';
 
 function AdminUser() {
   const [adminUsers, setAdminUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
 
-  // Ambil semua data admin
+  useEffect(() => {
+    fetchAdminUsers();
+  }, []);
+
   const fetchAdminUsers = async () => {
     const { data, error } = await supabase
       .from('admin_user')
-      .select('id, username, role, created_at') // jangan ambil password_hash
+      .select('id, username, role, created_at')
       .order('created_at', { ascending: false });
 
-    if (error) console.error('Gagal fetch admin_user:', error);
-    else setAdminUsers(data);
+    if (error) {
+      console.error('Gagal fetch admin_user:', error);
+    } else {
+      setAdminUsers(data);
+    }
   };
 
-  // Tambah user baru
   const addUser = async (formData) => {
     const { password, ...rest } = formData;
-    if (!password) return alert('Password wajib diisi');
+
+    if (!password) {
+      alert('Password wajib diisi');
+      return;
+    }
 
     const { error } = await supabase
       .from('admin_user')
       .insert({ ...rest, password_hash: password });
 
-    if (error) console.error('Gagal tambah user:', error);
-    else fetchAdminUsers();
+    if (error) {
+      console.error('Gagal tambah user:', error);
+    } else {
+      fetchAdminUsers();
+    }
   };
 
-  // Perbarui data user
   const updateUser = async (formData) => {
     const { password, ...rest } = formData;
 
     const updateData = {
       ...rest,
-      ...(password && { password_hash: password })
+      ...(password && { password_hash: password }),
     };
 
     const { error } = await supabase
@@ -44,62 +55,90 @@ function AdminUser() {
       .update(updateData)
       .eq('id', formData.id);
 
-    if (error) console.error('Gagal update user:', error);
-    else {
+    if (error) {
+      console.error('Gagal update user:', error);
+    } else {
       fetchAdminUsers();
-      setEditingUser(null); // reset mode edit
+      setEditingUser(null);
     }
   };
 
-  // Hapus user
   const deleteUser = async (id) => {
     const { error } = await supabase
       .from('admin_user')
       .delete()
       .eq('id', id);
 
-    if (error) console.error('Gagal hapus user:', error);
-    else fetchAdminUsers();
+    if (error) {
+      console.error('Gagal hapus user:', error);
+    } else {
+      fetchAdminUsers();
+    }
   };
 
-  useEffect(() => {
-    fetchAdminUsers();
-  }, []);
-
   return (
-    <div className="max-w-xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Manajemen Admin User</h1>
+    <div className="bg-pink-50 min-h-screen flex justify-center py-8 px-4">
+      <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-5xl">
+        <h1 className="text-2xl font-bold text-center text-pink-600 mb-6">
+          Manajemen Admin User
+        </h1>
 
-      <AdminUserForm
-        addUser={addUser}
-        updateUser={updateUser}
-        editingUser={editingUser}
-      />
+        <AdminUserForm
+          addUser={addUser}
+          updateUser={updateUser}
+          editingUser={editingUser}
+        />
 
-      <ul className="mt-4">
-        {adminUsers.map(user => (
-          <li key={user.id} className="border p-2 my-2 flex justify-between items-start">
-            <div>
-              <p className="font-semibold">{user.username}</p>
-              <p className="text-sm text-gray-600">Role: {user.role}</p>
-            </div>
-            <div className="space-x-2 text-sm">
-              <button
-                onClick={() => setEditingUser(user)}
-                className="text-blue-600 hover:underline"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => deleteUser(user.id)}
-                className="text-red-600 hover:underline"
-              >
-                Hapus
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+        <div className="mt-6 overflow-x-auto">
+          <table className="w-full text-sm border-collapse">
+            <thead className="bg-pink-100 text-pink-700">
+              <tr>
+                <th className="border p-3">Username</th>
+                <th className="border p-3">Role</th>
+                <th className="border p-3">Tanggal Dibuat</th>
+                <th className="border p-3">Aksi</th>
+              </tr>
+            </thead>
+            <tbody className="text-center">
+              {adminUsers.length > 0 ? (
+                adminUsers.map((user) => (
+                  <tr key={user.id}>
+                    <td className="border p-3">{user.username}</td>
+                    <td className="border p-3">{user.role}</td>
+                    <td className="border p-3">
+                      {new Date(user.created_at).toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      })}
+                    </td>
+                    <td className="border p-3 space-x-2">
+                      <button
+                        onClick={() => setEditingUser(user)}
+                        className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => deleteUser(user.id)}
+                        className="bg-pink-600 hover:bg-pink-700 text-white text-xs px-3 py-1 rounded"
+                      >
+                        Hapus
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="italic text-gray-500 p-4">
+                    Belum ada data admin
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
