@@ -29,13 +29,14 @@ function ListLayanan() {
   };
 
   const updateLayanan = async (newData) => {
-    const oldData = editingLayanan;
+    const oldData = editingLayanan; // Data lama dari state editingLayanan
 
+    // Kita hanya mengupdate kolom yang benar-benar berubah atau yang baru dari form
     const dataToUpdate = {
-      nama: newData.nama || oldData.nama,
-      gambar: newData.gambar || oldData.gambar,
-      deskripsi: newData.deskripsi || oldData.deskripsi,
-      harga: newData.harga ? parseFloat(newData.harga) : oldData.harga,
+      nama: newData.nama, // Ambil dari newData (sudah pasti ada dari form)
+      deskripsi: newData.deskripsi,
+      harga: parseFloat(newData.harga),
+      gambar: newData.gambar, // <-- Ini penting, ambil URL gambar terbaru dari newData
     };
 
     const { error } = await supabase
@@ -51,13 +52,47 @@ function ListLayanan() {
     }
   };
 
+
   const deleteLayanan = async (id) => {
     const konfirmasi = confirm("Yakin ingin menghapus layanan ini?");
     if (!konfirmasi) return;
 
-    const { error } = await supabase.from('layanan').delete().eq('id', id);
-    if (error) {
-      console.error('Gagal menghapus layanan:', error.message);
+    // Opsional: Hapus juga file gambar dari Supabase Storage jika ada
+    const { data: layananToDelete, error: fetchError } = await supabase
+      .from('layanan')
+      .select('gambar')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) {
+      console.error('Gagal mengambil data layanan untuk dihapus:', fetchError.message);
+      return;
+    }
+
+    if (layananToDelete && layananToDelete.gambar) {
+      // Perhatikan bagian ini: Split URL untuk mendapatkan path relatif.
+      // Jika URL Supabase public storage Anda seperti:
+      // https://[project-ref].supabase.co/storage/v1/object/public/layanan-gambar/layanan_images/namafile.jpg
+      // Maka kita perlu mengambil bagian setelah 'layanan-gambar/'
+      const bucketName = 'layanan-gambar'; // Nama bucket Anda
+      const urlParts = layananToDelete.gambar.split(`${bucketName}/`);
+      const filePath = urlParts.length > 1 ? urlParts[1] : null;
+
+      if (filePath) {
+        const { error: deleteStorageError } = await supabase.storage
+          .from(bucketName) // <<< SUDAH DISESUAIKAN KE 'layanan-gambar'
+          .remove([filePath]);
+
+        if (deleteStorageError) {
+          console.error('Gagal menghapus gambar dari storage:', deleteStorageError.message);
+        }
+      }
+    }
+
+    // Hapus entri dari database
+    const { error: deleteDbError } = await supabase.from('layanan').delete().eq('id', id);
+    if (deleteDbError) {
+      console.error('Gagal menghapus layanan dari database:', deleteDbError.message);
     } else {
       fetchLayanan();
     }
@@ -76,6 +111,7 @@ function ListLayanan() {
           addLayanan={addLayanan}
           updateLayanan={updateLayanan}
           editingLayanan={editingLayanan}
+          setEditingLayanan={setEditingLayanan}
         />
       </div>
 
@@ -83,7 +119,7 @@ function ListLayanan() {
         <table className="w-full text-md text-left font-sans">
           <thead className="bg-pink-100 text-pink-800">
             <tr>
-              <th className="px-6 py-4">Gambar</th>
+              <th className="px-6 py-4">Gambar</th> {/* Pastikan kolom ini ada */}
               <th className="px-6 py-4">Nama</th>
               <th className="px-6 py-4">Deskripsi</th>
               <th className="px-6 py-4">Harga</th>

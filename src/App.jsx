@@ -36,6 +36,7 @@ import RegisterPasien from './components/RegistrasiPasien';
 import FormBooking from './components/FormBooking';
 import HasilPrediksi from './components/prediksi/HasilPrediksi';
 import PrediksiMasalahGigi from './components/prediksi/PrediksiMasalahGigi';
+import HalamanProfil from './components/HalamanProfil';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -59,6 +60,7 @@ function App() {
         <Route path="/hasil-prediksi" element={<HasilPrediksi />} />
         <Route path="/registrasi" element={<RegisterPasien />} />
         <Route path="/booking" element={<FormBooking />} />
+        <Route path="/profil" element={<HalamanProfil />} /> 
       </Route>
 
       {/* Admin / Protected Routes */}

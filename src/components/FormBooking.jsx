@@ -1,115 +1,179 @@
-import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { supabase } from '../supabase';
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { supabase } from "../supabase";
+import dayjs from "dayjs";
 
-export default function FormBooking() {
+const FormBooking = () => {
   const location = useLocation();
-  const pasienId = location.state?.pasienId;
+  const navigate = useNavigate();
+  const pasienId = location.state?.pasien_id;
 
+  const [layananList, setLayananList] = useState([]);
   const [form, setForm] = useState({
-    tanggal: '',
-    jam: '',
-    keluhan: ''
+    layanan_id: "",
+    tanggal: "",
+    keluhan: "",
   });
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const [jamDipilih, setJamDipilih] = useState(null);
+
+  useEffect(() => {
+    fetchLayanan();
+  }, []);
+
+  useEffect(() => {
+    if (form.tanggal) {
+      cariSlotJamTersedia(form.tanggal);
+    }
+  }, [form.tanggal]);
+
+  const fetchLayanan = async () => {
+    const { data, error } = await supabase.from("layanan").select("id, nama");
+    if (!error) setLayananList(data);
+  };
+
+  const getHariIndo = (tanggal) => {
+    const hariInggris = dayjs(tanggal).format("dddd");
+    const mapHari = {
+      Sunday: "Minggu",
+      Monday: "Senin",
+      Tuesday: "Selasa",
+      Wednesday: "Rabu",
+      Thursday: "Kamis",
+      Friday: "Jumat",
+      Saturday: "Sabtu",
+    };
+    return mapHari[hariInggris];
+  };
+
+  const cariSlotJamTersedia = async (tanggalStr) => {
+    setJamDipilih(null);
+    const hari = getHariIndo(tanggalStr);
+
+    const { data: jadwalList, error: errJadwal } = await supabase
+      .from("jadwal_dokter")
+      .select("*, dokter(id, nama)")
+      .eq("hari", hari);
+
+    if (errJadwal || !jadwalList?.length) {
+      console.warn("Tidak ada jadwal dokter untuk hari:", hari);
+      return;
+    }
+
+    const { data: bookings } = await supabase
+      .from("booking")
+      .select("jam, dokter_id")
+      .eq("tanggal", tanggalStr);
+
+    for (const jadwal of jadwalList) {
+      const start = dayjs(`${tanggalStr} ${jadwal.jam_mulai}`);
+      const end = dayjs(`${tanggalStr} ${jadwal.jam_selesai}`);
+
+      for (let jam = start; jam.isBefore(end); jam = jam.add(30, "minute")) {
+        const jamStr = jam.format("HH:mm");
+
+        const sudahBooking = bookings?.some(
+          (b) => b.jam === jamStr && b.dokter_id === jadwal.dokter_id
+        );
+
+        if (!sudahBooking) {
+          setJamDipilih({
+            jam: jamStr,
+            dokter_id: jadwal.dokter_id,
+            dokter_nama: jadwal.dokter?.nama || "Tanpa Nama",
+          });
+          return;
+        }
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!pasienId) {
-      alert('Pasien belum login. Silakan login atau registrasi terlebih dahulu.');
+    if (!jamDipilih) {
+      alert("Tidak ada jam tersedia pada tanggal tersebut.");
       return;
     }
 
-    // Validasi jam harus di antara 08:00 dan 17:00
-    const [jamStr, menitStr] = form.jam.split(':');
-    const jam = parseInt(jamStr);
-    const menit = parseInt(menitStr);
-
-    const totalMenit = jam * 60 + menit;
-    const minMenit = 8 * 60; // 08:00 = 480 menit
-    const maxMenit = 17 * 60; // 17:00 = 1020 menit
-
-    if (totalMenit < minMenit || totalMenit > maxMenit) {
-      alert('Jam booking hanya diperbolehkan antara pukul 08:00 sampai 17:00.');
-      return;
-    }
-
-    const kode_booking = 'BK-' + Date.now();
-    const defaultDokterId = 'ID_DOKTER_DEFAULT'; // ganti sesuai ID dokter kamu
-    const defaultLayananId = 'ID_LAYANAN_DEFAULT'; // ganti sesuai ID layanan kamu
-
-    const { error } = await supabase.from('booking').insert([{
-      pasien_id: pasienId,
-      dokter_id: defaultDokterId,
-      layanan_id: defaultLayananId,
-      tanggal: form.tanggal,
-      jam: form.jam,
-      keluhan: form.keluhan,
-      status: 'Menunggu',
-      kode_booking
-    }]);
+    const kode_booking = `BK-${Date.now()}`;
+    const { error } = await supabase.from("booking").insert([
+      {
+        pasien_id: pasienId,
+        dokter_id: jamDipilih.dokter_id,
+        layanan_id: form.layanan_id,
+        tanggal: form.tanggal,
+        jam: jamDipilih.jam,
+        keluhan: form.keluhan,
+        kode_booking,
+      },
+    ]);
 
     if (error) {
-      alert('Gagal booking: ' + error.message);
+      alert("Gagal booking: " + error.message);
     } else {
-      alert('Booking berhasil!');
-      setForm({ tanggal: '', jam: '', keluhan: '' });
+      alert("Booking berhasil!");
+      navigate("/");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-6 bg-white rounded-xl shadow space-y-6">
-      <h2 className="text-3xl font-bold text-center text-pink-600 mb-4">Form Booking Janji</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-md mx-auto mt-10 p-4 shadow-md rounded bg-white"
+    >
+      <h2 className="text-xl font-semibold mb-4 text-pink-600">Form Booking</h2>
 
-      <div>
-        <label className="block text-gray-700 font-medium mb-1">Tanggal Booking</label>
-        <input
-          type="date"
-          name="tanggal"
-          onChange={handleChange}
-          value={form.tanggal}
-          required
-          className="w-full border border-gray-300 rounded p-2 focus:outline-pink-500"
-        />
-      </div>
+      <label className="font-medium text-pink-700">Layanan</label>
+      <select
+        required
+        value={form.layanan_id}
+        onChange={(e) => setForm({ ...form, layanan_id: e.target.value })}
+        className="w-full border p-2 mb-3 bg-pink-50 rounded-lg"
+      >
+        <option value="">Pilih Layanan</option>
+        {layananList.map((l) => (
+          <option key={l.id} value={l.id}>
+            {l.nama}
+          </option>
+        ))}
+      </select>
 
-      <div>
-        <label className="block text-gray-700 font-medium mb-1">Jam (08:00 - 17:00)</label>
-        <input
-          type="time"
-          name="jam"
-          onChange={handleChange}
-          value={form.jam}
-          required
-          className="w-full border border-gray-300 rounded p-2 focus:outline-pink-500"
-          min="08:00"
-          max="17:00"
-        />
-      </div>
+      <label className="font-medium text-pink-700">Tanggal</label>
+      <input
+        type="date"
+        required
+        value={form.tanggal}
+        onChange={(e) => setForm({ ...form, tanggal: e.target.value })}
+        className="w-full border p-2 mb-3 bg-pink-50 rounded-lg"
+      />
 
-      <div>
-        <label className="block text-gray-700 font-medium mb-1">Keluhan Pasien</label>
-        <textarea
-          name="keluhan"
-          placeholder="Contoh: Sakit gigi bagian belakang saat mengunyah..."
-          onChange={handleChange}
-          value={form.keluhan}
-          required
-          rows={4}
-          className="w-full border border-gray-300 rounded p-2 focus:outline-pink-500"
-        ></textarea>
+      <label className="font-medium text-pink-700">Keluhan</label>
+      <textarea
+        required
+        value={form.keluhan}
+        onChange={(e) => setForm({ ...form, keluhan: e.target.value })}
+        className="w-full border p-2 mb-3 bg-pink-50 rounded-lg"
+      />
+
+      <div className="mb-4 text-sm text-gray-700">
+        {jamDipilih ? (
+          <p>
+            Jam Otomatis: <strong>{jamDipilih.jam}</strong> bersama Dr.{" "}
+            <strong>{jamDipilih.dokter_nama}</strong>
+          </p>
+        ) : form.tanggal ? (
+          <p className="text-red-500">Tidak ada jam tersedia.</p>
+        ) : null}
       </div>
 
       <button
         type="submit"
-        className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
+        className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg text-lg font-semibold transition"
       >
         Booking Sekarang
       </button>
     </form>
   );
-}
+};
+
+export default FormBooking;

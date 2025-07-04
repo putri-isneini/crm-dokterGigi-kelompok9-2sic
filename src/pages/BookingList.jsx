@@ -1,114 +1,176 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '../supabase';
-import BookingForm from './BookingForm';
+import { useEffect, useState } from "react";
+import { supabase } from "../supabase";
+import BookingForm from "./BookingForm";
 
-function BookingList() {
+const BookingList = () => {
   const [bookingList, setBookingList] = useState([]);
-  const [editingBooking, setEditingBooking] = useState(null);
+  const [editing, setEditing] = useState(null);
+  const [pasienList, setPasienList] = useState([]);
+  const [dokterList, setDokterList] = useState([]);
+  const [layananList, setLayananList] = useState([]);
 
-  // Ambil data booking dari Supabase
-  const fetchBooking = async () => {
-    const { data, error } = await supabase
-      .from('booking')
-      .select(`
-        id, tanggal, jam, status, kode_booking, keluhan,
-        pasien:pasien_id (id, nama),
-        dokter:dokter_id (id, nama),
-        layanan:layanan_id (id, nama)
-      `)
-      .order('created_at', { ascending: false });
+  const fetchData = async () => {
+    const [{ data: booking }, { data: pasien }, { data: dokter }, { data: layanan }] = await Promise.all([
+      supabase
+        .from("booking")
+        .select(`
+          id,
+          kode_booking,
+          tanggal,
+          jam,
+          status,
+          keluhan,
+          created_at,
+          pasien ( id, nama ),
+          dokter ( id, nama ),
+          layanan ( id, nama )
+        `)
+        .order("created_at", { ascending: false }),
+      supabase.from("pasien").select("id, nama"),
+      supabase.from("dokter").select("id, nama"),
+      supabase.from("layanan").select("id, nama"),
+    ]);
 
-    if (error) console.error('Fetch error:', error);
-    else setBookingList(data);
+    setBookingList(booking || []);
+    setPasienList(pasien || []);
+    setDokterList(dokter || []);
+    setLayananList(layanan || []);
   };
 
-  // Fungsi buat kode booking otomatis
-  const generateKodeBooking = () => {
-    return `BK-${Date.now()}`;
+  const handleSubmit = async (data) => {
+    if (editing) {
+      await supabase.from("booking").update(data).eq("id", data.id);
+    } else {
+      const kode_booking = `BK-${Date.now()}`;
+      await supabase.from("booking").insert([{ ...data, kode_booking }]);
+    }
+    fetchData();
+    setEditing(null);
   };
 
-  // Tambah booking baru
-  const addBooking = async (booking) => {
-    booking.kode_booking = generateKodeBooking();
-    const { error } = await supabase.from('booking').insert([booking]);
-    if (error) console.error('Insert error:', error);
-    else fetchBooking();
-  };
-
-  // Update booking
-  const updateBooking = async (form) => {
-    const { id, ...data } = form;
-    const { error } = await supabase.from('booking').update(data).eq('id', id);
-    if (error) console.error('Update error:', error);
-    else {
-      setEditingBooking(null);
-      fetchBooking();
+  const handleDelete = async (id) => {
+    if (confirm("Yakin ingin menghapus booking ini?")) {
+      await supabase.from("booking").delete().eq("id", id);
+      fetchData();
     }
   };
 
-  // Hapus booking
-  const deleteBooking = async (id) => {
-    const { error } = await supabase.from('booking').delete().eq('id', id);
-    if (error) console.error('Delete error:', error);
-    else fetchBooking();
+  const handleStatusChange = async (id, newStatus) => {
+    console.log("⏳ Mengubah status booking:", id, "→", newStatus);
+    const { data, error } = await supabase
+      .from("booking")
+      .update({ status: newStatus })
+      .eq("id", id)
+      .select();
+
+    if (error) {
+      console.error("❌ Gagal mengubah status:", error.message);
+      alert("Gagal mengubah status.");
+    } else {
+      console.log("✅ Status berhasil diubah:", data);
+      fetchData();
+    }
+  };
+
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "Menunggu":
+        return "bg-yellow-100 text-yellow-800 border-yellow-300";
+      case "Terjadwal":
+        return "bg-blue-100 text-blue-800 border-blue-300";
+      case "Selesai":
+        return "bg-green-100 text-green-800 border-green-300";
+      case "Batal":
+        return "bg-red-100 text-red-800 border-red-300";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-300";
+    }
   };
 
   useEffect(() => {
-    fetchBooking();
+    fetchData();
   }, []);
 
   return (
-    <div className="min-h-screen bg-pink-50 px-4 py-6">
-      <h1 className="text-2xl font-bold text-pink-700 mb-6 text-center">Dashboard Booking Pasien</h1>
+    <div className="max-w-full px-10 py-8 bg-pink-50 min-h-screen">
+      <h1 className="text-4xl font-bold text-pink-600 mb-10 text-center">Manajemen Booking Pasien</h1>
 
-      <div className="flex flex-col lg:flex-row gap-8 w-full">
-        {/* Form Booking */}
-        <div className="w-full lg:w-1/2">
-          <h2 className="text-lg font-semibold mb-3 text-pink-600">
-            {editingBooking ? 'Edit Booking' : 'Tambah Booking'}
-          </h2>
-          <BookingForm
-            addBooking={addBooking}
-            updateBooking={updateBooking}
-            editingBooking={editingBooking}
-          />
-        </div>
+      <div className="mb-12">
+        <BookingForm
+          onSubmit={handleSubmit}
+          editing={editing}
+          pasienOptions={pasienList}
+          dokterOptions={dokterList}
+          layananOptions={layananList}
+        />
+      </div>
 
-        {/* List Booking */}
-        <div className="w-full lg:w-1/2 space-y-4">
-          <h2 className="text-lg font-semibold mb-3 text-pink-600">Daftar Booking</h2>
-          {bookingList.map((booking) => (
-            <div
-              key={booking.id}
-              className="bg-white border border-pink-300 p-4 rounded-xl shadow-md"
-            >
-              <p className="font-semibold text-pink-800">Kode: {booking.kode_booking}</p>
-              <p>Pasien: {booking.pasien?.nama || '-'}</p>
-              <p>Dokter: {booking.dokter?.nama || '-'}</p>
-              <p>Layanan: {booking.layanan?.nama || '-'}</p>
-              <p>Tanggal: {booking.tanggal} - {booking.jam}</p>
-              <p>Keluhan: {booking.keluhan || '-'}</p>
-              <p>Status: <span className="italic">{booking.status}</span></p>
-              <div className="space-x-3 mt-3">
-                <button
-                  onClick={() => setEditingBooking(booking)}
-                  className="text-blue-600 hover:underline"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => deleteBooking(booking.id)}
-                  className="text-red-600 hover:underline"
-                >
-                  Hapus
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="overflow-x-auto rounded-2xl shadow-xl border border-pink-200 bg-white">
+        <table className="w-full text-md text-left">
+          <thead className="bg-pink-100 text-pink-800">
+            <tr>
+              <th className="px-6 py-4">Kode</th>
+              <th className="px-6 py-4">Pasien</th>
+              <th className="px-6 py-4">Dokter</th>
+              <th className="px-6 py-4">Layanan</th>
+              <th className="px-6 py-4">Tanggal</th>
+              <th className="px-6 py-4">Jam</th>
+              <th className="px-6 py-4">Status</th>
+              <th className="px-6 py-4">Keluhan</th>
+              <th className="px-6 py-4 text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bookingList.length > 0 ? (
+              bookingList.map((b) => (
+                <tr key={b.id} className="border-t hover:bg-pink-50 transition duration-200">
+                  <td className="px-6 py-4">{b.kode_booking}</td>
+                  <td className="px-6 py-4">{b.pasien?.nama}</td>
+                  <td className="px-6 py-4">{b.dokter?.nama}</td>
+                  <td className="px-6 py-4">{b.layanan?.nama}</td>
+                  <td className="px-6 py-4">{b.tanggal}</td>
+                  <td className="px-6 py-4">{b.jam}</td>
+                  <td className="px-6 py-4">
+                    <select
+                      value={b.status}
+                      onChange={(e) => handleStatusChange(b.id, e.target.value)}
+                      className={`px-2 py-1 rounded-lg border ${getStatusClass(b.status)}`}
+                    >
+                      <option value="Menunggu">Menunggu</option>
+                      <option value="Terjadwal">Terjadwal</option>
+                      <option value="Selesai">Selesai</option>
+                      <option value="Batal">Batal</option>
+                    </select>
+                  </td>
+                  <td className="px-6 py-4">{b.keluhan}</td>
+                  <td className="px-6 py-4 text-center space-x-2">
+                    <button
+                      onClick={() => setEditing(b)}
+                      className="bg-pink-400 hover:bg-pink-500 text-white py-1 px-3 rounded-lg"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(b.id)}
+                      className="bg-red-400 hover:bg-red-500 text-white py-1 px-3 rounded-lg"
+                    >
+                      Hapus
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9" className="text-center px-6 py-8 text-gray-500 italic">
+                  Tidak ada data booking.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );
-}
+};
 
 export default BookingList;

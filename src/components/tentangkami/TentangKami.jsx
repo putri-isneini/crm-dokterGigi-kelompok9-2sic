@@ -14,7 +14,7 @@ const TentangKami = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    AOS.init({ once: false, duration: 1000 });
+    AOS.init({ once: false, duration: 1000, easing: 'ease-out-cubic' });
     fetchTentangKami();
     fetchDokter();
   }, []);
@@ -53,22 +53,46 @@ const TentangKami = () => {
 
   return (
     <>
-      <section style={styles.section}>
-        <h2 style={styles.heading} data-aos="fade-up">Tentang Kami</h2>
+      {/* PENTING UNTUK TAMPILAN FULL:
+          Pastikan di file CSS global Anda (misalnya index.css atau App.css) ada reset dasar:
+          html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden; /* Mencegah scroll horizontal yang tidak diinginkan */
+          }
+          Dan jika Anda memiliki header navigasi di atas, pastikan ia menggunakan position: fixed/sticky
+          dan memiliki z-index yang lebih tinggi dari heroSection (misal z-index: 1000).
+      */
 
-        {/* Tentang Kami */}
+      {/* Hero Section - Gambar Besar Full Layar */}
+      <section style={styles.heroSection} data-aos="fade-in">
+        <img
+          src="/image/bg2.jpg" // Pastikan path ini benar dan gambar berkualitas tinggi
+          alt="Drg. Tia Dental Care Clinic Exterior"
+          style={styles.heroImage}
+        />
+        <div style={styles.heroOverlay}>
+          <h1 style={styles.heroTitle} data-aos="fade-up" data-aos-delay="300">Tentang Kami</h1>
+        </div>
+      </section>
+
+      {/* Konten Utama Halaman Tentang Kami - Latar Belakang PUTIH */}
+      <section style={styles.contentSection}>
+        {/* Tentang Kami / Kisah Kami */}
         <div style={styles.row} data-aos="fade-up">
           <img src="/image/k1.jpg" alt="Tentang Kami" style={styles.image} />
           <div style={styles.textBlock}>
-            <div dangerouslySetInnerHTML={{ __html: tentangKami.deskripsi }} />
+            <h2 style={styles.subheading}>Kisah Kami</h2>
+            <div dangerouslySetInnerHTML={{ __html: tentangKami.deskripsi }} style={{ lineHeight: 1.8 }} />
           </div>
         </div>
 
         {/* Visi */}
         <div style={styles.rowReverse} data-aos="fade-up">
           <div style={styles.textBlock}>
-            <h3 style={styles.subheading}>Visi</h3>
-            <div dangerouslySetInnerHTML={{ __html: tentangKami.visi }} />
+            <h2 style={styles.subheading}>Visi</h2>
+            <div dangerouslySetInnerHTML={{ __html: tentangKami.visi }} style={{ lineHeight: 1.8 }} />
           </div>
           <img src="/image/k2.jpg" alt="Visi" style={styles.image} />
         </div>
@@ -77,15 +101,15 @@ const TentangKami = () => {
         <div style={styles.row} data-aos="fade-up">
           <img src="/image/k3.jpg" alt="Misi" style={styles.image} />
           <div style={styles.textBlock}>
-            <h3 style={styles.subheading}>Misi</h3>
-            <div dangerouslySetInnerHTML={{ __html: tentangKami.misi }} />
+            <h2 style={styles.subheading}>Misi</h2>
+            <div dangerouslySetInnerHTML={{ __html: tentangKami.misi }} style={{ lineHeight: 1.8 }} />
           </div>
         </div>
 
         {/* Dokter */}
         <h2 style={styles.heading} data-aos="fade-up">Dokter Kami</h2>
         {loading ? (
-          <p style={{ textAlign: "center", color: "#888" }}>Memuat data dokter...</p>
+          <p style={styles.loadingText}>Memuat data dokter...</p>
         ) : (
           <div style={styles.dokterGrid} data-aos="fade-up">
             {dokterList.map((dokter, index) => (
@@ -96,7 +120,7 @@ const TentangKami = () => {
                   style={styles.dokterFoto}
                 />
                 <h4 style={styles.dokterNama}>{dokter.nama}</h4>
-                <p style={{ color: "#666", fontSize: "1rem" }}>{dokter.spesialis}</p>
+                <p style={styles.dokterSpesialis}>{dokter.spesialis}</p>
               </div>
             ))}
           </div>
@@ -113,86 +137,176 @@ const TentangKami = () => {
   );
 };
 
+// ====================================================================
+// STYLES OBJECT - PENYESUAIAN UNTUK TAMPILAN FULL BLOK KONTEN
+// ====================================================================
 const styles = {
-  section: {
-    padding: "6rem 2rem",
-    background: "linear-gradient(to bottom, #fff0f5, #fef7f9)",
-    fontFamily: "'Kugile_Demo', sans-serif",
-    color: "#4b006e",
+  // --- STYLES UNTUK HERO SECTION ---
+  heroSection: {
+    position: 'relative',
+    width: '100vw',
+    height: '600px', // Tinggi hero section
+    overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // Sesuaikan `marginTop` ini dengan tinggi header navigasi Anda.
+    // Misal, jika header navigasi Anda tingginya 60px, maka pakai -60px.
+    marginTop: '-80px', // Nilai default, sesuaikan!
+    zIndex: 0,
   },
-  heading: {
-    fontSize: "3.2rem",
-    textAlign: "center",
-    marginBottom: "4rem",
-    color: "#db2777",
-    fontWeight: 800,
+  heroImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    objectPosition: 'center',
   },
-  subheading: {
-    fontSize: "2rem",
-    color: "#db2777",
-    marginBottom: "1.5rem",
+  heroOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
   },
+  heroTitle: {
+    fontSize: '5.5rem',
+    fontWeight: 900,
+    color: '#FFFFFF',
+    fontFamily: "'Montserrat', sans-serif",
+    textShadow: '3px 3px 10px rgba(0,0,0,0.8)',
+    textAlign: 'center',
+    padding: '0 40px',
+    lineHeight: '1.2',
+  },
+
+  // --- STYLES UNTUK CONTENT SECTION UTAMA ---
+  contentSection: {
+    // Padding horizontal di sini akan menjadi batas "full" untuk row di dalamnya
+    padding: "8rem 4%",
+    background: "#FFFFFF",
+    fontFamily: "'Roboto', sans-serif",
+    color: "#333333",
+    boxSizing: "border-box",
+    position: 'relative',
+    zIndex: 1,
+  },
+
+  // --- STYLES ELEMEN KONTEN (ROW) ---
   row: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: "4rem",
+    gap: "6rem",
     flexWrap: "wrap",
-    marginBottom: "5rem",
+    marginBottom: "8rem",
+    backgroundColor: "#ffffff",
+    borderRadius: "28px",
+    boxShadow: "0 20px 50px rgba(0, 0, 0, 0.08)",
+    padding: "4rem",
+    transition: "transform 0.3s ease-in-out",
+    // maxWidth: "1400px", <<< INI DIHAPUS UNTUK MEMBUATNYA FULL LEBAR
+    width: "100%", // Pastikan mengambil lebar penuh dari parent
+    margin: "0 auto", // Tetap untuk centering jika ada maxWidth
   },
   rowReverse: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: "4rem",
+    gap: "6rem",
     flexWrap: "wrap-reverse",
-    marginBottom: "5rem",
+    marginBottom: "8rem",
+    backgroundColor: "#ffffff",
+    borderRadius: "28px",
+    boxShadow: "0 20px 50px rgba(0, 0, 0, 0.08)",
+    padding: "4rem",
+    transition: "transform 0.3s ease-in-out",
+    // maxWidth: "1400px", <<< INI DIHAPUS UNTUK MEMBUATNYA FULL LEBAR
+    width: "100%", // Pastikan mengambil lebar penuh dari parent
+    margin: "0 auto", // Tetap untuk centering jika ada maxWidth
   },
   image: {
-    flex: "1 1 50vw",
-    borderRadius: "24px",
-    width: "50vw",
-    maxWidth: "720px",
-    height: "auto",
-    boxShadow: "0 15px 40px rgba(251, 113, 133, 0.25)",
+    flex: "1 1 45%",
+    minWidth: "350px",
+    borderRadius: "20px",
+    width: "100%",
+    height: "550px",
+    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.15)",
     objectFit: "cover",
+    transition: "transform 0.3s ease-in-out",
   },
   textBlock: {
-    flex: "1 1 500px",
-    fontSize: "1.3rem",
-    lineHeight: 2,
-    color: "#444",
-    fontWeight: 500,
-    maxWidth: "700px",
+    flex: "1 1 50%",
+    fontSize: "1.25rem",
+    lineHeight: 1.8,
+    color: "#4A4A4A",
+    fontWeight: 400,
+    maxWidth: "700px", // Ini bisa dipertahankan untuk keterbacaan teks
+  },
+
+  // --- STYLES LAINNYA (tidak berubah) ---
+  heading: {
+    fontSize: "3.8rem",
+    textAlign: "center",
+    marginBottom: "5rem",
+    color: "#AD1457",
+    fontWeight: 800,
+    fontFamily: "'Montserrat', sans-serif",
+  },
+  subheading: {
+    fontSize: "2.8rem",
+    color: "#AD1457",
+    marginBottom: "2.5rem",
+    fontWeight: 700,
+    fontFamily: "'Montserrat', sans-serif",
   },
   dokterGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-    gap: "3rem",
+    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+    gap: "3.5rem",
     padding: "0 1rem",
-    marginTop: "3rem",
+    marginTop: "4rem",
     justifyItems: "center",
+    maxWidth: "1400px",
+    margin: "0 auto",
   },
   dokterCard: {
-    backgroundColor: "#fff",
-    borderRadius: "20px",
+    backgroundColor: "#ffffff",
+    borderRadius: "24px",
     overflow: "hidden",
-    boxShadow: "0 15px 30px rgba(251, 113, 133, 0.1)",
-    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-    width: "260px",
+    boxShadow: "0 15px 35px rgba(0, 0, 0, 0.1)",
+    transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+    width: "100%",
+    maxWidth: "340px",
     textAlign: "center",
   },
   dokterFoto: {
     width: "100%",
-    height: "280px",
+    height: "350px",
     objectFit: "cover",
-    borderBottom: "4px solid #fbcfe8",
+    borderBottom: "6px solid #FF8A65",
   },
   dokterNama: {
-    fontSize: "1.3rem",
-    fontWeight: "600",
-    color: "#be185d",
-    padding: "1rem 0 0.5rem 0",
+    fontSize: "2.2rem",
+    fontWeight: 700,
+    color: "#AD1457",
+    padding: "1.5rem 0 0.8rem 0",
+    fontFamily: "'Montserrat', sans-serif",
+  },
+  dokterSpesialis: {
+    color: "#666666",
+    fontSize: "1.1rem",
+    marginBottom: "1.5rem",
+  },
+  loadingText: {
+    textAlign: "center",
+    color: "#888",
+    fontSize: "1.5rem",
+    padding: "3rem 0",
   },
   buttonWrapper: {
     textAlign: "center",
@@ -207,6 +321,7 @@ const styles = {
     borderRadius: "999px",
     cursor: "pointer",
     transition: "background 0.3s ease",
+    fontWeight: 600,
   },
 };
 

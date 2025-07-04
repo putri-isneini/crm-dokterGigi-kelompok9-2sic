@@ -1,110 +1,86 @@
 import React from "react";
+import { Link } from "react-router-dom"; // Penting: Gunakan Link untuk navigasi internal
+import { FaWhatsapp, FaEnvelope, FaMapMarkerAlt, FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa"; // Tambahkan ikon media sosial
 
 const Footer = () => {
   return (
-    <footer style={styles.footer}>
-      <div style={styles.container}>
+    <footer className="bg-gradient-to-br from-pink-50 via-pink-100 to-white pt-16 pb-8 mt-20 border-t border-pink-200 shadow-inner">
+      <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
         {/* Kolom 1: Info Klinik */}
-        <div style={styles.column}>
-          <h3 style={styles.title}>drg. Tia Dental Care</h3>
-          <p style={styles.text}>Jl. Senyum Sehat No. 12, Surabaya</p>
-          <p style={styles.text}>WhatsApp: 0812-3456-7890</p>
-          <p style={styles.text}>Email: info@tiadentalcare.com</p>
+        <div className="flex flex-col items-start">
+          <h3 className="text-pink-700 text-3xl font-extrabold mb-4 font-poppins">
+            drg. Tia Dental Care
+          </h3>
+          <p className="text-gray-700 text-base mb-2 flex items-center">
+            <FaMapMarkerAlt className="mr-2 text-pink-500" /> Jl. Senyum Sehat No. 12, Surabaya
+          </p>
+          <p className="text-gray-700 text-base mb-2 flex items-center">
+            <FaWhatsapp className="mr-2 text-pink-500" /> WhatsApp: 0812-3456-7890
+          </p>
+          <p className="text-gray-700 text-base mb-2 flex items-center">
+            <FaEnvelope className="mr-2 text-pink-500" /> Email: info@tiadentalcare.com
+          </p>
+
+          {/* Social Media Icons */}
+          <div className="flex space-x-5 mt-6">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-800 transition-colors duration-200 text-2xl">
+              <FaFacebook />
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-800 transition-colors duration-200 text-2xl">
+              <FaInstagram />
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-800 transition-colors duration-200 text-2xl">
+              <FaTwitter />
+            </a>
+          </div>
         </div>
 
         {/* Kolom 2: Navigasi */}
-        <div style={styles.column}>
-          <h4 style={styles.subtitle}>Menu</h4>
-          <ul style={styles.linkList}>
-            <li><a href="#home" style={styles.link}>Beranda</a></li>
-            <li><a href="#about" style={styles.link}>Tentang Kami</a></li>
-            <li><a href="#reservation" style={styles.link}>Layanan</a></li>
-            <li><a href="#produk" style={styles.link}>Promo</a></li>
-            <li><a href="#testimoni" style={styles.link}>Testimoni</a></li>
-            <li><a href="#contact" style={styles.link}>Kontak</a></li>
-            <li><a href="#artikel" style={styles.link}>Artikel</a></li>
+        <div>
+          <h4 className="text-pink-600 text-xl font-bold mb-5">Menu</h4>
+          <ul className="space-y-3">
+            <li><Link to="/" className="text-gray-700 hover:text-pink-600 transition-colors duration-200 text-base">Beranda</Link></li>
+            <li><Link to="/tentang" className="text-gray-700 hover:text-pink-600 transition-colors duration-200 text-base">Tentang Kami</Link></li>
+            <li><Link to="/layanan" className="text-gray-700 hover:text-pink-600 transition-colors duration-200 text-base">Layanan</Link></li>
+            <li><Link to="/promo" className="text-gray-700 hover:text-pink-600 transition-colors duration-200 text-base">Promo</Link></li>
+            <li><Link to="/testimoni" className="text-gray-700 hover:text-pink-600 transition-colors duration-200 text-base">Testimoni</Link></li>
+            <li><Link to="/kontak" className="text-gray-700 hover:text-pink-600 transition-colors duration-200 text-base">Kontak</Link></li>
+            <li><Link to="/artikel" className="text-gray-700 hover:text-pink-600 transition-colors duration-200 text-base">Artikel</Link></li>
           </ul>
         </div>
 
-        {/* Kolom 3: Artikel */}
-        <div style={styles.column}>
-          <h4 style={styles.subtitle}>Artikel Terbaru</h4>
-          <ul style={styles.linkList}>
-            <li><a href="#artikel1" style={styles.link}>🦷 Cara Merawat Gigi Sehat</a></li>
-            <li><a href="#artikel2" style={styles.link}>😁 Tips Senyum Cerah</a></li>
-            <li><a href="#artikel3" style={styles.link}>👶 Gigi Anak & Perawatannya</a></li>
+        {/* Kolom 3: Layanan Populer */}
+        <div>
+          <h4 className="text-pink-600 text-xl font-bold mb-5">Layanan Populer</h4>
+          <ul className="space-y-3">
+            <li><Link to="/layanan/pembersihan-karang-gigi" className="text-gray-700 hover:text-pink-600 transition-colors duration-200 text-base">Pembersihan Karang Gigi</Link></li>
+            <li><Link to="/layanan/pemutihan-gigi" className="text-gray-700 hover:text-pink-600 transition-colors duration-200 text-base">Pemutihan Gigi</Link></li>
+            <li><Link to="/layanan/penambalan-gigi" className="text-gray-700 hover:text-pink-600 transition-colors duration-200 text-base">Penambalan Gigi</Link></li>
+            <li><Link to="/layanan/behel-ortodonti" className="text-gray-700 hover:text-pink-600 transition-colors duration-200 text-base">Behel Ortodonti</Link></li>
+            <li><Link to="/layanan/cabut-gigi" className="text-gray-700 hover:text-pink-600 transition-colors duration-200 text-base">Cabut Gigi</Link></li>
           </ul>
+        </div>
+
+        {/* Kolom 4: Jam Operasional (Contoh, bisa diganti dengan Subscribe Newsletter atau Peta) */}
+        <div>
+          <h4 className="text-pink-600 text-xl font-bold mb-5">Jam Operasional</h4>
+          <p className="text-gray-700 text-base mb-2">Senin - Jumat: 09:00 - 17:00</p>
+          <p className="text-gray-700 text-base mb-2">Sabtu: 09:00 - 14:00</p>
+          <p className="text-gray-700 text-base mb-2">Minggu: Tutup</p>
         </div>
       </div>
 
-      {/* Bawah */}
-      <div style={styles.bottom}>
-        <p style={styles.copyright}>
+      {/* Bagian Bawah Footer */}
+      <div className="border-t border-pink-200 mt-12 pt-8 text-center">
+        <p className="text-gray-500 text-sm">
           &copy; {new Date().getFullYear()} drg. Tia Dental Care. All rights reserved.
+        </p>
+        <p className="text-gray-500 text-xs mt-1">
+          Made with ❤️ in Pekanbaru, Riau.
         </p>
       </div>
     </footer>
   );
-};
-
-const styles = {
-  footer: {
-    background: "#fff0f6",
-    padding: "4rem 2rem 2rem",
-    marginTop: "5rem",
-    borderTop: "2px solid #fbcfe8",
-  },
-  container: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    maxWidth: 1200,
-    margin: "0 auto",
-    gap: "2rem",
-  },
-  column: {
-    flex: "1 1 250px",
-    minWidth: "200px",
-  },
-  title: {
-    color: "#be185d",
-    fontSize: "1.6rem",
-    fontWeight: "bold",
-    marginBottom: "1rem",
-  },
-  subtitle: {
-    color: "#db2777",
-    fontSize: "1.25rem",
-    marginBottom: "0.8rem",
-  },
-  text: {
-    color: "#6b7280",
-    margin: "0.4rem 0",
-    fontSize: "0.95rem",
-  },
-  linkList: {
-    listStyle: "none",
-    padding: 0,
-    margin: 0,
-  },
-  link: {
-    textDecoration: "none",
-    color: "#6b7280",
-    fontSize: "0.95rem",
-    display: "block",
-    marginBottom: "0.5rem",
-    transition: "color 0.2s ease",
-  },
-  bottom: {
-    textAlign: "center",
-    marginTop: "2.5rem",
-    borderTop: "1px solid #fbcfe8",
-    paddingTop: "1.5rem",
-  },
-  copyright: {
-    fontSize: "0.85rem",
-    color: "#a1a1aa",
-  },
 };
 
 export default Footer;

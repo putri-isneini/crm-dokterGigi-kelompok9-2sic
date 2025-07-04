@@ -21,7 +21,6 @@ export default function RegisterPasien() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Simpan ke tabel pasien Supabase
     const { data, error } = await supabase
       .from('pasien')
       .insert([formData])
@@ -32,15 +31,18 @@ export default function RegisterPasien() {
       console.error('Gagal registrasi:', error.message);
       alert('Registrasi gagal, silakan coba lagi.');
     } else {
+      // Simpan ID ke localStorage
+      localStorage.setItem('pasien_id', data.id);
+
       alert('Registrasi berhasil!');
-      navigate('/booking', { state: { pasienId: data.id } });
+      navigate('/profil');
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-md space-y-4"
+      className="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-md space-y-4 mt-10"
     >
       <h2 className="text-2xl font-bold text-center text-pink-600">Registrasi Pasien</h2>
 

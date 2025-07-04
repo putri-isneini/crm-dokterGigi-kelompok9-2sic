@@ -27,7 +27,7 @@ const otherItems = [
   // { name: 'Rekam Medis', icon: <FolderKanban size={22} />, path: '/rekammedis' },
   { name: 'Booking', icon: <CalendarCheck size={22} />, path: '/bookinglist' },
   { name: 'Jadwal Dokter', icon: <CalendarCheck size={22} />, path: '/jadwaldokterlist' },
-  { name: 'Rekam Medis', icon: <FolderKanban size={22} />, path: '/rekammedis' },
+  // { name: 'Rekam Medis', icon: <FolderKanban size={22} />, path: '/rekammedis' },
   { name: 'Diskon', icon: <BarChart2 size={22} />, path: '/diskonlist' },
   // { name: 'FAQ', icon: <HelpCircle size={22} />, path: '/faq' },
 ];

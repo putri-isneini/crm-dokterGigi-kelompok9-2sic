@@ -1,13 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import Footer from "./Footer";
-import PrediksiMasalahGigi from "./prediksi/PrediksiMasalahGigi"; // pastikan path sesuai
+import PrediksiMasalahGigi from "./prediksi/PrediksiMasalahGigi";
+import { supabase } from '../supabase'; // PASTIKAN SUDAH ADA
 
 const LayananKami = ({ sectionRef }) => {
   const containerRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
   const [layananData, setLayananData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Efek untuk animasi scroll (AOS atau IntersectionObserver)
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -19,17 +22,27 @@ const LayananKami = ({ sectionRef }) => {
     if (containerRef.current) {
       observer.observe(containerRef.current);
     }
+    return () => {
+      if (containerRef.current) {
+        observer.disconnect();
+      }
+    };
   }, []);
 
   useEffect(() => {
     const fetchLayanan = async () => {
-      try {
-        const res = await fetch("/api/layanan"); // ubah sesuai endpoint kamu
-        const data = await res.json();
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('layanan')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Gagal mengambil data layanan:', error.message);
+      } else {
         setLayananData(data);
-      } catch (error) {
-        console.error("Gagal mengambil data layanan:", error);
       }
+      setLoading(false);
     };
     fetchLayanan();
   }, []);
@@ -37,36 +50,26 @@ const LayananKami = ({ sectionRef }) => {
   const renderCard = (item) => (
     <div
       key={item.id}
-      style={{
-        background: "#fff",
-        padding: "1.5rem",
-        borderRadius: "1rem",
-        boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
-        textAlign: "left",
-      }}
+      className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 ease-in-out border border-pink-100 flex flex-col"
     >
-      <h3 style={{ color: "#db2777", fontSize: "1.4rem", marginBottom: "0.5rem" }}>
+      {item.gambar && ( // Menampilkan gambar jika ada
+        <img
+          src={item.gambar}
+          alt={item.nama}
+          className="w-full h-48 object-cover rounded-xl mb-4 shadow-sm" // Styling gambar
+        />
+      )}
+      <h3 className="text-pink-600 text-2xl font-bold mb-3 font-heading">
         {item.nama}
       </h3>
-      <p style={{ color: "#4b5563" }}>{item.deskripsi}</p>
+      <p className="text-gray-700 text-base leading-relaxed mb-4 flex-grow">
+        {item.deskripsi}
+      </p>
       {item.harga && (
-        <p style={{ color: "#6b021d", fontWeight: "bold", marginTop: "0.5rem" }}>
+        <p className="text-rose-700 text-xl font-extrabold mt-2">
           Rp {parseInt(item.harga).toLocaleString("id-ID")}
         </p>
       )}
-    </div>
-  );
-
-  const renderGrid = (data) => (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-        gap: "3rem",
-        marginBottom: "5rem",
-      }}
-    >
-      {data.map((item) => renderCard(item))}
     </div>
   );
 
@@ -74,98 +77,61 @@ const LayananKami = ({ sectionRef }) => {
     <>
       <section
         ref={sectionRef}
-        style={{
-          background: "linear-gradient(to bottom, #fffafc, #ffe4ec)",
-          padding: "6rem 2rem 4rem",
-          textAlign: "center",
-        }}
+        className="bg-gradient-to-br from-pink-50 to-white pt-32 pb-20 text-center relative overflow-hidden"
       >
-        <h2 style={{ fontSize: "3rem", fontWeight: 800, color: "#db2777", marginBottom: "2rem" }}>
-          Layanan Kami
-        </h2>
-        <p
-          style={{
-            fontSize: "1.25rem",
-            color: "#6b021d",
-            marginBottom: "4rem",
-            fontWeight: 500,
-            maxWidth: "800px",
-            marginInline: "auto",
-          }}
-        >
-          Kami menyediakan berbagai layanan perawatan gigi profesional untuk
-          memenuhi kebutuhan kesehatan dan estetika gigi Anda.
-        </p>
+        <div className="absolute top-10 left-10 w-24 h-24 bg-pink-200 rounded-full mix-blend-multiply opacity-30 animate-pulse-slow"></div>
+        <div className="absolute bottom-20 right-20 w-32 h-32 bg-rose-200 rounded-full mix-blend-multiply opacity-30 animate-pulse-slow delay-500"></div>
 
-        {renderGrid(layananData)}
+        <div className="container mx-auto px-6 max-w-6xl">
+          <h2 className="text-5xl md:text-6xl font-extrabold text-pink-700 mb-6 leading-tight animate-fade-in-up">
+            Jajaran <span className="text-rose-500">Layanan Terbaik</span> Kami
+          </h2>
+          <p
+            className="text-xl md:text-2xl text-gray-700 mb-16 font-medium max-w-4xl mx-auto leading-relaxed animate-fade-in-up delay-200"
+          >
+            Kami berkomitmen menyediakan perawatan gigi komprehensif dengan teknologi
+            terkini dan sentuhan personal untuk senyum sehat Anda.
+          </p>
 
-        {/* Tombol Cek Masalah */}
-        <button
-          onClick={() => setShowModal(true)}
-          style={{
-            backgroundColor: "#ec4899",
-            color: "white",
-            border: "none",
-            padding: "1rem 2rem",
-            fontSize: "1.15rem",
-            fontWeight: "bold",
-            borderRadius: "999px",
-            cursor: "pointer",
-            boxShadow: "0 5px 15px rgba(251, 113, 133, 0.4)",
-            marginBottom: "3rem",
-            transition: "all 0.3s",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-        >
-          🔍 Cek Masalah Gigi Anda
-        </button>
+          {loading ? (
+            <p className="text-gray-500 text-xl">Memuat layanan...</p>
+          ) : layananData.length > 0 ? (
+            <div
+              ref={containerRef}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-14 mb-20 animate-fade-in"
+            >
+              {layananData.map((item) => renderCard(item))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-xl">Tidak ada layanan yang tersedia saat ini.</p>
+          )}
+
+          <button
+            onClick={() => setShowModal(true)}
+            className="bg-gradient-to-r from-pink-500 to-rose-400 text-white font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-pink-300 focus:ring-opacity-75 text-lg flex items-center justify-center mx-auto"
+          >
+            <span className="mr-3 text-2xl">🦷</span> Cek Masalah Gigi Anda
+          </button>
+        </div>
       </section>
 
       <Footer />
 
-      {/* Modal Pop-Up */}
       {showModal && (
         <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "rgba(0,0,0,0.6)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 9999,
-          }}
+          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[9999] p-4 animate-fade-in"
           onClick={() => setShowModal(false)}
         >
           <div
+            className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative animate-scale-in"
             onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "#fff",
-              padding: "2rem",
-              borderRadius: "1rem",
-              width: "90%",
-              maxWidth: "700px",
-              maxHeight: "90vh",
-              overflowY: "auto",
-              boxShadow: "0 20px 50px rgba(0,0,0,0.2)",
-            }}
           >
             <button
               onClick={() => setShowModal(false)}
-              style={{
-                float: "right",
-                border: "none",
-                background: "none",
-                fontSize: "1.5rem",
-                cursor: "pointer",
-                color: "#db2777",
-              }}
+              className="absolute top-4 right-4 text-gray-400 hover:text-pink-600 text-3xl font-light focus:outline-none transition-colors duration-200"
+              aria-label="Close modal"
             >
-              ×
+              &times;
             </button>
             <PrediksiMasalahGigi />
           </div>
