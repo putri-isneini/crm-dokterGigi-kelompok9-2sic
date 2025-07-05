@@ -34,9 +34,9 @@ import JadwalDokterForm from './pages/JadwalDokterForm';
 import JadwalDokter from './pages/JadwalDokterList';
 import RegisterPasien from './components/RegistrasiPasien';
 import FormBooking from './components/FormBooking';
-import HasilPrediksi from './components/prediksi/HasilPrediksi';
-import PrediksiMasalahGigi from './components/prediksi/PrediksiMasalahGigi';
+// import HasilPrediksi from './components/prediksi/HasilPrediksi'; // Hapus import ini
 import HalamanProfil from './components/HalamanProfil';
+import PrediksiMasalahGigi from './components/prediksi/PrediksiMasalahGigi';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -57,7 +57,6 @@ function App() {
         <Route path="/testimoni" element={<Testimoni />} />
         <Route path="/kontak" element={<Kontak />} />
         <Route path="/prediksi" element={<PrediksiMasalahGigi />} />
-        <Route path="/hasil-prediksi" element={<HasilPrediksi />} />
         <Route path="/registrasi" element={<RegisterPasien />} />
         <Route path="/booking" element={<FormBooking />} />
         <Route path="/profil" element={<HalamanProfil />} /> 

@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import Footer from "./Footer";
-import PrediksiMasalahGigi from "./prediksi/PrediksiMasalahGigi";
+// import PrediksiMasalahGigi from "./prediksi/PrediksiMasalahGigi"; // Hapus import ini karena akan jadi halaman terpisah
 import { supabase } from '../supabase'; // PASTIKAN SUDAH ADA
+import { Link } from 'react-router-dom'; // Import Link dari react-router-dom
 
 const LayananKami = ({ sectionRef }) => {
   const containerRef = useRef(null);
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false); // Hapus state ini
   const [layananData, setLayananData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -106,18 +107,20 @@ const LayananKami = ({ sectionRef }) => {
             <p className="text-gray-500 text-xl">Tidak ada layanan yang tersedia saat ini.</p>
           )}
 
-          <button
-            onClick={() => setShowModal(true)}
+          {/* Mengubah button menjadi Link */}
+          <Link
+            to="/prediksi" // Path tujuan
             className="bg-gradient-to-r from-pink-500 to-rose-400 text-white font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-pink-300 focus:ring-opacity-75 text-lg flex items-center justify-center mx-auto"
           >
             <span className="mr-3 text-2xl">🦷</span> Cek Masalah Gigi Anda
-          </button>
+          </Link>
         </div>
       </section>
 
       <Footer />
 
-      {showModal && (
+      {/* Hapus bagian modal sepenuhnya */}
+      {/* {showModal && (
         <div
           className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[9999] p-4 animate-fade-in"
           onClick={() => setShowModal(false)}
@@ -136,7 +139,7 @@ const LayananKami = ({ sectionRef }) => {
             <PrediksiMasalahGigi />
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 };

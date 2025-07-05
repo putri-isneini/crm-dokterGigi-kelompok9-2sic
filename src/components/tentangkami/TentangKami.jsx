@@ -12,11 +12,30 @@ const TentangKami = () => {
   });
   const [dokterList, setDokterList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth); // State untuk lebar jendela
+  // State untuk efek hover pada gambar d2/d3
+  const [isImageBorderedHovered, setIsImageBorderedHovered] = useState(false);
+  // State untuk efek hover pada dokter card
+  const [hoveredDokterId, setHoveredDokterId] = useState(null);
+  // State untuk efek hover pada tombol
+  const [isButtonHovered, setIsButtonHovered] = useState(false);
 
   useEffect(() => {
     AOS.init({ once: false, duration: 1000, easing: 'ease-out-cubic' });
     fetchTentangKami();
     fetchDokter();
+
+    // Listener untuk perubahan ukuran jendela
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup listener
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const fetchTentangKami = async () => {
@@ -51,6 +70,355 @@ const TentangKami = () => {
     setLoading(false);
   };
 
+  // Fungsi untuk mendapatkan gaya dinamis berdasarkan lebar jendela dan state hover
+  const getDynamicStyles = (width) => {
+    // --- PALET WARNA PINK SOFT BARU YANG LEBIH CERAH DAN HAMPIR PUTIH ---
+    const primaryPink = '#EC407A';     // Pink yang cerah untuk judul, tombol
+    const secondaryPink = '#FFC0CB';   // Pink sedang, sedikit lebih cerah dari secondary sebelumnya
+    const subtlePinkBg = '#FFFBFB';    // PUTIH DENGAN HINT PINK SANGAT TIPIS
+    const darkText = '#424242';        // Teks gelap agar mudah dibaca
+    const mediumText = '#616161';      // Teks abu-abu sedang
+    const white = '#FFFFFF';           // Putih murni
+
+    const baseStyles = {
+      heroSection: {
+        position: 'relative',
+        width: '100vw',
+        height: '650px',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '-80px',
+        zIndex: 0,
+      },
+      heroImage: {
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        objectPosition: 'center',
+      },
+      heroOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.55)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1,
+      },
+      heroTitle: {
+        fontSize: '6.5rem',
+        fontWeight: 900,
+        color: white,
+        fontFamily: "'Playfair Display', serif",
+        textShadow: '0 5px 15px rgba(0,0,0,0.6)',
+        textAlign: 'center',
+        padding: '0 40px',
+        lineHeight: '1.2',
+      },
+      contentSection: {
+        padding: "8rem 6%",
+        background: subtlePinkBg, // Latar belakang putih dengan hint pink
+        fontFamily: "'Roboto', sans-serif",
+        color: darkText,
+        boxSizing: "border-box",
+        position: 'relative',
+        zIndex: 1,
+      },
+      row: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "5rem",
+        flexWrap: "wrap",
+        marginBottom: "9rem",
+        width: "100%",
+      },
+      rowReverse: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "5rem",
+        flexWrap: "wrap-reverse",
+        marginBottom: "9rem",
+        width: "100%",
+      },
+      imageWrapper: {
+        flex: "1 1 45%",
+        minWidth: "400px",
+        maxWidth: "600px",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        cursor: 'pointer',
+      },
+      imageD1: {
+        width: "100%",
+        height: "auto",
+        maxHeight: "550px",
+        objectFit: "contain",
+        objectPosition: "center",
+        borderRadius: "20px",
+        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.15)",
+      },
+      imageBordered: {
+        width: "100%",
+        height: "auto",
+        maxHeight: "550px",
+        objectFit: "cover",
+        objectPosition: "center",
+        borderRadius: "20px",
+        border: `8px solid ${secondaryPink}`, // Border pink sedang
+        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
+        transform: isImageBorderedHovered ? 'rotate(0deg) scale(1.02)' : 'rotate(-3deg)',
+        transition: 'transform 0.3s ease-in-out',
+      },
+      textBlock: {
+        flex: "1 1 50%",
+        fontSize: "1.15rem",
+        lineHeight: 1.8,
+        color: darkText,
+        fontWeight: 400,
+        maxWidth: "700px",
+        textAlign: "justify",
+      },
+      paragraphText: {
+        lineHeight: 1.8,
+        fontSize: "1.1rem",
+        color: darkText,
+      },
+      heading: {
+        fontSize: "4.2rem",
+        textAlign: "center",
+        marginBottom: "6rem",
+        color: primaryPink, // Heading berwarna pink cerah
+        fontWeight: 800,
+        fontFamily: "'Playfair Display', serif",
+      },
+      subheading: {
+        fontSize: "3rem",
+        color: primaryPink, // Subheading berwarna pink cerah
+        marginBottom: "2rem",
+        fontWeight: 700,
+        fontFamily: "'Playfair Display', serif",
+        textAlign: "left",
+      },
+      dokterGrid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+        gap: "3.5rem",
+        padding: "0 1rem",
+        marginTop: "4rem",
+        justifyItems: "center",
+        maxWidth: "1400px",
+        margin: "0 auto",
+      },
+      dokterCard: (id) => ({
+        backgroundColor: white,
+        borderRadius: "20px",
+        overflow: "hidden",
+        // Efek hover untuk card dokter
+        transform: hoveredDokterId === id ? 'translateY(-12px) scale(1.04)' : 'translateY(0) scale(1)',
+        boxShadow: hoveredDokterId === id
+          ? "0 28px 60px rgba(236, 64, 122, 0.3)" // Bayangan pink lebih kuat saat hover
+          : "0 15px 40px rgba(0, 0, 0, 0.08)", // Bayangan default lebih lembut dan transparan
+        transition: "transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
+        width: "100%",
+        maxWidth: "340px",
+        textAlign: "center",
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        border: `2px solid ${secondaryPink}`, // Tambah border tipis untuk definisi card
+      }),
+      dokterFoto: (id) => ({
+        width: "100%",
+        height: "380px",
+        objectFit: "cover",
+        // Border bawah foto dokter dengan gradasi pink (lebih aesthetic)
+        borderBottom: hoveredDokterId === id
+          ? `6px solid ${primaryPink}` // Pink cerah saat hover
+          : `6px solid ${secondaryPink}`, // Pink sedang default
+        // Efek hover untuk foto dokter
+        filter: hoveredDokterId === id ? 'grayscale(0%) brightness(105%)' : 'grayscale(10%) brightness(100%)',
+        transition: 'filter 0.3s ease, border-bottom 0.3s ease',
+      }),
+      dokterInfo: {
+        padding: "1.5rem 1rem",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexGrow: 1,
+        // Background info dokter dengan gradasi subtle dari putih ke pink sangat tipis
+        background: `linear-gradient(to bottom, ${white}, ${subtlePinkBg})`,
+      },
+      dokterNama: {
+        fontSize: "2.1rem",
+        fontWeight: 700,
+        color: primaryPink,
+        marginBottom: "0.5rem",
+        fontFamily: "'Montserrat', sans-serif",
+        letterSpacing: '0.5px',
+      },
+      dokterSpesialis: {
+        color: mediumText,
+        fontSize: "1.15rem",
+        fontWeight: 500,
+        letterSpacing: '0.8px',
+        opacity: 0.9,
+      },
+      loadingText: {
+        textAlign: "center",
+        color: mediumText,
+        fontSize: "1.5rem",
+        padding: "3rem 0",
+      },
+      buttonWrapper: {
+        textAlign: "center",
+        marginTop: "5rem",
+      },
+      button: {
+        backgroundColor: primaryPink,
+        color: white,
+        border: "none",
+        padding: "1.2rem 3rem",
+        fontSize: "1.2rem",
+        borderRadius: "50px",
+        cursor: "pointer",
+        transition: "background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease",
+        fontWeight: 600,
+        letterSpacing: '0.5px',
+        // Efek hover dan active
+        transform: isButtonHovered ? 'translateY(-5px)' : 'translateY(0)',
+        boxShadow: isButtonHovered ? "0 15px 30px rgba(236, 64, 122, 0.4)" : "0 8px 20px rgba(0, 0, 0, 0.2)",
+      },
+    };
+
+    // --- MEDIA QUERIES (Diterapkan secara kondisional) ---
+    let currentStyles = { ...baseStyles };
+
+    // Untuk memastikan objek bersarang juga disalin dan tidak mereferensi yang sama
+    currentStyles.heroTitle = { ...baseStyles.heroTitle };
+    currentStyles.contentSection = { ...baseStyles.contentSection };
+    currentStyles.row = { ...baseStyles.row };
+    currentStyles.rowReverse = { ...baseStyles.rowReverse };
+    currentStyles.imageWrapper = { ...baseStyles.imageWrapper };
+    currentStyles.imageD1 = { ...baseStyles.imageD1 };
+    currentStyles.imageBordered = { ...baseStyles.imageBordered };
+    currentStyles.textBlock = { ...baseStyles.textBlock };
+    currentStyles.paragraphText = { ...baseStyles.paragraphText };
+    currentStyles.heading = { ...baseStyles.heading };
+    currentStyles.subheading = { ...baseStyles.subheading };
+    currentStyles.dokterGrid = { ...baseStyles.dokterGrid };
+    currentStyles.dokterInfo = { ...baseStyles.dokterInfo };
+    currentStyles.dokterNama = { ...baseStyles.dokterNama };
+    currentStyles.dokterSpesialis = { ...baseStyles.dokterSpesialis };
+    currentStyles.loadingText = { ...baseStyles.loadingText };
+    currentStyles.buttonWrapper = { ...baseStyles.buttonWrapper };
+    currentStyles.button = { ...baseStyles.button };
+
+
+    if (width <= 1200) {
+      currentStyles.heroTitle.fontSize = '5.5rem';
+      currentStyles.row.gap = "3rem";
+      currentStyles.rowReverse.gap = "3rem";
+      currentStyles.imageWrapper.minWidth = "350px";
+      currentStyles.imageBordered.maxHeight = "450px";
+      currentStyles.imageD1.maxHeight = "450px";
+      currentStyles.textBlock.fontSize = "1.05rem";
+      currentStyles.heading.fontSize = "3.5rem";
+      currentStyles.subheading.fontSize = "2.5rem";
+      currentStyles.dokterFoto = (id) => ({
+        ...baseStyles.dokterFoto(id),
+        height: "300px",
+      });
+    }
+    if (width <= 992) {
+      currentStyles.heroSection.height = '550px';
+      currentStyles.heroTitle.fontSize = '4.5rem';
+      currentStyles.heroTitle.padding = '0 20px';
+      currentStyles.contentSection.padding = "6rem 4%";
+      currentStyles.row.flexDirection = "column";
+      currentStyles.row.marginBottom = "6rem";
+      currentStyles.row.gap = "2rem";
+      currentStyles.rowReverse.flexDirection = "column-reverse";
+      currentStyles.rowReverse.marginBottom = "6rem";
+      currentStyles.rowReverse.gap = "2rem";
+      currentStyles.imageWrapper.minWidth = "auto";
+      currentStyles.imageWrapper.width = "100%";
+      currentStyles.imageWrapper.maxWidth = "500px";
+      currentStyles.imageBordered.transform = isImageBorderedHovered ? 'none' : 'none';
+      currentStyles.imageBordered.borderWidth = '6px';
+      currentStyles.imageD1.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.1)";
+      currentStyles.heading.fontSize = "3rem";
+      currentStyles.heading.marginBottom = "4rem";
+      currentStyles.subheading.fontSize = "2.2rem";
+      currentStyles.subheading.textAlign = "center";
+      currentStyles.textBlock.textAlign = "center";
+      currentStyles.textBlock.maxWidth = "100%";
+      currentStyles.dokterGrid.gridTemplateColumns = "repeat(auto-fit, minmax(250px, 1fr))";
+      currentStyles.dokterGrid.gap = "2.5rem";
+      currentStyles.dokterCard = (id) => ({
+        ...baseStyles.dokterCard(id),
+        maxWidth: "300px",
+      });
+      currentStyles.dokterFoto = (id) => ({
+        ...currentStyles.dokterFoto(id),
+        height: "250px",
+      });
+    }
+    if (width <= 768) {
+      currentStyles.heroSection.height = '450px';
+      currentStyles.heroTitle.fontSize = '3.5rem';
+      currentStyles.contentSection.padding = "5rem 3%";
+      currentStyles.heading.fontSize = "2.5rem";
+      currentStyles.subheading.fontSize = "2rem";
+      currentStyles.textBlock.fontSize = "1rem";
+      currentStyles.paragraphText.fontSize = "0.95rem";
+      currentStyles.dokterCard = (id) => ({
+        ...currentStyles.dokterCard(id),
+        maxWidth: "280px",
+      });
+      currentStyles.dokterFoto = (id) => ({
+        ...currentStyles.dokterFoto(id),
+        height: "220px",
+      });
+      currentStyles.dokterNama.fontSize = "1.8rem";
+      currentStyles.dokterSpesialis.fontSize = "1rem";
+      currentStyles.button.padding = "1rem 2rem";
+      currentStyles.button.fontSize = "1.1rem";
+    }
+    if (width <= 480) {
+      currentStyles.heroSection.height = '350px';
+      currentStyles.heroTitle.fontSize = '2.8rem';
+      currentStyles.heroTitle.padding = '0 15px';
+      currentStyles.contentSection.padding = "4rem 2%";
+      currentStyles.heading.fontSize = "2rem";
+      currentStyles.heading.marginBottom = "3rem";
+      currentStyles.subheading.fontSize = "1.8rem";
+      currentStyles.row.marginBottom = "4rem";
+      currentStyles.rowReverse.marginBottom = "4rem";
+      currentStyles.dokterGrid.gridTemplateColumns = "1fr";
+      currentStyles.dokterGrid.gap = "2rem";
+      currentStyles.dokterCard = (id) => ({
+        ...currentStyles.dokterCard(id),
+        maxWidth: "unset",
+        width: "90%",
+        margin: "0 auto",
+      });
+    }
+
+    return currentStyles;
+  };
+
+  // Panggil fungsi untuk mendapatkan gaya saat ini
+  const currentStyles = getDynamicStyles(windowWidth);
+
   return (
     <>
       {/* PENTING UNTUK TAMPILAN FULL:
@@ -61,268 +429,109 @@ const TentangKami = () => {
             width: 100%;
             overflow-x: hidden; /* Mencegah scroll horizontal yang tidak diinginkan */
           }
-          Dan jika Anda memiliki header navigasi di atas, pastikan ia menggunakan position: fixed/sticky
-          dan memiliki z-index yang lebih tinggi dari heroSection (misal z-index: 1000).
+          @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
       */
 
       {/* Hero Section - Gambar Besar Full Layar */}
-      <section style={styles.heroSection} data-aos="fade-in">
+      <section style={currentStyles.heroSection} data-aos="fade-in">
         <img
-          src="/image/bg2.jpg" // Pastikan path ini benar dan gambar berkualitas tinggi
+          src="/image/bg2.jpg"
           alt="Drg. Tia Dental Care Clinic Exterior"
-          style={styles.heroImage}
+          style={currentStyles.heroImage}
         />
-        <div style={styles.heroOverlay}>
-          <h1 style={styles.heroTitle} data-aos="fade-up" data-aos-delay="300">Tentang Kami</h1>
+        <div style={currentStyles.heroOverlay}>
+          <h1 style={currentStyles.heroTitle} data-aos="fade-up" data-aos-delay="300">Tentang Kami</h1>
         </div>
       </section>
 
-      {/* Konten Utama Halaman Tentang Kami - Latar Belakang PUTIH */}
-      <section style={styles.contentSection}>
+      {/* Konten Utama Halaman Tentang Kami - Latar Belakang BERSIH */}
+      <section style={currentStyles.contentSection}>
         {/* Tentang Kami / Kisah Kami */}
-        <div style={styles.row} data-aos="fade-up">
-          <img src="/image/k1.jpg" alt="Tentang Kami" style={styles.image} />
-          <div style={styles.textBlock}>
-            <h2 style={styles.subheading}>Kisah Kami</h2>
-            <div dangerouslySetInnerHTML={{ __html: tentangKami.deskripsi }} style={{ lineHeight: 1.8 }} />
+        <div style={currentStyles.row} data-aos="fade-up">
+          <div style={currentStyles.imageWrapper}>
+            <img src="/image/d1.png" alt="Tentang Kami" style={currentStyles.imageD1} />
+          </div>
+          <div style={currentStyles.textBlock}>
+            <h2 style={currentStyles.subheading}>Kisah Kami</h2>
+            <div dangerouslySetInnerHTML={{ __html: tentangKami.deskripsi }} style={currentStyles.paragraphText} />
           </div>
         </div>
 
         {/* Visi */}
-        <div style={styles.rowReverse} data-aos="fade-up">
-          <div style={styles.textBlock}>
-            <h2 style={styles.subheading}>Visi</h2>
-            <div dangerouslySetInnerHTML={{ __html: tentangKami.visi }} style={{ lineHeight: 1.8 }} />
+        <div style={currentStyles.rowReverse} data-aos="fade-up">
+          <div
+            style={currentStyles.textBlock}>
+            <h2 style={currentStyles.subheading}>Visi</h2>
+            <div dangerouslySetInnerHTML={{ __html: tentangKami.visi }} style={currentStyles.paragraphText} />
           </div>
-          <img src="/image/k2.jpg" alt="Visi" style={styles.image} />
+          <div
+            style={currentStyles.imageWrapper}
+            onMouseEnter={() => setIsImageBorderedHovered(true)}
+            onMouseLeave={() => setIsImageBorderedHovered(false)}
+          >
+            <img src="/image/d2.jpg" alt="Visi" style={currentStyles.imageBordered} />
+          </div>
         </div>
 
         {/* Misi */}
-        <div style={styles.row} data-aos="fade-up">
-          <img src="/image/k3.jpg" alt="Misi" style={styles.image} />
-          <div style={styles.textBlock}>
-            <h2 style={styles.subheading}>Misi</h2>
-            <div dangerouslySetInnerHTML={{ __html: tentangKami.misi }} style={{ lineHeight: 1.8 }} />
+        <div style={currentStyles.row} data-aos="fade-up">
+          <div
+            style={currentStyles.imageWrapper}
+            onMouseEnter={() => setIsImageBorderedHovered(true)}
+            onMouseLeave={() => setIsImageBorderedHovered(false)}
+          >
+            <img src="/image/d3.jpg" alt="Misi" style={currentStyles.imageBordered} />
+          </div>
+          <div style={currentStyles.textBlock}>
+            <h2 style={currentStyles.subheading}>Misi</h2>
+            <div dangerouslySetInnerHTML={{ __html: tentangKami.misi }} style={currentStyles.paragraphText} />
           </div>
         </div>
 
         {/* Dokter */}
-        <h2 style={styles.heading} data-aos="fade-up">Dokter Kami</h2>
+        <h2 style={currentStyles.heading} data-aos="fade-up">Tim Dokter Kami</h2>
         {loading ? (
-          <p style={styles.loadingText}>Memuat data dokter...</p>
+          <p style={currentStyles.loadingText}>Memuat data dokter...</p>
         ) : (
-          <div style={styles.dokterGrid} data-aos="fade-up">
-            {dokterList.map((dokter, index) => (
-              <div key={dokter.id} style={styles.dokterCard} data-aos="zoom-in" data-aos-delay={index * 100}>
+          <div style={currentStyles.dokterGrid} data-aos="fade-up">
+            {dokterList.map((dokter) => (
+              <div
+                key={dokter.id}
+                style={currentStyles.dokterCard(dokter.id)}
+                data-aos="zoom-in"
+                data-aos-delay={dokter.id * 100} // Menggunakan ID untuk delay AOS yang unik
+                onMouseEnter={() => setHoveredDokterId(dokter.id)}
+                onMouseLeave={() => setHoveredDokterId(null)}
+              >
                 <img
                   src={dokter.foto || "/image/default-dokter.jpg"}
                   alt={dokter.nama}
-                  style={styles.dokterFoto}
+                  style={currentStyles.dokterFoto(dokter.id)}
                 />
-                <h4 style={styles.dokterNama}>{dokter.nama}</h4>
-                <p style={styles.dokterSpesialis}>{dokter.spesialis}</p>
+                <div style={currentStyles.dokterInfo}>
+                  <h4 style={currentStyles.dokterNama}>{dokter.nama}</h4>
+                  <p style={currentStyles.dokterSpesialis}>{dokter.spesialis}</p>
+                </div>
               </div>
             ))}
           </div>
         )}
 
         {/* Button */}
-        <div style={styles.buttonWrapper} data-aos="zoom-in">
-          <button style={styles.button}>Lihat Selengkapnya</button>
+        <div style={currentStyles.buttonWrapper} data-aos="zoom-in">
+          <button
+            style={currentStyles.button}
+            onMouseEnter={() => setIsButtonHovered(true)}
+            onMouseLeave={() => setIsButtonHovered(false)}
+          >
+            Jadwalkan Konsultasi
+          </button>
         </div>
       </section>
 
       <Footer />
     </>
   );
-};
-
-// ====================================================================
-// STYLES OBJECT - PENYESUAIAN UNTUK TAMPILAN FULL BLOK KONTEN
-// ====================================================================
-const styles = {
-  // --- STYLES UNTUK HERO SECTION ---
-  heroSection: {
-    position: 'relative',
-    width: '100vw',
-    height: '600px', // Tinggi hero section
-    overflow: 'hidden',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    // Sesuaikan `marginTop` ini dengan tinggi header navigasi Anda.
-    // Misal, jika header navigasi Anda tingginya 60px, maka pakai -60px.
-    marginTop: '-80px', // Nilai default, sesuaikan!
-    zIndex: 0,
-  },
-  heroImage: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    objectPosition: 'center',
-  },
-  heroOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1,
-  },
-  heroTitle: {
-    fontSize: '5.5rem',
-    fontWeight: 900,
-    color: '#FFFFFF',
-    fontFamily: "'Montserrat', sans-serif",
-    textShadow: '3px 3px 10px rgba(0,0,0,0.8)',
-    textAlign: 'center',
-    padding: '0 40px',
-    lineHeight: '1.2',
-  },
-
-  // --- STYLES UNTUK CONTENT SECTION UTAMA ---
-  contentSection: {
-    // Padding horizontal di sini akan menjadi batas "full" untuk row di dalamnya
-    padding: "8rem 4%",
-    background: "#FFFFFF",
-    fontFamily: "'Roboto', sans-serif",
-    color: "#333333",
-    boxSizing: "border-box",
-    position: 'relative',
-    zIndex: 1,
-  },
-
-  // --- STYLES ELEMEN KONTEN (ROW) ---
-  row: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "6rem",
-    flexWrap: "wrap",
-    marginBottom: "8rem",
-    backgroundColor: "#ffffff",
-    borderRadius: "28px",
-    boxShadow: "0 20px 50px rgba(0, 0, 0, 0.08)",
-    padding: "4rem",
-    transition: "transform 0.3s ease-in-out",
-    // maxWidth: "1400px", <<< INI DIHAPUS UNTUK MEMBUATNYA FULL LEBAR
-    width: "100%", // Pastikan mengambil lebar penuh dari parent
-    margin: "0 auto", // Tetap untuk centering jika ada maxWidth
-  },
-  rowReverse: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "6rem",
-    flexWrap: "wrap-reverse",
-    marginBottom: "8rem",
-    backgroundColor: "#ffffff",
-    borderRadius: "28px",
-    boxShadow: "0 20px 50px rgba(0, 0, 0, 0.08)",
-    padding: "4rem",
-    transition: "transform 0.3s ease-in-out",
-    // maxWidth: "1400px", <<< INI DIHAPUS UNTUK MEMBUATNYA FULL LEBAR
-    width: "100%", // Pastikan mengambil lebar penuh dari parent
-    margin: "0 auto", // Tetap untuk centering jika ada maxWidth
-  },
-  image: {
-    flex: "1 1 45%",
-    minWidth: "350px",
-    borderRadius: "20px",
-    width: "100%",
-    height: "550px",
-    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.15)",
-    objectFit: "cover",
-    transition: "transform 0.3s ease-in-out",
-  },
-  textBlock: {
-    flex: "1 1 50%",
-    fontSize: "1.25rem",
-    lineHeight: 1.8,
-    color: "#4A4A4A",
-    fontWeight: 400,
-    maxWidth: "700px", // Ini bisa dipertahankan untuk keterbacaan teks
-  },
-
-  // --- STYLES LAINNYA (tidak berubah) ---
-  heading: {
-    fontSize: "3.8rem",
-    textAlign: "center",
-    marginBottom: "5rem",
-    color: "#AD1457",
-    fontWeight: 800,
-    fontFamily: "'Montserrat', sans-serif",
-  },
-  subheading: {
-    fontSize: "2.8rem",
-    color: "#AD1457",
-    marginBottom: "2.5rem",
-    fontWeight: 700,
-    fontFamily: "'Montserrat', sans-serif",
-  },
-  dokterGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-    gap: "3.5rem",
-    padding: "0 1rem",
-    marginTop: "4rem",
-    justifyItems: "center",
-    maxWidth: "1400px",
-    margin: "0 auto",
-  },
-  dokterCard: {
-    backgroundColor: "#ffffff",
-    borderRadius: "24px",
-    overflow: "hidden",
-    boxShadow: "0 15px 35px rgba(0, 0, 0, 0.1)",
-    transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-    width: "100%",
-    maxWidth: "340px",
-    textAlign: "center",
-  },
-  dokterFoto: {
-    width: "100%",
-    height: "350px",
-    objectFit: "cover",
-    borderBottom: "6px solid #FF8A65",
-  },
-  dokterNama: {
-    fontSize: "2.2rem",
-    fontWeight: 700,
-    color: "#AD1457",
-    padding: "1.5rem 0 0.8rem 0",
-    fontFamily: "'Montserrat', sans-serif",
-  },
-  dokterSpesialis: {
-    color: "#666666",
-    fontSize: "1.1rem",
-    marginBottom: "1.5rem",
-  },
-  loadingText: {
-    textAlign: "center",
-    color: "#888",
-    fontSize: "1.5rem",
-    padding: "3rem 0",
-  },
-  buttonWrapper: {
-    textAlign: "center",
-    marginTop: "4rem",
-  },
-  button: {
-    backgroundColor: "#f472b6",
-    color: "#fff",
-    border: "none",
-    padding: "1rem 2rem",
-    fontSize: "1.1rem",
-    borderRadius: "999px",
-    cursor: "pointer",
-    transition: "background 0.3s ease",
-    fontWeight: 600,
-  },
 };
 
 export default TentangKami;
