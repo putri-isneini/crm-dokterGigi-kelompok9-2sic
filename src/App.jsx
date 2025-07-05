@@ -1,49 +1,66 @@
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
 
+// Layout
 import MainLayout from './components/MainLayout';
-import Dashboard from './pages/Dashboard';
+
+// Auth
 import Login from './components/Login';
-import BookingForm from './components/BookingForm';
 import RegisterForm from './components/RegisterForm';
+import BookingForm from './components/BookingForm';
 
-import DataDokter from './pages/DataDokter';
-import Faq from './pages/faq/Faq';
-import FaqForm from './pages/faq/FaqForm';
+// Dashboard
+import Dashboard from './pages/Dashboard';
 
-import AdminUser from './pages/admin/AdminUser';         // ✅ pastikan file ini ada
-import AdminUserForm from './pages/admin/AdminUserForm';
-
-import RiwayatKunjungan from './pages/riwayatkunjungan/RiwayatKunjungan';
-import TambahRiwayat from './pages/riwayatkunjungan/TambahRiwayat';
-import EditRiwayat from './pages/riwayatkunjungan/EditRiwayat';
+// Pasien
 import Pasien from './pages/pasien/pasien';
 import TambahPasien from './pages/pasien/TambahPasien';
 import EditPasien from './pages/pasien/EditPasien';
 
+// Dokter
+import DataDokter from './pages/DataDokter';
+
+// FAQ
+import Faq from './pages/faq/Faq';
+import FaqForm from './pages/faq/FaqForm';
+
+// Admin
+import AdminUser from './pages/admin/AdminUser';
+import AdminUserForm from './pages/admin/AdminUserForm';
+
+// Riwayat Kunjungan
+import RiwayatKunjungan from './pages/riwayatkunjungan/RiwayatKunjungan';
+import TambahRiwayat from './pages/riwayatkunjungan/TambahRiwayat';
+import EditRiwayat from './pages/riwayatkunjungan/EditRiwayat';
+
 function App() {
   return (
     <Routes>
-      {/* Route tanpa layout */}
+      {/* Tanpa Layout */}
       <Route path="/login" element={<Login />} />
-      <Route path="/bookingpasien" element={<BookingForm />} />
       <Route path="/register" element={<RegisterForm />} />
+      <Route path="/bookingpasien" element={<BookingForm />} />
 
-      {/* Route dengan layout utama */}
+      {/* Dengan Layout Utama */}
       <Route element={<MainLayout />}>
+        {/* Dashboard */}
         <Route path="/" element={<Dashboard />} />
 
         {/* Pasien */}
         <Route path="/pasien" element={<Pasien />} />
         <Route path="/pasien/tambah" element={<TambahPasien />} />
-        <Route path="/pasien/edit/:id" element={<EditPasien  />} />
+        <Route path="/pasien/edit/:id" element={<EditPasien />} />
+
+        {/* Dokter */}
+        <Route path="/datadokter" element={<DataDokter />} />
 
         {/* FAQ */}
-        <Route path="/faq/list" element={<Faq/>} />
-      
+        <Route path="/faq/list" element={<Faq />} />
+        <Route path="/faq/form" element={<FaqForm />} /> {/* Optional: hapus jika tidak dipakai */}
 
-        {/* Admin User */}
+        {/* Admin */}
         <Route path="/admin/list" element={<AdminUser />} />
+        <Route path="/admin/form" element={<AdminUserForm />} /> {/* Optional */}
 
         {/* Riwayat Kunjungan */}
         <Route path="/riwayat" element={<RiwayatKunjungan />} />
