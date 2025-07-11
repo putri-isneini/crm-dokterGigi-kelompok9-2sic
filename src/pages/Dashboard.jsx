@@ -1,4 +1,4 @@
-// src/components/Dashboard.js
+// src/pages/Dashboard.jsx (atau src/components/Dashboard.jsx, sesuaikan jika Anda memindahkannya)
 import React, { useEffect, useState } from 'react'
 import {
   Chart as ChartJS,
@@ -71,11 +71,6 @@ const Dashboard = () => {
     return <div className="text-center mt-20 text-lg text-pink-600 font-semibold">Memuat dashboard...</div>;
   }
 
-  // Dashboard ini seharusnya hanya diakses oleh Admin atau Dokter.
-  // PrivateRoute sudah menangani otorisasi, jadi tidak perlu `if (!allowed)` di sini lagi.
-  // Namun, jika Anda ingin menampilkan pesan berbeda atau fitur spesifik berdasarkan role di dalam dashboard,
-  // Anda bisa menggunakan state `userRole`.
-
   const stats = [
     { label: "Pendapatan Hari Ini", value: "$53,000", percent: "+55%", color: "rose" },
     { label: "Pengguna Hari Ini", value: "2,300", percent: "+3%", color: "pink" },
@@ -97,10 +92,24 @@ const Dashboard = () => {
 
   const barOptions = {
     responsive: true,
+    maintainAspectRatio: false, // Penting untuk kontrol ukuran chart
     plugins: {
       legend: { position: 'top' },
       title: { display: true, text: '📊 Penjualan Bulanan Tahun Ini' },
     },
+    scales: {
+        x: {
+            grid: {
+                display: false // Sembunyikan grid vertikal
+            }
+        },
+        y: {
+            beginAtZero: true,
+            grid: {
+                color: 'rgba(200, 200, 200, 0.2)' // Warna grid horizontal
+            }
+        }
+    }
   }
 
   const lineData = {
@@ -120,10 +129,24 @@ const Dashboard = () => {
 
   const lineOptions = {
     responsive: true,
+    maintainAspectRatio: false, // Penting untuk kontrol ukuran chart
     plugins: {
       legend: { position: 'top' },
       title: { display: true, text: '📈 Pertumbuhan Pelanggan Tahun Ini' },
     },
+    scales: {
+        x: {
+            grid: {
+                display: false // Sembunyikan grid vertikal
+            }
+        },
+        y: {
+            beginAtZero: true,
+            grid: {
+                color: 'rgba(200, 200, 200, 0.2)' // Warna grid horizontal
+            }
+        }
+    }
   }
 
   const pieData = {
@@ -140,6 +163,7 @@ const Dashboard = () => {
 
   const pieOptions = {
     responsive: true,
+    maintainAspectRatio: false, // Penting untuk kontrol ukuran chart
     plugins: {
       legend: { position: 'bottom' },
       title: { display: true, text: '🧾 Statistik Pendaftaran Pasien' },
@@ -161,19 +185,38 @@ const Dashboard = () => {
 
   const radarOptions = {
     responsive: true,
+    maintainAspectRatio: false, // Penting untuk kontrol ukuran chart
     plugins: {
       legend: { position: 'top' },
       title: { display: true, text: '🌟 Popularitas Layanan Klinik Gigi' },
     },
+    scales: {
+        r: {
+            angleLines: {
+                color: 'rgba(200, 200, 200, 0.2)'
+            },
+            grid: {
+                color: 'rgba(200, 200, 200, 0.2)'
+            },
+            pointLabels: {
+                color: '#555'
+            },
+            ticks: {
+                backdropColor: 'rgba(255, 255, 255, 0.7)',
+                color: '#777'
+            }
+        }
+    }
   }
 
   return (
-    <div className="p-6 space-y-10 bg-pink-50 min-h-screen">
+    // Mengurangi padding horizontal dari p-6 menjadi px-4
+    <div className="py-5 px-17 space-y-10 min-h-screen w-full"> {/* PERUBAHAN DI SINI: px-4 */}
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-pink-600">Dashboard {userRole} Klinik</h1> {/* Tampilkan role */}
         <button
           onClick={handleLogout}
-          className="bg-pink-600 text-white px-4 py-2 rounded shadow"
+          className="bg-pink-600 text-white px-4 py-2 rounded shadow hover:bg-pink-700 transition"
         >
           Logout
         </button>
@@ -184,6 +227,7 @@ const Dashboard = () => {
           <div key={label} className="bg-white rounded-2xl shadow p-5 border border-pink-100">
             <p className="text-sm text-gray-500">{label}</p>
             <h2 className="text-2xl font-bold flex items-center gap-2" style={{ color: `var(--tw-text-opacity, 1)` }}>
+              {/* Menggunakan kelas Tailwind langsung untuk warna teks */}
               <span className={`text-${color}-600`}>{value}</span>
               <span className={`text-sm text-${color}-500 font-semibold`}>{percent}</span>
             </h2>
@@ -192,16 +236,16 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-2xl shadow p-6 border border-pink-100">
+        <div className="bg-white rounded-2xl shadow p-6 border border-pink-100 h-96"> {/* Tambahkan tinggi tetap */}
           <Bar options={barOptions} data={barData} />
         </div>
-        <div className="bg-white rounded-2xl shadow p-6 border border-pink-100">
+        <div className="bg-white rounded-2xl shadow p-6 border border-pink-100 h-96"> {/* Tambahkan tinggi tetap */}
           <Line options={lineOptions} data={lineData} />
         </div>
-        <div className="bg-white rounded-2xl shadow p-6 border border-pink-100">
+        <div className="bg-white rounded-2xl shadow p-6 border border-pink-100 h-96"> {/* Tambahkan tinggi tetap */}
           <Doughnut options={pieOptions} data={pieData} />
         </div>
-        <div className="bg-white rounded-2xl shadow p-6 border border-pink-100">
+        <div className="bg-white rounded-2xl shadow p-6 border border-pink-100 h-96"> {/* Tambahkan tinggi tetap */}
           <Radar options={radarOptions} data={radarData} />
         </div>
       </div>

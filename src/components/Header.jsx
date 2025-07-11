@@ -7,56 +7,35 @@ import { supabase } from "../supabase";
 import "../App.css";
 import "../index.css";
 
-const Header = () => {
+// Header sekarang menerima isLoggedIn dan userRole sebagai props
+const Header = ({ isLoggedIn, userRole }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
-    // Memeriksa status login dari localStorage saat komponen dimuat atau lokasi berubah
-    const loggedInStatus = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(loggedInStatus);
-
-    // Mengambil role user dari localStorage
-    const storedUserRole = localStorage.getItem("userRole");
-    setUserRole(storedUserRole);
-
     // Menutup dropdown saat navigasi berubah
+    // isLoggedIn dan userRole sekarang datang dari props, tidak perlu dibaca dari localStorage di sini
     setShowDropdown(false);
-  }, [location]); // Dependensi pada location agar update saat rute berubah
+  }, [location]);
 
   // Fungsi untuk menangani klik logout
   const handleLogout = async () => {
-    console.log("Logout button clicked!"); // Log untuk debugging
+    console.log("Logout button clicked!");
     const { error } = await supabase.auth.signOut();
     
-    // Menangani error jika ada saat logout
     if (error) {
       alert("Gagal logout: " + error.message);
-      console.error("Logout error:", error.message, error); // Log error lebih detail
+      console.error("Logout error:", error.message, error);
     } else {
-      console.log("Supabase signOut successful. Clearing local storage...");
-      // Menghapus item terkait login dari localStorage
-      localStorage.removeItem("isLoggedIn");
-      localStorage.removeItem("userRole");
-      localStorage.removeItem("pasien_id");
+      console.log("Supabase signOut successful. Waiting for App.js to update state and navigate...");
+      // localStorage.removeItem("isLoggedIn"); // DIHAPUS: App.js handles this
+      // localStorage.removeItem("userRole"); // DIHAPUS: App.js handles this
+      // localStorage.removeItem("pasien_id"); // DIHAPUS: App.js handles this
       
-      // Memperbarui state lokal komponen Header
-      setIsLoggedIn(false);
-      setUserRole(null);
-
-      // Verifikasi status setelah penghapusan di localStorage
-      console.log("isLoggedIn after removal (localStorage):", localStorage.getItem("isLoggedIn"));
-      console.log("userRole after removal (localStorage):", localStorage.getItem("userRole"));
-      console.log("React state updated: isLoggedIn =", false, "userRole =", null);
-      
-      // Memberikan sedikit penundaan sebelum navigasi
-      // Ini penting untuk memberi waktu pada listener auth state change di App.js
-      // untuk memperbarui state global sebelum rute dialihkan.
+      // Memberikan sedikit penundaan sebelum navigasi untuk memastikan state global diperbarui
       setTimeout(() => {
-        navigate("/"); // Mengarahkan ke halaman beranda publik
+        navigate("/");
         console.log("Navigated to / after delay.");
       }, 100); // Penundaan 100 milidetik
     }

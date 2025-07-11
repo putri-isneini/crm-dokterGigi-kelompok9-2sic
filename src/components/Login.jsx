@@ -34,25 +34,25 @@ export default function Login({ setIsLoggedIn }) {
 
       let userRole = user.user_metadata?.role; // Prioritas 1: Ambil role dari user_metadata
 
-      // Fallback jika role tidak ada di user_metadata
+      // Fallback jika role tidak ada di user_metadata (seharusnya diatur saat pendaftaran)
       if (!userRole) {
         console.warn("Role not found in user_metadata. Attempting fallback lookup in database tables.");
 
-        // Cek di tabel 'pasien' (menggunakan tabel pasien sekarang)
+        // Cek di tabel 'pasien_user'
         const { data: pasienData, error: pasienError } = await supabase
-          .from("pasien") // Ubah ke tabel 'pasien'
+          .from("pasien_user")
           .select("id")
-          .eq("id", user.id) // Kolom 'id' di tabel pasien harus sama dengan user.id dari auth.users
+          .eq("supabase_auth_id", user.id)
           .single();
 
         if (pasienData && !pasienError) {
           userRole = "Pasien";
         } else {
-          // Cek di tabel 'admin_user'
+          // Cek di tabel 'admin_user' (untuk Admin, Dokter, Staf)
           const { data: adminUserData, error: adminUserError } = await supabase
             .from("admin_user")
             .select("role")
-            .eq("email", user.email)
+            .eq("email", user.email) // Menggunakan email untuk lookup
             .single();
 
           if (adminUserData && !adminUserError) {
@@ -64,20 +64,31 @@ export default function Login({ setIsLoggedIn }) {
         }
       }
 
+      // Simpan role dan status login di localStorage
       localStorage.setItem("userRole", userRole);
       localStorage.setItem("isLoggedIn", "true");
 
       // Simpan pasien_id hanya jika role adalah Pasien
       if (userRole === "Pasien") {
-        // Karena tabel pasien menggunakan id dari auth.users sebagai PK, langsung gunakan user.id
-        localStorage.setItem('pasien_id', user.id);
+        const { data: pasienData, error: pasienError } = await supabase
+          .from('pasien_user')
+          .select('id')
+          .eq('supabase_auth_id', user.id)
+          .single();
+        if (!pasienError && pasienData) {
+          localStorage.setItem('pasien_id', pasienData.id);
+        } else {
+          console.warn("Pasien user not found in 'pasien_user' table after login, but userRole is Pasien. Clearing pasien_id.");
+          localStorage.removeItem('pasien_id');
+        }
       } else {
-        localStorage.removeItem('pasien_id');
+        localStorage.removeItem('pasien_id'); // Bersihkan pasien_id jika bukan pasien
       }
 
       setIsLoggedIn(true);
       alert("Login berhasil! Anda adalah " + userRole);
 
+      // Navigasi berdasarkan role
       switch (userRole) {
         case "Pasien":
           navigate("/profil-pasien");

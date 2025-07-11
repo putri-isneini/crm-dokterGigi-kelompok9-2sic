@@ -1,201 +1,122 @@
-import { useEffect, useState } from 'react';
+// src/pages/admin/AdminUser.jsx
+import React, { useEffect, useState } from 'react';
 import { supabase } from '../../supabase';
-import AdminUserForm from './AdminUserForm';
+import { useNavigate } from 'react-router-dom';
 
 function AdminUser() {
-  const [adminUsers, setAdminUsers] = useState([]);
-  const [editingUser, setEditingUser] = useState(null);
-  const [showPasswords, setShowPasswords] = useState({});
+    const [adminUsers, setAdminUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchAdminUsers();
-  }, []);
+    const fetchAdminUsers = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const { data, error } = await supabase
+                .from('admin_user')
+                .select('id, email, nama, role, created_at') // Select 'nama' instead of 'username'
+                .order('created_at', { ascending: false }); // Order by created_at
 
-  const fetchAdminUsers = async () => {
-    const { data, error } = await supabase
-      .from('admin_user')
-      .select('id, email, username, role, password_hash, created_at')
-      .order('created_at', { ascending: false });
+            if (error) {
+                throw error;
+            }
+            setAdminUsers(data);
+        } catch (err) {
+            console.error('Gagal fetch admin_user:', err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const deleteAdminUser = async (id) => {
+        if (window.confirm('Apakah Anda yakin ingin menghapus user admin ini?')) {
+            const { error } = await supabase
+                .from('admin_user')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                alert('Gagal menghapus user admin: ' + error.message);
+            } else {
+                fetchAdminUsers();
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchAdminUsers();
+    }, []);
+
+    if (loading) {
+        return <div className="text-center mt-20 text-lg text-pink-600 font-semibold">Memuat daftar admin user...</div>;
+    }
 
     if (error) {
-      console.error('Gagal fetch admin_user:', error);
-    } else {
-      setAdminUsers(data);
-    }
-  };
-
-  const addUser = async (formData) => {
-    const { email, password, username, role } = formData;
-
-    if (!email || !password || !username || !role) {
-      alert("Semua field wajib diisi");
-      return;
+        return <div className="text-center mt-20 text-lg text-red-600 font-semibold">Error: {error}</div>;
     }
 
-    if (!email.includes('@') || !email.includes('.')) {
-      alert("Email tidak valid");
-      return;
-    }
+    return (
+        <div className="max-w-7xl mx-auto px-6 py-10 bg-pink-50 min-h-screen">
+            <h1 className="text-4xl font-extrabold text-pink-700 mb-10 text-center">
+                👥 Manajemen Admin & Staf
+            </h1>
 
-    if (password.length < 6) {
-      alert("Password minimal 6 karakter");
-      return;
-    }
+            <div className="mb-8 text-right">
+                <button
+                    onClick={() => navigate('/admin/tambah')}
+                    className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition"
+                >
+                    + Tambah Admin/Staf Baru
+                </button>
+            </div>
 
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (signUpError) {
-      console.error("Gagal daftar Supabase Auth:", signUpError.message);
-      alert("Gagal daftar: " + signUpError.message);
-      return;
-    }
-
-    const userId = signUpData?.user?.id;
-
-    const { error: insertError } = await supabase
-      .from("admin_user")
-      .insert({
-        id: userId,
-        email,
-        username,
-        role,
-        password_hash: password, // password disimpan ke kolom password_hash
-      });
-
-    if (insertError) {
-      console.error("Gagal tambah ke admin_user:", insertError.message);
-      alert("Gagal simpan admin_user: " + insertError.message);
-    } else {
-      alert("Admin berhasil ditambahkan");
-      fetchAdminUsers();
-    }
-  };
-
-  const updateUser = async (formData) => {
-    const { id, email, username, role, password } = formData;
-
-    const { error } = await supabase
-      .from('admin_user')
-      .update({
-        email,
-        username,
-        role,
-        password_hash: password,
-      })
-      .eq('id', id);
-
-    if (error) {
-      console.error('Gagal update user:', error.message);
-    } else {
-      fetchAdminUsers();
-      setEditingUser(null);
-    }
-  };
-
-  const deleteUser = async (id) => {
-    const { error } = await supabase
-      .from('admin_user')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      console.error('Gagal hapus user:', error.message);
-    } else {
-      fetchAdminUsers();
-    }
-  };
-
-  const togglePassword = (id) => {
-    setShowPasswords((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
-
-  return (
-    <div className="bg-pink-50 min-h-screen flex justify-center py-8 px-4">
-      <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-5xl">
-        <h1 className="text-2xl font-bold text-center text-pink-600 mb-6">
-          Manajemen Admin User
-        </h1>
-
-        <AdminUserForm
-          addUser={addUser}
-          updateUser={updateUser}
-          editingUser={editingUser}
-        />
-
-        <div className="mt-6 overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
-            <thead className="bg-pink-100 text-pink-700">
-              <tr>
-                <th className="border p-3">Email</th>
-                <th className="border p-3">Username</th>
-                <th className="border p-3">Role</th>
-                <th className="border p-3">Password</th>
-                <th className="border p-3">Tanggal Dibuat</th>
-                <th className="border p-3">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="text-center">
-              {adminUsers.length > 0 ? (
-                adminUsers.map((user) => (
-                  <tr key={user.id}>
-                    <td className="border p-3">{user.email}</td>
-                    <td className="border p-3">{user.username}</td>
-                    <td className="border p-3">{user.role}</td>
-                    <td className="border p-3">
-                      {showPasswords[user.id] ? (
-                        <span>{user.password_hash}</span>
-                      ) : (
-                        <span>{'●'.repeat(user.password_hash?.length || 8)}</span>
-                      )}
-                      <button
-                        onClick={() => togglePassword(user.id)}
-                        className="ml-2 text-xs text-blue-600 underline"
-                      >
-                        {showPasswords[user.id] ? 'Sembunyikan' : 'Lihat'}
-                      </button>
-                    </td>
-                    <td className="border p-3">
-                      {new Date(user.created_at).toLocaleDateString('id-ID', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                      })}
-                    </td>
-                    <td className="border p-3 space-x-2">
-                      <button
-                        onClick={() => setEditingUser(user)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => deleteUser(user.id)}
-                        className="bg-pink-600 hover:bg-pink-700 text-white text-xs px-3 py-1 rounded"
-                      >
-                        Hapus
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" className="italic text-gray-500 p-4">
-                    Belum ada data admin
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+            {adminUsers.length > 0 ? (
+                <div className="overflow-x-auto bg-white rounded-2xl shadow-md border border-pink-100">
+                    <table className="min-w-full divide-y divide-pink-200">
+                        <thead className="bg-pink-100">
+                            <tr>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">Nama</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">Email</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">Role</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">Dibuat Pada</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-pink-200">
+                            {adminUsers.map((user) => (
+                                <tr key={user.id}>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.nama || 'N/A'}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{user.email}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{user.role}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                        {new Date(user.created_at).toLocaleDateString('id-ID', {
+                                            year: 'numeric', month: 'long', day: 'numeric',
+                                            hour: '2-digit', minute: '2-digit'
+                                        })}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        {/* Edit button would go here, if you have an edit form */}
+                                        <button
+                                            onClick={() => deleteAdminUser(user.id)}
+                                            className="text-red-600 hover:text-red-900 ml-2"
+                                        >
+                                            Hapus
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            ) : (
+                <p className="text-center text-gray-500 italic mt-12">
+                    Belum ada user admin/staf yang ditambahkan.
+                </p>
+            )}
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default AdminUser;

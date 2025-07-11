@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../Footer";
+// Hapus baris ini: import Footer from "../Footer";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { supabase } from "../../supabase"; // pastikan path-nya benar
@@ -392,7 +392,7 @@ const TentangKami = () => {
         height: "220px",
       });
       currentStyles.dokterNama.fontSize = "1.8rem";
-      currentStyles.dokterSpesialis.fontSize = "1rem";
+      currentStyles.dokterSpesialis.fontSize = "1.1rem";
       currentStyles.button.padding = "1rem 2rem";
       currentStyles.button.fontSize = "1.1rem";
     }
@@ -424,8 +424,6 @@ const TentangKami = () => {
 
   return (
     <>
-
-
       {/* Hero Section - Gambar Besar Full Layar */}
       <section style={currentStyles.heroSection} data-aos="fade-in">
         <img
@@ -523,7 +521,7 @@ const TentangKami = () => {
         </div>
       </section>
 
-      <Footer />
+      {/* <Footer /> <-- Baris ini sudah dihapus atau dikomentari */}
     </>
   );
 };

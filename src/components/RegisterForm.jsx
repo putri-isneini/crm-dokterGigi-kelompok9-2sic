@@ -6,7 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 export default function RegisterForm() {
   const [form, setForm] = useState({
     nama: "",
-    noHp: "", // Menggunakan noHp sesuai dengan tabel pasien
+    noHp: "", // Menggunakan noHp, konsisten dengan DB (no_hp)
     email: "",
     password: "",
     alamat: "",
@@ -54,17 +54,16 @@ export default function RegisterForm() {
         return;
       }
 
-      // 2. Insert data lengkap pasien ke tabel 'pasien'
-      const { error: pasienError } = await supabase.from("pasien").insert([
+      // 2. Insert data lengkap pasien ke tabel 'pasien_user'
+      // Pastikan semua kolom yang NOT NULL di DB disertakan di sini
+      const { error: pasienError } = await supabase.from("pasien_user").insert([
         {
-          id: user.id, // Gunakan ID dari Supabase Auth sebagai PK di tabel pasien
-          email: user.email, // Tambahkan email dari user Auth
+          supabase_auth_id: user.id, // ID unik dari Supabase Auth
           nama: form.nama,
-          no_hp: form.noHp, // Sesuaikan dengan nama kolom di DB: no_hp
+          no_hp: form.noHp, // Ganti dari no_telepon menjadi no_hp agar konsisten dengan DB
           alamat: form.alamat,
-          jenis_kelamin: form.jenis_kelamin,
           tanggal_lahir: form.tanggal_lahir,
-          // membership akan default 'Silver' seperti di skema SQL jika ada
+          jenis_kelamin: form.jenis_kelamin,
         },
       ]);
 
@@ -102,10 +101,10 @@ export default function RegisterForm() {
           />
         </div>
         <div>
-          <label className="text-sm text-pink-600">No HP</label>
+          <label className="text-sm text-pink-600">No HP</label> {/* Label juga diubah */}
           <input
             type="text"
-            name="noHp"
+            name="noHp" // name atribut juga diubah
             value={form.noHp}
             onChange={handleChange}
             required

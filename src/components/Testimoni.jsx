@@ -1,5 +1,5 @@
 import React from "react";
-import Footer from "./Footer";
+// Hapus baris ini: import Footer from "./Footer";
 
 const Testimoni = () => {
   const testimoniList = [
@@ -26,34 +26,35 @@ const Testimoni = () => {
   ];
 
   return (
-     <>
-    <section id="testimoni" style={styles.section}>
-      <h2 style={styles.title}>
-        💬 Testimoni Pasien Kami
-        <span style={styles.titleUnderline}></span>
-      </h2>
+    <>
+      <section id="testimoni" style={styles.section}>
+        <h2 style={styles.title}>
+          💬 Testimoni Pasien Kami
+          <span style={styles.titleUnderline}></span>
+        </h2>
 
-      <div style={styles.gallery}>
-        {testimoniList.map((item, index) => (
-          <div key={index} style={styles.card}>
-            <div style={styles.images}>
-              <div style={styles.imgWrapper}>
-                <img src={item.before} alt="Before" style={styles.image} />
-                <span style={styles.label}>Before</span>
+        <div style={styles.gallery}>
+          {testimoniList.map((item, index) => (
+            <div key={index} style={styles.card}>
+              <div style={styles.images}>
+                <div style={styles.imgWrapper}>
+                  <img src={item.before} alt="Before" style={styles.image} />
+                  <span style={styles.label}>Before</span>
+                </div>
+                <div style={styles.imgWrapper}>
+                  <img src={item.after} alt="After" style={styles.image} />
+                  <span style={{ ...styles.label, ...styles.labelAfter }}>After</span>
+                </div>
               </div>
-              <div style={styles.imgWrapper}>
-                <img src={item.after} alt="After" style={styles.image} />
-                <span style={{ ...styles.label, ...styles.labelAfter }}>After</span>
+              <div style={styles.keterangan}>
+                <p>{item.keterangan}</p>
               </div>
             </div>
-            <div style={styles.keterangan}>
-              <p>{item.keterangan}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-    <Footer /></>
+          ))}
+        </div>
+      </section>
+      {/* Hapus baris ini: <Footer /> */}
+    </>
   );
 };
 
@@ -98,7 +99,6 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     gap: "16px",
-    marginBottom: "20px",
   },
   imgWrapper: {
     position: "relative",

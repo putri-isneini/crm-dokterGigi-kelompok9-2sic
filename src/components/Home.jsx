@@ -1,11 +1,12 @@
+// src/components/Home.jsx
 import React from "react";
 import { motion } from "framer-motion";
-import Header from "./Header";
-import Footer from "./Footer";
+import Header from "./Header"; // Boleh dihapus juga kalau sudah dari PublicLayout (opsional)
 
 const Home = () => {
   return (
     <>
+      {/* Jika Header sudah ada di PublicLayout, baris ini bisa dihapus */}
       <Header />
 
       <section id="home" style={styles.heroSection}>
@@ -46,7 +47,7 @@ const Home = () => {
         </motion.div>
       </section>
 
-      <Footer />
+      {/* Footer dihapus karena sudah dipanggil di PublicLayout */}
     </>
   );
 };
