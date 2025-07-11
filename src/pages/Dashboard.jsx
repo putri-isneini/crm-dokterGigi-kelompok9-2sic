@@ -1,4 +1,5 @@
-import React from 'react'
+// src/components/Dashboard.js
+import React, { useEffect, useState } from 'react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,9 +12,12 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler,
 } from 'chart.js'
 
 import { Bar, Line, Doughnut, Radar } from 'react-chartjs-2'
+import { supabase } from '../supabase'
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 ChartJS.register(
   CategoryScale,
@@ -25,10 +29,53 @@ ChartJS.register(
   RadialLinearScale,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler,
 )
 
 const Dashboard = () => {
+  const navigate = useNavigate(); // Inisialisasi useNavigate
+  const [userRole, setUserRole] = useState(null); // State untuk menyimpan role
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        // Ambil role dari metadata atau localStorage
+        let role = session.user.user_metadata?.role || localStorage.getItem("userRole");
+        setUserRole(role);
+      } else {
+        // Jika tidak ada sesi, user seharusnya sudah di-redirect oleh PrivateRoute
+        navigate("/login"); 
+      }
+      setLoading(false);
+    };
+    fetchUserRole();
+  }, [navigate]);
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut()
+    if (error) {
+      alert("Gagal logout: " + error.message);
+    } else {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('currentUserId');
+      alert("Anda telah logout.");
+      navigate("/login"); // Redirect ke halaman login setelah logout
+    }
+  }
+
+  if (loading) {
+    return <div className="text-center mt-20 text-lg text-pink-600 font-semibold">Memuat dashboard...</div>;
+  }
+
+  // Dashboard ini seharusnya hanya diakses oleh Admin atau Dokter.
+  // PrivateRoute sudah menangani otorisasi, jadi tidak perlu `if (!allowed)` di sini lagi.
+  // Namun, jika Anda ingin menampilkan pesan berbeda atau fitur spesifik berdasarkan role di dalam dashboard,
+  // Anda bisa menggunakan state `userRole`.
+
   const stats = [
     { label: "Pendapatan Hari Ini", value: "$53,000", percent: "+55%", color: "rose" },
     { label: "Pengguna Hari Ini", value: "2,300", percent: "+3%", color: "pink" },
@@ -122,35 +169,38 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 space-y-10 bg-pink-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-pink-600">Dashboard Admin Klinik</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-pink-600">Dashboard {userRole} Klinik</h1> {/* Tampilkan role */}
+        <button
+          onClick={handleLogout}
+          className="bg-pink-600 text-white px-4 py-2 rounded shadow"
+        >
+          Logout
+        </button>
+      </div>
 
-      {/* Stat Card */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map(({ label, value, percent, color }) => (
           <div key={label} className="bg-white rounded-2xl shadow p-5 border border-pink-100">
             <p className="text-sm text-gray-500">{label}</p>
-            <h2 className={`text-2xl font-bold text-${color}-600 flex items-center gap-2`}>
-              {value}
-              <span className={`text-xs font-semibold text-${color}-500`}>{percent}</span>
+            <h2 className="text-2xl font-bold flex items-center gap-2" style={{ color: `var(--tw-text-opacity, 1)` }}>
+              <span className={`text-${color}-600`}>{value}</span>
+              <span className={`text-sm text-${color}-500 font-semibold`}>{percent}</span>
             </h2>
           </div>
         ))}
       </div>
 
-      {/* Grafik */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-2xl shadow p-6 border border-pink-100">
           <Bar options={barOptions} data={barData} />
         </div>
-
         <div className="bg-white rounded-2xl shadow p-6 border border-pink-100">
           <Line options={lineOptions} data={lineData} />
         </div>
-
         <div className="bg-white rounded-2xl shadow p-6 border border-pink-100">
           <Doughnut options={pieOptions} data={pieData} />
         </div>
-
         <div className="bg-white rounded-2xl shadow p-6 border border-pink-100">
           <Radar options={radarOptions} data={radarData} />
         </div>

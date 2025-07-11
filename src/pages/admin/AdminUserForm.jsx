@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 const AdminUserForm = ({ addUser, updateUser, editingUser }) => {
   const [form, setForm] = useState({
+    email: '',
     username: '',
     password: '',
     role: 'Admin',
@@ -10,25 +11,27 @@ const AdminUserForm = ({ addUser, updateUser, editingUser }) => {
   useEffect(() => {
     if (editingUser) {
       setForm({
+        email: editingUser.email || '',
         username: editingUser.username || '',
         password: '',
         role: editingUser.role || 'Admin',
       });
     } else {
-      setForm({ username: '', password: '', role: 'Admin' });
+      setForm({ email: '', username: '', password: '', role: 'Admin' });
     }
   }, [editingUser]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!form.username.trim() || (!editingUser && !form.password.trim())) {
-      alert('Username dan Password wajib diisi.');
+    if (!form.email.trim() || !form.username.trim() || (!editingUser && !form.password.trim())) {
+      alert('Email, Username, dan Password wajib diisi.');
       return;
     }
 
     const userData = {
       id: editingUser?.id,
+      email: form.email.trim(),
       username: form.username.trim(),
       role: form.role,
       ...(form.password.trim() && { password: form.password }),
@@ -40,7 +43,7 @@ const AdminUserForm = ({ addUser, updateUser, editingUser }) => {
       addUser(userData);
     }
 
-    setForm({ username: '', password: '', role: 'Admin' });
+    setForm({ email: '', username: '', password: '', role: 'Admin' });
   };
 
   return (
@@ -48,6 +51,18 @@ const AdminUserForm = ({ addUser, updateUser, editingUser }) => {
       <h2 className="text-pink-600 text-lg font-semibold mb-4">
         {editingUser ? 'Edit Admin User' : 'Tambah Admin User'}
       </h2>
+
+      <div className="mb-3">
+        <label className="text-pink-600 text-sm block mb-1">Email</label>
+        <input
+          type="email"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          placeholder="Masukkan email"
+          className="w-full p-2 border rounded bg-pink-50 focus:outline-pink-400"
+          required
+        />
+      </div>
 
       <div className="mb-3">
         <label className="text-pink-600 text-sm block mb-1">Username</label>

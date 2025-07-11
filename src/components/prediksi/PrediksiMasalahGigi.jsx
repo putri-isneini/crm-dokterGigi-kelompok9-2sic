@@ -77,7 +77,7 @@ export default function PrediksiMasalahGigi() {
 
     // --- URL BACKEND ANDA ---
     // PENTING: PASTIKAN URL INI SELALU SESUAI DENGAN URL NGROK YANG AKTIF SAAT INI
-    const backendUrl = 'https://7bc9-104-196-48-7.ngrok-free.app/predict'; // GANTI INI DENGAN URL NGROK ANDA!
+    const backendUrl = 'https://1c64-34-125-68-121.ngrok-free.app/predict'; // GANTI INI DENGAN URL NGROK ANDA!
 
     try {
       // Mengirim data formulir sebagai JSON ke backend

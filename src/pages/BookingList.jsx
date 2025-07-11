@@ -1,6 +1,7 @@
+// src/pages/BookingList.js (Perubahan minor pada select layanan)
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase";
-import BookingForm from "./BookingForm";
+import BookingForm from "../components/BookingForm"; // Pastikan path benar
 
 const BookingList = () => {
   const [bookingList, setBookingList] = useState([]);
@@ -10,7 +11,8 @@ const BookingList = () => {
   const [layananList, setLayananList] = useState([]);
 
   const fetchData = async () => {
-    const [{ data: booking }, { data: pasien }, { data: dokter }, { data: layanan }] = await Promise.all([
+    // Gunakan Promise.all untuk fetch data secara paralel
+    const [{ data: booking, error: bookingError }, { data: pasien, error: pasienError }, { data: dokter, error: dokterError }, { data: layanan, error: layananError }] = await Promise.all([
       supabase
         .from("booking")
         .select(`
@@ -23,13 +25,18 @@ const BookingList = () => {
           created_at,
           pasien ( id, nama ),
           dokter ( id, nama ),
-          layanan ( id, nama )
+          layanan ( id, nama ) -- Ubah nama_layanan menjadi 'nama' jika tabel layanan hanya memiliki kolom 'nama'
         `)
         .order("created_at", { ascending: false }),
       supabase.from("pasien").select("id, nama"),
       supabase.from("dokter").select("id, nama"),
-      supabase.from("layanan").select("id, nama"),
+      supabase.from("layanan").select("id, nama"), // Pastikan ini juga mengambil 'nama'
     ]);
+
+    if (bookingError) console.error("Error fetching bookings:", bookingError.message);
+    if (pasienError) console.error("Error fetching pasien:", pasienError.message);
+    if (dokterError) console.error("Error fetching dokter:", dokterError.message);
+    if (layananError) console.error("Error fetching layanan:", layananError.message);
 
     setBookingList(booking || []);
     setPasienList(pasien || []);
@@ -38,8 +45,16 @@ const BookingList = () => {
   };
 
   const handleSubmit = async (data) => {
-    if (editing) {
-      await supabase.from("booking").update(data).eq("id", data.id);
+    if (data.id) {
+      await supabase.from("booking").update({
+        pasien_id: data.pasien_id,
+        dokter_id: data.dokter_id,
+        layanan_id: data.layanan_id,
+        tanggal: data.tanggal,
+        jam: data.jam,
+        keluhan: data.keluhan,
+        status: data.status,
+      }).eq("id", data.id);
     } else {
       const kode_booking = `BK-${Date.now()}`;
       await supabase.from("booking").insert([{ ...data, kode_booking }]);

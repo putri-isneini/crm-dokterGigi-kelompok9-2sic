@@ -68,14 +68,14 @@ button:focus-visible {
 }*/
 /*Font tambahan*/
 @font-face {
-  font-family: 'Kugile_Demo';
-  src: url('/fonts/Kugile_Demo.ttf') format('truetype');
+  font-family: 'GreaterTheory';
+  src: url('/fonts/GreaterTheory.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 body {
-  font-family: 'Kugile_Demo', sans-serif;
+  font-family: 'GreaterTheory', sans-serif;
 }
 
 .fade-in-container.fade-in {

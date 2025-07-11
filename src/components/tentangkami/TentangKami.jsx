@@ -209,69 +209,72 @@ const TentangKami = () => {
       },
       dokterGrid: {
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-        gap: "3.5rem",
+        gridTemplateColumns: "repeat(5, 1fr)", // 5 kolom tetap
+        gap: "2.5rem",
         padding: "0 1rem",
         marginTop: "4rem",
         justifyItems: "center",
-        maxWidth: "1400px",
+        maxWidth: "1800px", // tambahkan cukup ruang agar muat
         margin: "0 auto",
       },
+
+
       dokterCard: (id) => ({
-        backgroundColor: white,
-        borderRadius: "20px",
+        background: `linear-gradient(135deg, ${white}, ${subtlePinkBg})`,
+        borderRadius: "22px",
         overflow: "hidden",
-        // Efek hover untuk card dokter
-        transform: hoveredDokterId === id ? 'translateY(-12px) scale(1.04)' : 'translateY(0) scale(1)',
+        transform: hoveredDokterId === id ? 'translateY(-10px) scale(1.03)' : 'translateY(0) scale(1)',
         boxShadow: hoveredDokterId === id
-          ? "0 28px 60px rgba(236, 64, 122, 0.3)" // Bayangan pink lebih kuat saat hover
-          : "0 15px 40px rgba(0, 0, 0, 0.08)", // Bayangan default lebih lembut dan transparan
-        transition: "transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
+          ? "0 20px 40px rgba(236, 64, 122, 0.3)"
+          : "0 10px 30px rgba(0, 0, 0, 0.06)",
+        transition: "all 0.35s ease-in-out",
         width: "100%",
-        maxWidth: "340px",
+        maxWidth: "360px",
         textAlign: "center",
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        border: `2px solid ${secondaryPink}`, // Tambah border tipis untuk definisi card
+        border: `1.5px solid ${secondaryPink}`,
       }),
+
       dokterFoto: (id) => ({
         width: "100%",
-        height: "380px",
+        height: "360px",
         objectFit: "cover",
-        // Border bawah foto dokter dengan gradasi pink (lebih aesthetic)
         borderBottom: hoveredDokterId === id
-          ? `6px solid ${primaryPink}` // Pink cerah saat hover
-          : `6px solid ${secondaryPink}`, // Pink sedang default
-        // Efek hover untuk foto dokter
-        filter: hoveredDokterId === id ? 'grayscale(0%) brightness(105%)' : 'grayscale(10%) brightness(100%)',
-        transition: 'filter 0.3s ease, border-bottom 0.3s ease',
+          ? `4px solid ${primaryPink}`
+          : `4px solid ${secondaryPink}`,
+        filter: hoveredDokterId === id ? 'grayscale(0%) brightness(105%)' : 'grayscale(8%) brightness(98%)',
+        transition: 'all 0.3s ease',
       }),
+
       dokterInfo: {
-        padding: "1.5rem 1rem",
+        padding: "1.4rem 1rem",
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         flexGrow: 1,
-        // Background info dokter dengan gradasi subtle dari putih ke pink sangat tipis
         background: `linear-gradient(to bottom, ${white}, ${subtlePinkBg})`,
       },
+
       dokterNama: {
-        fontSize: "2.1rem",
+        fontSize: "2rem",
         fontWeight: 700,
         color: primaryPink,
-        marginBottom: "0.5rem",
-        fontFamily: "'Montserrat', sans-serif",
-        letterSpacing: '0.5px',
+        marginBottom: "0.4rem",
+        fontFamily: "'Poppins', sans-serif",
+        letterSpacing: '0.6px',
       },
+
       dokterSpesialis: {
         color: mediumText,
-        fontSize: "1.15rem",
+        fontSize: "1.1rem",
         fontWeight: 500,
-        letterSpacing: '0.8px',
-        opacity: 0.9,
+        letterSpacing: '0.5px',
+        opacity: 0.85,
       },
+
       loadingText: {
         textAlign: "center",
         color: mediumText,
@@ -421,16 +424,7 @@ const TentangKami = () => {
 
   return (
     <>
-      {/* PENTING UNTUK TAMPILAN FULL:
-          Pastikan di file CSS global Anda (misalnya index.css atau App.css) ada reset dasar:
-          html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            overflow-x: hidden; /* Mencegah scroll horizontal yang tidak diinginkan */
-          }
-          @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
-      */
+
 
       {/* Hero Section - Gambar Besar Full Layar */}
       <section style={currentStyles.heroSection} data-aos="fade-in">

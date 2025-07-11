@@ -1,17 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import Footer from "./Footer";
-// import PrediksiMasalahGigi from "./prediksi/PrediksiMasalahGigi"; // Hapus import ini karena akan jadi halaman terpisah
-import { supabase } from '../supabase'; // PASTIKAN SUDAH ADA
-import { Link } from 'react-router-dom'; // Import Link dari react-router-dom
+import { supabase } from '../supabase';
+import { Link } from 'react-router-dom';
 
 const LayananKami = ({ sectionRef }) => {
   const containerRef = useRef(null);
-  // const [showModal, setShowModal] = useState(false); // Hapus state ini
   const [layananData, setLayananData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Efek untuk animasi scroll (AOS atau IntersectionObserver)
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -20,13 +17,9 @@ const LayananKami = ({ sectionRef }) => {
       },
       { threshold: 0.2 }
     );
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
+    if (containerRef.current) observer.observe(containerRef.current);
     return () => {
-      if (containerRef.current) {
-        observer.disconnect();
-      }
+      if (containerRef.current) observer.disconnect();
     };
   }, []);
 
@@ -53,11 +46,11 @@ const LayananKami = ({ sectionRef }) => {
       key={item.id}
       className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 ease-in-out border border-pink-100 flex flex-col"
     >
-      {item.gambar && ( // Menampilkan gambar jika ada
+      {item.gambar && (
         <img
           src={item.gambar}
           alt={item.nama}
-          className="w-full h-48 object-cover rounded-xl mb-4 shadow-sm" // Styling gambar
+          className="w-full h-48 object-cover rounded-xl mb-4 shadow-sm"
         />
       )}
       <h3 className="text-pink-600 text-2xl font-bold mb-3 font-heading">
@@ -67,10 +60,18 @@ const LayananKami = ({ sectionRef }) => {
         {item.deskripsi}
       </p>
       {item.harga && (
-        <p className="text-rose-700 text-xl font-extrabold mt-2">
+        <p className="text-rose-700 text-xl font-extrabold mt-2 mb-4">
           Rp {parseInt(item.harga).toLocaleString("id-ID")}
         </p>
       )}
+
+      {/* Tombol coba layanan */}
+      <Link
+        to={`/booking?layanan_id=${item.id}`}
+        className="mt-auto bg-gradient-to-r from-pink-500 to-rose-400 text-white font-semibold text-sm px-5 py-2 rounded-full hover:shadow-md hover:scale-105 transition-all ease-in-out text-center"
+      >
+        Coba Layanan
+      </Link>
     </div>
   );
 
@@ -87,9 +88,7 @@ const LayananKami = ({ sectionRef }) => {
           <h2 className="text-5xl md:text-6xl font-extrabold text-pink-700 mb-6 leading-tight animate-fade-in-up">
             Jajaran <span className="text-rose-500">Layanan Terbaik</span> Kami
           </h2>
-          <p
-            className="text-xl md:text-2xl text-gray-700 mb-16 font-medium max-w-4xl mx-auto leading-relaxed animate-fade-in-up delay-200"
-          >
+          <p className="text-xl md:text-2xl text-gray-700 mb-16 font-medium max-w-4xl mx-auto leading-relaxed animate-fade-in-up delay-200">
             Kami berkomitmen menyediakan perawatan gigi komprehensif dengan teknologi
             terkini dan sentuhan personal untuk senyum sehat Anda.
           </p>
@@ -107,9 +106,8 @@ const LayananKami = ({ sectionRef }) => {
             <p className="text-gray-500 text-xl">Tidak ada layanan yang tersedia saat ini.</p>
           )}
 
-          {/* Mengubah button menjadi Link */}
           <Link
-            to="/prediksi" // Path tujuan
+            to="/prediksi"
             className="bg-gradient-to-r from-pink-500 to-rose-400 text-white font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-pink-300 focus:ring-opacity-75 text-lg flex items-center justify-center mx-auto"
           >
             <span className="mr-3 text-2xl">🦷</span> Cek Masalah Gigi Anda
@@ -118,30 +116,9 @@ const LayananKami = ({ sectionRef }) => {
       </section>
 
       <Footer />
-
-      {/* Hapus bagian modal sepenuhnya */}
-      {/* {showModal && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[9999] p-4 animate-fade-in"
-          onClick={() => setShowModal(false)}
-        >
-          <div
-            className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative animate-scale-in"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-pink-600 text-3xl font-light focus:outline-none transition-colors duration-200"
-              aria-label="Close modal"
-            >
-              &times;
-            </button>
-            <PrediksiMasalahGigi />
-          </div>
-        </div>
-      )} */}
     </>
   );
 };
 
 export default LayananKami;
+  

@@ -5,6 +5,7 @@ import AdminUserForm from './AdminUserForm';
 function AdminUser() {
   const [adminUsers, setAdminUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
+  const [showPasswords, setShowPasswords] = useState({});
 
   useEffect(() => {
     fetchAdminUsers();
@@ -13,7 +14,7 @@ function AdminUser() {
   const fetchAdminUsers = async () => {
     const { data, error } = await supabase
       .from('admin_user')
-      .select('id, username, role, created_at')
+      .select('id, email, username, role, password_hash, created_at')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -24,39 +25,70 @@ function AdminUser() {
   };
 
   const addUser = async (formData) => {
-    const { password, ...rest } = formData;
+    const { email, password, username, role } = formData;
 
-    if (!password) {
-      alert('Password wajib diisi');
+    if (!email || !password || !username || !role) {
+      alert("Semua field wajib diisi");
       return;
     }
 
-    const { error } = await supabase
-      .from('admin_user')
-      .insert({ ...rest, password_hash: password });
+    if (!email.includes('@') || !email.includes('.')) {
+      alert("Email tidak valid");
+      return;
+    }
 
-    if (error) {
-      console.error('Gagal tambah user:', error);
+    if (password.length < 6) {
+      alert("Password minimal 6 karakter");
+      return;
+    }
+
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (signUpError) {
+      console.error("Gagal daftar Supabase Auth:", signUpError.message);
+      alert("Gagal daftar: " + signUpError.message);
+      return;
+    }
+
+    const userId = signUpData?.user?.id;
+
+    const { error: insertError } = await supabase
+      .from("admin_user")
+      .insert({
+        id: userId,
+        email,
+        username,
+        role,
+        password_hash: password, // password disimpan ke kolom password_hash
+      });
+
+    if (insertError) {
+      console.error("Gagal tambah ke admin_user:", insertError.message);
+      alert("Gagal simpan admin_user: " + insertError.message);
     } else {
+      alert("Admin berhasil ditambahkan");
       fetchAdminUsers();
     }
   };
 
   const updateUser = async (formData) => {
-    const { password, ...rest } = formData;
-
-    const updateData = {
-      ...rest,
-      ...(password && { password_hash: password }),
-    };
+    const { id, email, username, role, password } = formData;
 
     const { error } = await supabase
       .from('admin_user')
-      .update(updateData)
-      .eq('id', formData.id);
+      .update({
+        email,
+        username,
+        role,
+        password_hash: password,
+      })
+      .eq('id', id);
 
     if (error) {
-      console.error('Gagal update user:', error);
+      console.error('Gagal update user:', error.message);
     } else {
       fetchAdminUsers();
       setEditingUser(null);
@@ -70,10 +102,17 @@ function AdminUser() {
       .eq('id', id);
 
     if (error) {
-      console.error('Gagal hapus user:', error);
+      console.error('Gagal hapus user:', error.message);
     } else {
       fetchAdminUsers();
     }
+  };
+
+  const togglePassword = (id) => {
+    setShowPasswords((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
 
   return (
@@ -93,8 +132,10 @@ function AdminUser() {
           <table className="w-full text-sm border-collapse">
             <thead className="bg-pink-100 text-pink-700">
               <tr>
+                <th className="border p-3">Email</th>
                 <th className="border p-3">Username</th>
                 <th className="border p-3">Role</th>
+                <th className="border p-3">Password</th>
                 <th className="border p-3">Tanggal Dibuat</th>
                 <th className="border p-3">Aksi</th>
               </tr>
@@ -103,8 +144,22 @@ function AdminUser() {
               {adminUsers.length > 0 ? (
                 adminUsers.map((user) => (
                   <tr key={user.id}>
+                    <td className="border p-3">{user.email}</td>
                     <td className="border p-3">{user.username}</td>
                     <td className="border p-3">{user.role}</td>
+                    <td className="border p-3">
+                      {showPasswords[user.id] ? (
+                        <span>{user.password_hash}</span>
+                      ) : (
+                        <span>{'●'.repeat(user.password_hash?.length || 8)}</span>
+                      )}
+                      <button
+                        onClick={() => togglePassword(user.id)}
+                        className="ml-2 text-xs text-blue-600 underline"
+                      >
+                        {showPasswords[user.id] ? 'Sembunyikan' : 'Lihat'}
+                      </button>
+                    </td>
                     <td className="border p-3">
                       {new Date(user.created_at).toLocaleDateString('id-ID', {
                         day: 'numeric',
@@ -130,7 +185,7 @@ function AdminUser() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="italic text-gray-500 p-4">
+                  <td colSpan="6" className="italic text-gray-500 p-4">
                     Belum ada data admin
                   </td>
                 </tr>

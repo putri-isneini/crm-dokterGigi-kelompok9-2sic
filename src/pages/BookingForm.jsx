@@ -1,7 +1,9 @@
+// src/components/BookingForm.js (Tidak ada perubahan signifikan yang diperlukan)
 import { useState, useEffect } from "react";
 
 const BookingForm = ({ onSubmit, editing, pasienOptions, dokterOptions, layananOptions }) => {
   const [form, setForm] = useState({
+    id: '',
     pasien_id: '',
     dokter_id: '',
     layanan_id: '',
@@ -13,9 +15,19 @@ const BookingForm = ({ onSubmit, editing, pasienOptions, dokterOptions, layananO
 
   useEffect(() => {
     if (editing) {
-      setForm(editing);
+      setForm({
+        id: editing.id || '',
+        pasien_id: editing.pasien?.id || editing.pasien_id || '', // Sesuaikan jika 'pasien' objek di 'editing'
+        dokter_id: editing.dokter?.id || editing.dokter_id || '', // Sesuaikan jika 'dokter' objek di 'editing'
+        layanan_id: editing.layanan?.id || editing.layanan_id || '', // Sesuaikan jika 'layanan' objek di 'editing'
+        tanggal: editing.tanggal || '',
+        jam: editing.jam || '',
+        keluhan: editing.keluhan || '',
+        status: editing.status || 'Menunggu',
+      });
     } else {
       setForm({
+        id: '',
         pasien_id: '',
         dokter_id: '',
         layanan_id: '',
@@ -33,9 +45,17 @@ const BookingForm = ({ onSubmit, editing, pasienOptions, dokterOptions, layananO
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!form.pasien_id || !form.dokter_id || !form.layanan_id || !form.tanggal || !form.jam) {
+      alert("Mohon lengkapi semua field yang wajib.");
+      return;
+    }
+
     onSubmit(form);
     setForm({
+      id: '',
       pasien_id: '',
+      pasien_id: '', // Reset
       dokter_id: '',
       layanan_id: '',
       tanggal: '',

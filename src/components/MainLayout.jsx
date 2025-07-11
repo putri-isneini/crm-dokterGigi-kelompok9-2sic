@@ -1,18 +1,23 @@
-import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar.jsx";
+// src/components/MainLayout.js
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import Header from './Header'; // Pastikan path benar
+import Sidebar from './Sidebar'; // Asumsikan Anda memiliki komponen Sidebar
 
-export default function MainLayout() {
+// MainLayout sekarang menerima isLoggedIn dan userRole sebagai props
+const MainLayout = ({ isLoggedIn, userRole }) => {
   return (
-    <div id="app-container" className="bg-gray-100 min-h-screen flex w-full">
-      <Sidebar />
-      <div id="main-content" className="flex-1 flex flex-col ml-64">
-        {/* <Header /> --> Dihapus */}
-        <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
-          <div className="p-6 bg-white rounded-xl shadow-sm min-h-[calc(100vh-4rem)]">
-            <Outlet />
-          </div>
+    <div className="flex">
+      <Sidebar /> {/* Sidebar untuk navigasi dashboard */}
+      <div className="flex-1 flex flex-col">
+        {/* Teruskan isLoggedIn dan userRole ke Header */}
+        <Header isLoggedIn={isLoggedIn} userRole={userRole} />
+        <main className="flex-1 p-6 pt-24"> {/* Sesuaikan padding-top agar tidak tertutup header */}
+          <Outlet />
         </main>
       </div>
     </div>
   );
-}
+};
+
+export default MainLayout;

@@ -4,21 +4,16 @@ import Footer from "./Footer";
 
 const Kontak = () => {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false); // DIHAPUS: Tidak diperlukan lagi
 
-  useEffect(() => {
-    // Mengecek apakah ada pasien_id di localStorage.
-    // Ini mungkin perlu disesuaikan dengan logika otentikasi admin Anda.
-    // Jika Anda ingin tombol ini hanya terlihat oleh admin, pastikan ada indikator admin di localStorage.
-    const pasienId = localStorage.getItem("pasien_id");
-    // Untuk tujuan admin, mungkin Anda perlu mengecek role atau token admin
-    // Contoh sederhana: setIsLoggedIn(localStorage.getItem("admin_token") !== null);
-    setIsLoggedIn(!!pasienId); // Menganggap jika ada pasienId, maka bisa masuk ke halaman admin/login
-  }, []);
+  // useEffect(() => { // DIHAPUS: Tidak diperlukan lagi
+  //   const pasienId = localStorage.getItem("pasien_id");
+  //   setIsLoggedIn(!!pasienId);
+  // }, []);
 
-  const goToLogin = () => { // Mengubah nama fungsi dari goToAdmin menjadi goToLogin
-    navigate("/login"); // Mengubah rute navigasi dari "/admin" menjadi "/login"
-  };
+  // const goToLogin = () => { // DIHAPUS: Fungsi ini tidak lagi digunakan
+  //   navigate("/login");
+  // };
 
   return (
     <>
@@ -33,7 +28,7 @@ const Kontak = () => {
             {/* Map */}
             <div className="kontak-map">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.658682705599!2d101.4429916742533!3d0.5187700994963576!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31d5ac91ee202f5d%3A0x6b4e72c8e3129532!2sJl.%20Durian%20No.28a%2C%20Sukajadi%2C%20Kec.%20Sukajadi%2C%20Kota%20Pekanbaru%2C%20Riau%2028121!5e0!3m2!1sid!2sid!4v1717282800000!5m2!1sid!2sid" // Mengganti URL map yang lebih spesifik
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.658682705599!2d101.4429916742533!3d0.5187700994963576!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31d5ac91ee202f5d%3A0x6b4e72c8e3129532!2sJl.%20Durian%20No.28a%2C%20Sukajadi%2C%20Kec.%20Sukajadi%2C%20Kota%20Pekanbaru%2C%20Riau%2028121!5e0!3m2!1sid!2sid!4v1717282800000!5m2!1sid!2sid"
                 title="Lokasi Klinik Drg. Tia Dental Care"
                 loading="lazy"
                 allowFullScreen
@@ -50,13 +45,13 @@ const Kontak = () => {
               </div>
               <div className="info-item">
                 <i className="fab fa-whatsapp info-icon"></i>
-                <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer"> {/* Tambah rel="noopener noreferrer" untuk keamanan */}
+                <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer">
                   0812-3456-7890
                 </a>
               </div>
               <div className="info-item">
                 <i className="fab fa-instagram info-icon"></i>
-                <a href="https://www.instagram.com/tiadentalcare" target="_blank" rel="noopener noreferrer"> {/* Tambah rel="noopener noreferrer" */}
+                <a href="https://www.instagram.com/tiadentalcare" target="_blank" rel="noopener noreferrer">
                   @tiadentalcare
                 </a>
               </div>
@@ -65,11 +60,12 @@ const Kontak = () => {
                 <span>Senin - Sabtu, 08.00 - 17.00 WIB</span>
               </div>
 
-              {isLoggedIn && (
-                <button className="admin-button" onClick={goToLogin}> {/* Mengubah onClick ke goToLogin */}
+              {/* DIHAPUS: Button "Masuk ke Halaman Login Admin" */}
+              {/* {isLoggedIn && (
+                <button className="admin-button" onClick={goToLogin}>
                   Masuk ke Halaman Login Admin
                 </button>
-              )}
+              )} */}
             </div>
           </div>
         </div>
@@ -153,27 +149,28 @@ const Kontak = () => {
             text-decoration: underline;
             color: #d81b60; /* Warna hover link */
           }
-          .admin-button {
-            margin-top: 40px; /* Jarak lebih besar dari info di atasnya */
+          /* DIHAPUS: CSS untuk .admin-button */
+          /* .admin-button {
+            margin-top: 40px;
             align-self: flex-start;
-            background-color: #AD1457; /* Warna tombol yang kuat */
+            background-color: #AD1457;
             color: white;
             border: none;
-            padding: 14px 32px; /* Padding tombol lebih besar */
+            padding: 14px 32px;
             border-radius: 9999px;
-            font-size: 1.1rem; /* Ukuran font tombol lebih besar */
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 6px 16px rgba(173, 20, 87, 0.3); /* Shadow tombol lebih menonjol */
+            box-shadow: 0 6px 16px rgba(173, 20, 87, 0.3);
             transition: background 0.3s ease, transform 0.2s ease;
           }
           .admin-button:hover {
-            background-color: #880E4F; /* Warna hover tombol */
-            transform: translateY(-2px); /* Efek angkat saat hover */
+            background-color: #880E4F;
+            transform: translateY(-2px);
           }
           .admin-button:active {
-            transform: translateY(0); /* Kembali ke posisi semula saat diklik */
-          }
+            transform: translateY(0);
+          } */
 
           @media (max-width: 768px) {
             .kontak-title {
@@ -190,8 +187,8 @@ const Kontak = () => {
             .kontak-map,
             .kontak-info {
               width: 100%;
-              min-width: unset; /* Hapus min-width di mobile */
-              height: 350px; /* Sesuaikan tinggi map di mobile */
+              min-width: unset;
+              height: 350px;
             }
             .info-item {
               font-size: 1rem;
@@ -199,11 +196,12 @@ const Kontak = () => {
             .info-icon {
               font-size: 1.4rem;
             }
-            .admin-button {
-                width: 100%; /* Tombol full width di mobile */
-                align-self: center; /* Tengah tombol di mobile */
-                max-width: 300px; /* Batasi lebar tombol */
-            }
+            /* DIHAPUS: CSS untuk .admin-button di media query */
+            /* .admin-button {
+                width: 100%;
+                align-self: center;
+                max-width: 300px;
+            } */
           }
         `}</style>
       </section>

@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
 import dayjs from "dayjs";
 
 const FormBooking = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const pasienId = location.state?.pasien_id;
-
+  const [pasienId, setPasienId] = useState(null);
   const [layananList, setLayananList] = useState([]);
   const [form, setForm] = useState({
     layanan_id: "",
@@ -16,20 +14,51 @@ const FormBooking = () => {
   });
 
   const [jamDipilih, setJamDipilih] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchLayanan();
-  }, []);
+    const checkPasienId = async () => {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session || !session.user) {
+        setError("Anda harus login sebagai pasien untuk melakukan booking.");
+        navigate("/login");
+        setLoading(false);
+        return;
+      }
+
+      // Ambil pasienId dari tabel 'pasien' menggunakan ID dari auth.users
+      const { data: pasienData, error: pasienError } = await supabase
+        .from('pasien') // Ubah ke tabel 'pasien'
+        .select('id')
+        .eq('id', session.user.id) // Kolom 'id' di tabel pasien harus sama dengan user.id dari auth.users
+        .single();
+
+      if (pasienError || !pasienData) {
+        setError("Data profil pasien Anda tidak ditemukan. Silakan lengkapi profil Anda.");
+        navigate("/profil-pasien");
+        setLoading(false);
+        return;
+      }
+
+      setPasienId(pasienData.id);
+      setLoading(false);
+      fetchLayanan();
+    };
+
+    checkPasienId();
+  }, [navigate]);
 
   useEffect(() => {
-    if (form.tanggal) {
+    if (form.tanggal && pasienId) {
       cariSlotJamTersedia(form.tanggal);
     }
-  }, [form.tanggal]);
+  }, [form.tanggal, pasienId]);
 
   const fetchLayanan = async () => {
     const { data, error } = await supabase.from("layanan").select("id, nama");
     if (!error) setLayananList(data);
+    else console.error("Error fetching layanan:", error.message);
   };
 
   const getHariIndo = (tanggal) => {
@@ -73,13 +102,13 @@ const FormBooking = () => {
         const jamStr = jam.format("HH:mm");
 
         const sudahBooking = bookings?.some(
-          (b) => b.jam === jamStr && b.dokter_id === jadwal.dokter_id
+          (b) => b.jam === jamStr && b.dokter_id === jadwal.dokter.id
         );
 
         if (!sudahBooking) {
           setJamDipilih({
             jam: jamStr,
-            dokter_id: jadwal.dokter_id,
+            dokter_id: jadwal.dokter.id,
             dokter_nama: jadwal.dokter?.nama || "Tanpa Nama",
           });
           return;
@@ -90,6 +119,11 @@ const FormBooking = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!pasienId) {
+      alert("ID Pasien tidak ditemukan. Silakan login kembali.");
+      navigate("/login");
+      return;
+    }
     if (!jamDipilih) {
       alert("Tidak ada jam tersedia pada tanggal tersebut.");
       return;
@@ -112,9 +146,17 @@ const FormBooking = () => {
       alert("Gagal booking: " + error.message);
     } else {
       alert("Booking berhasil!");
-      navigate("/");
+      navigate("/profil-pasien");
     }
   };
+
+  if (loading) {
+    return <div className="text-center mt-20 text-lg text-pink-600 font-semibold">Memuat formulir booking...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center mt-20 text-lg text-red-600 font-semibold">Error: {error}</div>;
+  }
 
   return (
     <form
