@@ -1,48 +1,63 @@
-// src/components/TestimoniSection.jsx
+// src/components/TestimoniSection.jsx (Sebelumnya FeedbackTestimoniSection.jsx)
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabase'; // Pastikan path supabase benar
 import { QuoteIcon, StarIcon } from 'lucide-react'; // Untuk ikon
 
-const TestimoniSection = () => {
-  const [testimoniList, setTestimoniList] = useState([]);
+const TestimoniSection = () => { // Nama komponen dikembalikan menjadi TestimoniSection
+  const [feedbackList, setFeedbackList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchTestimoni = async () => {
+    const fetchFeedback = async () => {
       setLoading(true);
       setError(null);
       try {
+        // Fetch dari tabel 'feedback' dan join dengan 'pasien_user' untuk mendapatkan nama pasien
         const { data, error } = await supabase
-          .from('testimoni')
-          .select('id, nama_pasien, komentar, rating, created_at')
-          .order('created_at', { ascending: false }); // Urutkan dari terbaru
+          .from('feedback')
+          .select(`
+            id,
+            komentar,
+            rating,
+            created_at,
+            pasien_user(nama_lengkap) // Join untuk mendapatkan nama_lengkap dari pasien_user
+          `)
+          .order('created_at', { ascending: false });
 
         if (error) {
           throw error;
         }
-        setTestimoniList(data);
+        // Map data untuk menyertakan nama_pasien
+        const formattedFeedback = data.map(item => ({
+          id: item.id,
+          komentar: item.komentar,
+          rating: item.rating,
+          created_at: item.created_at,
+          nama_pasien: item.pasien_user ? item.pasien_user.nama_lengkap : 'Anonim',
+        }));
+        setFeedbackList(formattedFeedback);
       } catch (err) {
-        console.error('Gagal fetch testimoni untuk halaman depan:', err.message);
+        console.error('Gagal fetch feedback untuk halaman testimoni:', err.message);
         setError('Gagal memuat testimoni. Silakan coba lagi nanti.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchTestimoni();
+    fetchFeedback();
   }, []);
 
   if (loading) {
-    return <div className="text-center text-gray-600 py-10">Memuat testimoni...</div>;
+    return <div className="text-center text-gray-600 py-10">Memuat testimoni feedback...</div>;
   }
 
   if (error) {
     return <div className="text-center text-red-600 py-10">Error: {error}</div>;
   }
 
-  if (testimoniList.length === 0) {
-    return <div className="text-center text-gray-500 py-10 italic">Belum ada testimoni yang tersedia.</div>;
+  if (feedbackList.length === 0) {
+    return <div className="text-center text-gray-500 py-10 italic">Belum ada testimoni feedback yang tersedia.</div>;
   }
 
   return (
@@ -52,7 +67,7 @@ const TestimoniSection = () => {
           Apa Kata Pasien Kami 💬
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {testimoniList.map((testimoni) => (
+          {feedbackList.map((testimoni) => (
             <div key={testimoni.id} className="bg-pink-50 p-8 rounded-2xl shadow-lg border border-pink-100 flex flex-col items-center text-center">
               <QuoteIcon className="w-10 h-10 text-pink-400 mb-4" />
               <p className="italic text-gray-700 mb-4 leading-relaxed">"{testimoni.komentar}"</p>

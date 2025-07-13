@@ -1,23 +1,76 @@
 // src/components/FeedbackForm.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase'; // Pastikan path supabase benar
 import { StarIcon } from 'lucide-react'; // Untuk ikon bintang
+import { useParams, useNavigate } from 'react-router-dom'; // Import useParams dan useNavigate
 
-const FeedbackForm = ({ bookingId, pasienId, onFeedbackSubmitted }) => {
+const FeedbackForm = () => {
+  const { bookingId } = useParams(); // Ambil bookingId dari URL
+  const navigate = useNavigate();
+  const [pasienId, setPasienId] = useState(null);
   const [rating, setRating] = useState(0);
   const [komentar, setKomentar] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Initial loading for fetching pasienId
+  const [isSubmitting, setIsSubmitting] = useState(false); // For form submission
   const [error, setError] = useState(null);
   const [submitted, setSubmitted] = useState(false); // State untuk menandakan sudah submit
 
+  useEffect(() => {
+    const fetchPasienId = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+        if (userError || !user) {
+          setError("Sesi pengguna tidak valid. Silakan login kembali.");
+          setLoading(false);
+          navigate("/login");
+          return;
+        }
+
+        const { data: pasienData, error: pasienError } = await supabase
+          .from('pasien_user')
+          .select('id')
+          .eq('supabase_auth_id', user.id)
+          .single();
+
+        if (pasienError || !pasienData) {
+          setError("Data profil pasien Anda tidak ditemukan. Silakan lengkapi profil Anda.");
+          setLoading(false);
+          navigate("/profil-pasien");
+          return;
+        }
+        setPasienId(pasienData.id);
+      } catch (err) {
+        console.error("Error fetching pasien ID in FeedbackForm:", err.message);
+        setError("Gagal memuat data pasien: " + err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPasienId();
+  }, [navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setIsSubmitting(true); // Mulai loading saat submit
     setError(null);
 
     if (rating === 0) {
       setError('Mohon berikan rating bintang.');
-      setLoading(false);
+      setIsSubmitting(false);
+      return;
+    }
+    if (!bookingId) {
+      setError('ID Booking tidak ditemukan. Tidak dapat mengirim feedback.');
+      setIsSubmitting(false);
+      return;
+    }
+    if (!pasienId) {
+      setError('ID Pasien tidak ditemukan. Silakan coba lagi.');
+      setIsSubmitting(false);
       return;
     }
 
@@ -43,23 +96,28 @@ const FeedbackForm = ({ bookingId, pasienId, onFeedbackSubmitted }) => {
         .eq('id', bookingId);
 
       if (updateBookingError) {
-        // Jika update booking gagal, mungkin perlu rollback feedback atau log error
         console.error('Gagal memperbarui status feedback di booking:', updateBookingError.message);
-        // Namun, feedback sudah tersimpan, jadi biarkan saja untuk saat ini
       }
 
       setSubmitted(true);
       alert('Terima kasih atas feedback Anda!');
-      if (onFeedbackSubmitted) {
-        onFeedbackSubmitted(); // Panggil callback untuk refresh data di HalamanProfil
-      }
+      // Arahkan ke halaman profil pasien
+      navigate("/profil-pasien", { replace: true });
     } catch (err) {
       console.error('Gagal mengirim feedback:', err.message);
       setError('Gagal mengirim feedback: ' + err.message);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false); // Selesai loading
     }
   };
+
+  if (loading) {
+    return <div className="text-center mt-20 text-lg text-pink-600 font-semibold">Memuat formulir feedback...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center mt-20 text-lg text-red-600 font-semibold">Error: {error}</div>;
+  }
 
   if (submitted) {
     return (
@@ -70,7 +128,7 @@ const FeedbackForm = ({ bookingId, pasienId, onFeedbackSubmitted }) => {
   }
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md border border-pink-100">
+    <div className="bg-white p-6 rounded-xl shadow-md border border-pink-100 max-w-md mx-auto mt-10">
       <h3 className="text-xl font-semibold text-pink-600 mb-4">Berikan Feedback Anda</h3>
       {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -100,10 +158,10 @@ const FeedbackForm = ({ bookingId, pasienId, onFeedbackSubmitted }) => {
         </div>
         <button
           type="submit"
-          disabled={loading || rating === 0}
+          disabled={isSubmitting || rating === 0}
           className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? 'Mengirim...' : 'Kirim Feedback'}
+          {isSubmitting ? 'Mengirim...' : 'Kirim Feedback'}
         </button>
       </form>
     </div>

@@ -1,13 +1,32 @@
 // src/components/Home.jsx
 import React from "react";
 import { motion } from "framer-motion";
-import Header from "./Header"; // Boleh dihapus juga kalau sudah dari PublicLayout (opsional)
+import { useOutletContext, useNavigate } from "react-router-dom"; // Import useNavigate
+// Header tidak perlu di-import di sini jika sudah dari PublicLayout
 
 const Home = () => {
+  // Mengambil isLoggedIn dan userRole dari context Outlet PublicLayout
+  const { isLoggedIn, userRole } = useOutletContext();
+  const navigate = useNavigate(); // Untuk navigasi programatis
+
+  // Tentukan teks dan tujuan tombol berdasarkan status login dan peran
+  let buttonText = "Login / Daftar";
+  let buttonHref = "/login"; // Default ke halaman login
+
+  if (isLoggedIn) {
+    if (userRole === 'Pasien') {
+      buttonText = "Buat Janji Sekarang";
+      buttonHref = "/booking";
+    } else if (['Admin', 'Dokter', 'Staf'].includes(userRole)) {
+      buttonText = "Ke Dashboard";
+      buttonHref = "/dashboard";
+    }
+  }
+
   return (
     <>
-      {/* Jika Header sudah ada di PublicLayout, baris ini bisa dihapus */}
-      <Header />
+      {/* Header sudah dipanggil di PublicLayout, jadi ini bisa dihapus */}
+      {/* <Header /> */}
 
       <section id="home" style={styles.heroSection}>
         <div style={styles.overlay} />
@@ -37,12 +56,15 @@ const Home = () => {
           </motion.p>
 
           <motion.a
-            href="/booking"
+            // Gunakan buttonHref yang dinamis
+            href={buttonHref}
             style={styles.btnBooking}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
+            // Tambahkan onClick untuk navigasi programatis jika diperlukan,
+            // tapi href sudah cukup untuk elemen <a>
           >
-            Buat Janji Sekarang
+            {buttonText} {/* Gunakan buttonText yang dinamis */}
           </motion.a>
         </motion.div>
       </section>

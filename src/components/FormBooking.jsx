@@ -15,19 +15,24 @@ const FormBooking = () => {
   });
 
   const [jamDipilih, setJamDipilih] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Mengganti 'loading' untuk submit
   const [error, setError] = useState(null);
+  const [isInitialLoading, setIsInitialLoading] = useState(true); // State baru untuk loading awal data
 
   useEffect(() => {
-    const checkPasienId = async () => {
-      setLoading(true); // Pastikan loading true saat memulai
+    const checkPasienProfile = async () => {
+      setIsInitialLoading(true); // Mulai loading awal
       setError(null); // Reset error
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError || !session || !session.user) {
-        console.error("Session error or no user:", sessionError?.message);
-        setError("Anda harus login sebagai pasien untuk melakukan booking.");
-        setLoading(false);
+
+      // Dapatkan informasi pengguna yang sedang login
+      // Karena rute ini sudah dilindungi oleh PrivateRoute, kita tahu pengguna sudah login.
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        // Seharusnya tidak terjadi jika PrivateRoute berfungsi, tapi sebagai fallback aman.
+        console.error("User not found after PrivateRoute:", userError?.message);
+        setError("Sesi pengguna tidak valid. Silakan login kembali.");
+        setIsInitialLoading(false);
         navigate("/login");
         return;
       }
@@ -36,24 +41,24 @@ const FormBooking = () => {
       const { data: pasienData, error: pasienError } = await supabase
         .from('pasien_user') // Menggunakan tabel 'pasien_user'
         .select('id')
-        .eq('supabase_auth_id', session.user.id) // Kolom 'supabase_auth_id' di tabel pasien_user
+        .eq('supabase_auth_id', user.id) // Kolom 'supabase_auth_id' di tabel pasien_user
         .single();
 
       if (pasienError || !pasienData) {
         console.error("Pasien data not found or error:", pasienError?.message);
         setError("Data profil pasien Anda tidak ditemukan. Silakan lengkapi profil Anda.");
-        setLoading(false);
+        setIsInitialLoading(false);
         navigate("/profil-pasien"); // Arahkan ke HalamanProfil untuk melengkapi data
         return;
       }
 
       setPasienId(pasienData.id);
-      setLoading(false);
+      setIsInitialLoading(false); // Selesai loading awal
       fetchLayanan(); // Panggil fetchLayanan setelah pasienId didapatkan
     };
 
-    checkPasienId();
-  }, [navigate]);
+    checkPasienProfile();
+  }, [navigate]); // Dependency array tetap sama
 
   useEffect(() => {
     if (form.tanggal && pasienId) {
@@ -94,7 +99,7 @@ const FormBooking = () => {
       console.error("Error fetching jadwal dokter:", errJadwal.message);
       return;
     }
-    
+
     if (!jadwalList || jadwalList.length === 0) {
       console.warn("Tidak ada jadwal dokter untuk hari:", hari);
       return;
@@ -141,34 +146,34 @@ const FormBooking = () => {
       }
     }
     // Jika tidak ada slot yang ditemukan setelah iterasi semua jadwal
-    setJamDipilih(null); 
+    setJamDipilih(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Mulai loading saat submit
+    setIsSubmitting(true); // Mulai loading saat submit
     setError(null); // Reset error
 
     if (!pasienId) {
       setError("ID Pasien tidak ditemukan. Silakan login kembali.");
-      navigate("/login");
-      setLoading(false);
+      navigate("/login"); // Ini seharusnya tidak terjadi jika alur benar
+      setIsSubmitting(false);
       return;
     }
     if (!jamDipilih) {
       setError("Tidak ada jam tersedia pada tanggal tersebut.");
-      setLoading(false);
+      setIsSubmitting(false);
       return;
     }
     if (!form.layanan_id || !form.tanggal || !form.keluhan) {
       setError("Semua field harus diisi.");
-      setLoading(false);
+      setIsSubmitting(false);
       return;
     }
 
     const kode_booking = `BK-${Date.now()}`;
     try {
-      const { error: insertError } = await supabase.from("booking").insert([
+      const { data: insertedBooking, error: insertError } = await supabase.from("booking").insert([
         {
           pasien_id: pasienId,
           dokter_id: jamDipilih.dokter_id,
@@ -179,28 +184,32 @@ const FormBooking = () => {
           kode_booking,
           status: 'Menunggu', // Set status default
         },
-      ]);
+      ]).select('id').single(); // Ambil ID booking yang baru dibuat
 
       if (insertError) {
         throw insertError;
       }
       alert("Booking berhasil!");
-      navigate("/profil-pasien");
+      // Arahkan ke halaman feedback dengan ID booking yang baru
+      navigate(`/feedback/${insertedBooking.id}`, { replace: true });
     } catch (err) {
       console.error("Gagal booking:", err.message);
       setError("Gagal booking: " + err.message);
       alert("Gagal booking: " + err.message);
     } finally {
-      setLoading(false); // Selesai loading
+      setIsSubmitting(false); // Selesai loading
     }
   };
 
-  if (loading) {
-    return <div className="text-center mt-20 text-lg text-pink-600 font-semibold">Memuat formulir booking...</div>;
-  }
-
+  // Tampilkan error jika ada
   if (error) {
     return <div className="text-center mt-20 text-lg text-red-600 font-semibold">Error: {error}</div>;
+  }
+
+  // Jika masih loading data awal atau pasienId belum ada, jangan tampilkan formulir
+  // Ini menghilangkan pesan "Memuat formulir booking..."
+  if (isInitialLoading || pasienId === null) {
+      return null; // Tidak menampilkan apapun selama loading awal atau pasienId belum ada
   }
 
   return (
@@ -258,10 +267,10 @@ const FormBooking = () => {
 
       <button
         type="submit"
-        disabled={loading || !jamDipilih || !form.layanan_id || !form.tanggal || !form.keluhan} // Disable jika loading, tidak ada jam, atau field kosong
+        disabled={isSubmitting || !jamDipilih || !form.layanan_id || !form.tanggal || !form.keluhan} // Disable jika isSubmitting, tidak ada jam, atau field kosong
         className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg text-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {loading ? 'Memproses Booking...' : 'Booking Sekarang'}
+        {isSubmitting ? 'Memproses Booking...' : 'Booking Sekarang'}
       </button>
     </form>
   );

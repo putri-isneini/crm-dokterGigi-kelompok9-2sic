@@ -1,7 +1,7 @@
+// src/components/Testimoni.jsx (Renamed from Testimoni.jsx)
 import React from "react";
-// Hapus baris ini: import Footer from "./Footer";
 
-const Testimoni = () => {
+const Testimoni = () => { // Renamed component
   const testimoniList = [
     {
       before: "/image/before1.jpg",
@@ -53,7 +53,6 @@ const Testimoni = () => {
           ))}
         </div>
       </section>
-      {/* Hapus baris ini: <Footer /> */}
     </>
   );
 };

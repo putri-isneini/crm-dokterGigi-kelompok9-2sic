@@ -1,20 +1,20 @@
-// src/components/PublicLayout.js
+// src/components/PublicLayout.jsx
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Header from './Header'; // Pastikan path benar
-import Footer from './Footer'; // Jika ada footer
+import Header from './Header'; // Asumsi Header ada di sini
+import Footer from './Footer'; // Asumsi Footer ada di sini
 
-// PublicLayout sekarang menerima isLoggedIn dan userRole sebagai props
 const PublicLayout = ({ isLoggedIn, userRole }) => {
   return (
-    <div>
-      {/* Teruskan isLoggedIn dan userRole ke Header */}
+    <>
+      {/* Meneruskan isLoggedIn dan userRole ke Header juga, jika diperlukan */}
       <Header isLoggedIn={isLoggedIn} userRole={userRole} />
-      <main className="pt-24"> {/* Sesuaikan padding-top agar tidak tertutup header */}
-        <Outlet />
+      <main>
+        {/* PENTING: Meneruskan isLoggedIn dan userRole ke komponen anak melalui context */}
+        <Outlet context={{ isLoggedIn, userRole }} />
       </main>
-      <Footer /> {/* Asumsikan Anda memiliki komponen Footer */}
-    </div>
+      <Footer />
+    </>
   );
 };
 

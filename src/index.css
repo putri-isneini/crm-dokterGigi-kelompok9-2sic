@@ -67,12 +67,7 @@ button:focus-visible {
   }
 }*/
 /*Font tambahan*/
-@font-face {
-  font-family: 'GreaterTheory';
-  src: url('/fonts/GreaterTheory.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
+
 
 body {
   font-family: 'GreaterTheory', sans-serif;
