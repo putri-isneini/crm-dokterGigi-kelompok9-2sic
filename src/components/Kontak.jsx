@@ -1,213 +1,121 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import Footer from "./Footer";
+// src/components/Kontak.jsx
+import React, { useEffect } from 'react';
+import { PhoneCall } from 'lucide-react'; // Tetap import jika ingin digunakan di tempat lain
+import AOS from 'aos'; // Import AOS
+import 'aos/dist/aos.css'; // Import CSS AOS
 
 const Kontak = () => {
-  const navigate = useNavigate();
-  // const [isLoggedIn, setIsLoggedIn] = useState(false); // DIHAPUS: Tidak diperlukan lagi
+  useEffect(() => {
+    AOS.init({ duration: 800, easing: 'ease-in-out', once: true }); // Inisialisasi AOS
+  }, []);
 
-  // useEffect(() => { // DIHAPUS: Tidak diperlukan lagi
-  //   const pasienId = localStorage.getItem("pasien_id");
-  //   setIsLoggedIn(!!pasienId);
-  // }, []);
-
-  // const goToLogin = () => { // DIHAPUS: Fungsi ini tidak lagi digunakan
-  //   navigate("/login");
-  // };
+  // Gaya untuk Hero Section, disesuaikan dari LayananKami
+  const heroStyles = {
+    heroSection: {
+      position: "relative",
+      width: "100%",
+      height: "60vh", // Tinggi yang sama dengan LayananKami
+      overflow: "hidden",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      textAlign: "center",
+      paddingTop: "96px", // Sesuaikan dengan tinggi header tetap
+      zIndex: 0, 
+    },
+    heroImage: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+      zIndex: 0, 
+    },
+    heroOverlay: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(0, 0, 0, 0.4)", // Overlay gelap
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "white",
+      padding: "1.5rem",
+      zIndex: 1, 
+    },
+  };
 
   return (
-    <>
-      <section className="kontak-wrapper">
-        <div className="kontak-container">
-          <h2 className="kontak-title">📞 Hubungi Kami</h2>
-          <p className="kontak-subtitle">
-            Kami siap membantu Anda. Silakan hubungi kami kapan saja!
+    <section id="kontak-page-container" className="bg-white pb-20 text-center relative overflow-hidden">
+      {/* Hero Section - Gambar Besar Full Layar */}
+      <section style={heroStyles.heroSection}>
+        <img src="/image/bg2.jpg" alt="Interior Klinik Gigi" style={heroStyles.heroImage} />
+        <div style={heroStyles.heroOverlay} data-aos="zoom-in">
+          <h2 className="text-5xl md:text-6xl font-extrabold mb-4 leading-tight" data-aos="fade-up" data-aos-delay="300">
+            <span className="text-rose-300">Hubungi</span> Kami
+          </h2>
+          <p className="text-xl md:text-2xl mb-8 font-medium leading-relaxed max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="500">
+            Kami siap membantu Anda dengan segala pertanyaan dan kebutuhan perawatan gigi Anda.
           </p>
+        </div>
+      </section>
 
-          <div className="kontak-content">
-            {/* Map */}
-            <div className="kontak-map">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.658682705599!2d101.4429916742533!3d0.5187700994963576!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31d5ac91ee202f5d%3A0x6b4e72c8e3129532!2sJl.%20Durian%20No.28a%2C%20Sukajadi%2C%20Kec.%20Sukajadi%2C%20Kota%20Pekanbaru%2C%20Riau%2028121!5e0!3m2!1sid!2sid!4v1717282800000!5m2!1sid!2sid"
-                title="Lokasi Klinik Drg. Tia Dental Care"
-                loading="lazy"
-                allowFullScreen
-              ></iframe>
+      {/* Konten Utama Halaman Kontak */}
+      <div className="max-w-6xl mx-auto px-6 mt-16"> {/* mt-16 untuk jarak dari hero section */}
+        {/* Judul dan paragraf yang sebelumnya ada di sini dihapus karena digantikan oleh hero section */}
+        
+        <div className="flex flex-col lg:flex-row items-center gap-10">
+          <div className="w-full lg:w-1/2 rounded-2xl overflow-hidden shadow-xl border border-pink-100" data-aos="fade-right" data-aos-delay="500">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.658682705599!2d101.4429916742533!3d0.5187700994963576!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31d5ac91ee202f5d%3A0x6b4e72c8e3129532!2sJl.%20Durian%20No.28a%2C%20Sukajadi%2C%20Kec.%20Sukajadi%2C%20Kota%20Pekanbaru%2C%20Riau%2028121!5e0!3m2!1sid!2sid!4v1717282800000!5m2!1sid!2sid"
+              title="Lokasi Klinik Drg. Tia Dental Care"
+              loading="lazy"
+              allowFullScreen
+              className="w-full h-[450px] border-0"
+            ></iframe>
+          </div>
+
+          <div className="w-full lg:w-1/2 space-y-6 text-lg text-gray-700" data-aos="fade-left" data-aos-delay="600">
+            <div className="flex items-start gap-4">
+              <i className="fas fa-map-marker-alt text-2xl text-pink-500"></i>
+              <span>
+                Jl. Durian No.28a, Sukajadi, Kec. Sukajadi, Kota Pekanbaru, Riau 28121
+              </span>
             </div>
-
-            {/* Contact Info */}
-            <div className="kontak-info">
-              <div className="info-item">
-                <i className="fas fa-map-marker-alt info-icon"></i>
-                <span>
-                  Jl. Durian No.28a, Sukajadi, Kec. Sukajadi, Kota Pekanbaru, Riau 28121
-                </span>
-              </div>
-              <div className="info-item">
-                <i className="fab fa-whatsapp info-icon"></i>
-                <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer">
-                  0812-3456-7890
-                </a>
-              </div>
-              <div className="info-item">
-                <i className="fab fa-instagram info-icon"></i>
-                <a href="https://www.instagram.com/tiadentalcare" target="_blank" rel="noopener noreferrer">
-                  @tiadentalcare
-                </a>
-              </div>
-              <div className="info-item">
-                <i className="fas fa-clock info-icon"></i>
-                <span>Senin - Sabtu, 08.00 - 17.00 WIB</span>
-              </div>
-
-              {/* DIHAPUS: Button "Masuk ke Halaman Login Admin" */}
-              {/* {isLoggedIn && (
-                <button className="admin-button" onClick={goToLogin}>
-                  Masuk ke Halaman Login Admin
-                </button>
-              )} */}
+            <div className="flex items-start gap-4">
+              <i className="fab fa-whatsapp text-2xl text-pink-500"></i>
+              <a
+                href="https://wa.me/6281234567890"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-pink-600 hover:underline"
+              >
+                0812-3456-7890
+              </a>
+            </div>
+            <div className="flex items-start gap-4">
+              <i className="fab fa-instagram text-2xl text-pink-500"></i>
+              <a
+                href="https://www.instagram.com/tiadentalcare"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-pink-600 hover:underline"
+              >
+                @tiadentalcare
+              </a>
+            </div>
+            <div className="flex items-start gap-4">
+              <i className="fas fa-clock text-2xl text-pink-500"></i>
+              <span>Senin - Sabtu, 08.00 - 17.00 WIB</span>
             </div>
           </div>
         </div>
-
-        <style>{`
-          /* Font Imports */
-          @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap');
-
-          .kontak-wrapper {
-            background: #fff0f6; /* Warna latar belakang lembut */
-            padding: 80px 20px 40px;
-            font-family: 'Roboto', sans-serif; /* Font default */
-            color: #333;
-          }
-          .kontak-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            text-align: center;
-          }
-          .kontak-title {
-            font-size: 2.8rem; /* Ukuran font lebih besar */
-            font-weight: 800; /* Lebih tebal */
-            color: #AD1457; /* Warna pink gelap yang elegan */
-            margin-bottom: 15px; /* Jarak lebih besar */
-            font-family: 'Montserrat', sans-serif; /* Font untuk judul */
-          }
-          .kontak-subtitle {
-            color: #555;
-            font-size: 1.2rem; /* Ukuran font lebih besar */
-            margin-bottom: 50px; /* Jarak lebih besar */
-          }
-          .kontak-content {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 50px; /* Jarak antar kolom lebih besar */
-            justify-content: center;
-            align-items: flex-start;
-          }
-          .kontak-map {
-            flex: 1;
-            min-width: 320px; /* Lebar minimum sedikit lebih besar */
-            height: 450px; /* Tinggi map lebih besar */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* Shadow lebih menonjol */
-            border-radius: 20px; /* Sudut lebih membulat */
-            overflow: hidden;
-            border: 2px solid #f8bbd0; /* Border halus */
-          }
-          .kontak-map iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-          }
-          .kontak-info {
-            flex: 1;
-            min-width: 300px; /* Lebar minimum sedikit lebih besar */
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            gap: 25px; /* Jarak antar info item lebih besar */
-            padding: 20px 0; /* Padding vertikal */
-          }
-          .info-item {
-            display: flex;
-            align-items: flex-start; /* Menggunakan flex-start agar ikon dan teks sejajar di atas */
-            gap: 15px; /* Jarak ikon dan teks lebih besar */
-            font-size: 1.1rem; /* Ukuran font lebih besar */
-            color: #444;
-            line-height: 1.5; /* Spasi baris untuk alamat */
-          }
-          .info-icon {
-            font-size: 1.6rem; /* Ukuran ikon lebih besar */
-            color: #E91E63; /* Warna ikon yang menarik */
-            flex-shrink: 0; /* Pastikan ikon tidak menyusut */
-          }
-          .info-item a {
-            color: #E91E63; /* Warna link yang menarik */
-            text-decoration: none;
-            font-weight: 500;
-          }
-          .info-item a:hover {
-            text-decoration: underline;
-            color: #d81b60; /* Warna hover link */
-          }
-          /* DIHAPUS: CSS untuk .admin-button */
-          /* .admin-button {
-            margin-top: 40px;
-            align-self: flex-start;
-            background-color: #AD1457;
-            color: white;
-            border: none;
-            padding: 14px 32px;
-            border-radius: 9999px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 6px 16px rgba(173, 20, 87, 0.3);
-            transition: background 0.3s ease, transform 0.2s ease;
-          }
-          .admin-button:hover {
-            background-color: #880E4F;
-            transform: translateY(-2px);
-          }
-          .admin-button:active {
-            transform: translateY(0);
-          } */
-
-          @media (max-width: 768px) {
-            .kontak-title {
-              font-size: 2.2rem;
-            }
-            .kontak-subtitle {
-              font-size: 1rem;
-            }
-            .kontak-content {
-              flex-direction: column;
-              align-items: center;
-              gap: 30px;
-            }
-            .kontak-map,
-            .kontak-info {
-              width: 100%;
-              min-width: unset;
-              height: 350px;
-            }
-            .info-item {
-              font-size: 1rem;
-            }
-            .info-icon {
-              font-size: 1.4rem;
-            }
-            /* DIHAPUS: CSS untuk .admin-button di media query */
-            /* .admin-button {
-                width: 100%;
-                align-self: center;
-                max-width: 300px;
-            } */
-          }
-        `}</style>
-      </section>
-
-      <Footer />
-    </>
+      </div>
+    </section>
   );
 };
 

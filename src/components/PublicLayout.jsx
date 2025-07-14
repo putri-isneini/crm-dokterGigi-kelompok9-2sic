@@ -1,20 +1,18 @@
 // src/components/PublicLayout.jsx
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Header from './Header'; // Asumsi Header ada di sini
-import Footer from './Footer'; // Asumsi Footer ada di sini
+import Header from './Header';
+import Footer from './Footer';
 
 const PublicLayout = ({ isLoggedIn, userRole }) => {
   return (
-    <>
-      {/* Meneruskan isLoggedIn dan userRole ke Header juga, jika diperlukan */}
+    <div className="flex flex-col min-h-screen">
       <Header isLoggedIn={isLoggedIn} userRole={userRole} />
-      <main>
-        {/* PENTING: Meneruskan isLoggedIn dan userRole ke komponen anak melalui context */}
+      <main className="flex-grow">
         <Outlet context={{ isLoggedIn, userRole }} />
       </main>
       <Footer />
-    </>
+    </div>
   );
 };
 

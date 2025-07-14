@@ -1,3 +1,4 @@
+// src/components/Header.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
@@ -11,10 +12,9 @@ const Header = ({ isLoggedIn, userRole }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-    setShowDropdown(false); // tutup dropdown saat navigasi berubah
+    setShowDropdown(false);
   }, [location]);
 
-  // Fungsi Logout
   const handleLogout = async () => {
     console.log("Logout button clicked!");
     const { error } = await supabase.auth.signOut();
@@ -24,8 +24,6 @@ const Header = ({ isLoggedIn, userRole }) => {
       console.error("Logout error:", error.message, error);
     } else {
       console.log("Berhasil logout dari Supabase. Mengarahkan ke halaman Beranda...");
-      // Langsung navigasi ke halaman Beranda setelah logout berhasil
-      // Menggunakan replace: true agar tidak bisa kembali ke halaman sebelumnya
       navigate("/", { replace: true }); 
     }
   };
@@ -35,21 +33,20 @@ const Header = ({ isLoggedIn, userRole }) => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-br from-pink-50 via-pink-100 to-white shadow-lg backdrop-blur-sm border-b border-pink-200 px-8 py-3 flex justify-between items-center transition-all duration-300 ease-in-out text-[18px]">
-      {/* Logo */}
-      <Link to="/" className="flex items-center gap-3 text-pink-700 hover:text-pink-800 transition-colors duration-200">
-        <img src="/image/logo.png" alt="Logo Klinik Gigi" className="w-16 h-16 object-cover rounded-full shadow-md" />
-        <span className="font-extrabold text-2xl font-poppins text-pink-600 hover:text-pink-700 transition-colors duration-200">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-br from-pink-50 via-pink-100 to-white shadow-lg backdrop-blur-sm border-b border-pink-200 px-16 py-4 flex justify-between items-center transition-all duration-300 ease-in-out text-lg"> {/* Changed px-8 to px-16 */}
+      <Link to="/" className="flex items-center gap-4 text-pink-700 hover:text-pink-800 transition-colors duration-200">
+        <img src="/image/logo.png" alt="Logo Klinik Gigi" className="w-20 h-20 object-cover rounded-full shadow-md" />
+        <span className="font-extrabold text-3xl font-poppins text-pink-600 hover:text-pink-700 transition-colors duration-200">
           Drg. Tia Dental Care
         </span>
       </Link>
 
-      {/* Navigasi */}
-      <nav className="flex gap-10 font-semibold text-rose-800 flex-grow justify-center">
+      <nav className="flex gap-12 font-semibold text-rose-800 flex-grow justify-center text-xl">
         {[
           { to: "/", label: "Beranda" },
           { to: "/tentang", label: "Tentang Kami" },
           { to: "/layanan", label: "Layanan" },
+          { to: "/faq", label: "FAQ" }, 
           { to: "/testimoni", label: "Testimoni" },
           { to: "/kontak", label: "Kontak" },
         ].map(({ to, label }) => (
@@ -64,12 +61,11 @@ const Header = ({ isLoggedIn, userRole }) => {
         ))}
       </nav>
 
-      {/* Bagian Login / Profil */}
       <div className="relative flex items-center">
         {!isLoggedIn ? (
           <button
             onClick={() => navigate("/login")}
-            className="bg-gradient-to-r from-pink-500 to-rose-400 text-white font-bold py-2 px-6 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out"
+            className="bg-gradient-to-r from-pink-500 to-rose-400 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out text-lg"
           >
             Login
           </button>
@@ -77,7 +73,7 @@ const Header = ({ isLoggedIn, userRole }) => {
           <div className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className="text-pink-600 text-5xl cursor-pointer hover:text-pink-700 transition-colors duration-200"
+              className="text-pink-600 text-6xl cursor-pointer hover:text-pink-700 transition-colors duration-200"
               aria-label="User menu"
             >
               <FaUserCircle />
@@ -85,7 +81,7 @@ const Header = ({ isLoggedIn, userRole }) => {
 
             {showDropdown && (
               <div
-                className="absolute right-0 mt-3 w-40 bg-white rounded-lg shadow-xl border border-pink-100 py-1 animate-fade-in-down origin-top-right text-[17px] z-[1000]"
+                className="absolute right-0 mt-3 w-44 bg-white rounded-lg shadow-xl border border-pink-100 py-1 animate-fade-in-down origin-top-right text-lg z-[1000]"
                 onMouseLeave={handleDropdownMouseLeave}
               >
                 {userRole === 'Pasien' && (
@@ -115,7 +111,6 @@ const Header = ({ isLoggedIn, userRole }) => {
                     Dashboard
                   </Link>
                 )}
-                {/* Tombol Logout */}
                 <button
                   onClick={handleLogout}
                   className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 hover:text-red-700 font-medium transition-colors duration-200 border-t border-gray-100 mt-1 pt-2"

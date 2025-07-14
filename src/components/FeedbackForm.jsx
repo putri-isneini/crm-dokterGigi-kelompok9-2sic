@@ -1,171 +1,250 @@
 // src/components/FeedbackForm.jsx
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../supabase'; // Pastikan path supabase benar
-import { StarIcon } from 'lucide-react'; // Untuk ikon bintang
-import { useParams, useNavigate } from 'react-router-dom'; // Import useParams dan useNavigate
+import { supabase } from '../supabase';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Star, Send, XCircle, CheckCircle, Loader2 } from 'lucide-react'; // Import ikon
 
 const FeedbackForm = () => {
-  const { bookingId } = useParams(); // Ambil bookingId dari URL
-  const navigate = useNavigate();
-  const [pasienId, setPasienId] = useState(null);
-  const [rating, setRating] = useState(0);
-  const [komentar, setKomentar] = useState('');
-  const [loading, setLoading] = useState(true); // Initial loading for fetching pasienId
-  const [isSubmitting, setIsSubmitting] = useState(false); // For form submission
-  const [error, setError] = useState(null);
-  const [submitted, setSubmitted] = useState(false); // State untuk menandakan sudah submit
+    const { bookingId } = useParams();
+    const navigate = useNavigate();
+    const [rating, setRating] = useState(0);
+    const [komentar, setKomentar] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
+    const [bookingDetails, setBookingDetails] = useState(null);
+    const [pasienId, setPasienId] = useState(null);
 
-  useEffect(() => {
-    const fetchPasienId = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
+    useEffect(() => {
+        const fetchBookingDetails = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
+                if (userError || !user) {
+                    throw new Error('User not authenticated. Please log in.');
+                }
+                setPasienId(user.id);
 
-        if (userError || !user) {
-          setError("Sesi pengguna tidak valid. Silakan login kembali.");
-          setLoading(false);
-          navigate("/login");
-          return;
+                const { data, error: bookingError } = await supabase
+                    .from('booking')
+                    .select('id, status, feedback_submitted, pasien_id')
+                    .eq('id', bookingId)
+                    .eq('pasien_id', user.id)
+                    .single();
+
+                if (bookingError) throw bookingError;
+                if (!data) {
+                    setError('Booking tidak ditemukan atau Anda tidak memiliki akses.');
+                    return;
+                }
+                if (data.status !== 'Selesai') {
+                    setError('Feedback hanya bisa diberikan untuk booking yang sudah selesai.');
+                    return;
+                }
+                if (data.feedback_submitted) {
+                    setError('Feedback untuk booking ini sudah diberikan.');
+                    return;
+                }
+                setBookingDetails(data);
+
+            } catch (err) {
+                console.error('Error fetching booking details for feedback:', err.message);
+                setError(err.message || 'Gagal memuat detail booking.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (bookingId) {
+            fetchBookingDetails();
+        }
+    }, [bookingId, navigate]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+        setMessage(null);
+
+        if (!pasienId || !bookingDetails) {
+            setError('Data booking atau pasien tidak valid.');
+            setLoading(false);
+            return;
+        }
+        if (rating === 0) {
+            setError('Mohon berikan rating bintang.');
+            setLoading(false);
+            return;
         }
 
-        const { data: pasienData, error: pasienError } = await supabase
-          .from('pasien_user')
-          .select('id')
-          .eq('supabase_auth_id', user.id)
-          .single();
+        try {
+            // 1. Masukkan feedback
+            const { error: feedbackInsertError } = await supabase
+                .from('feedback')
+                .insert({
+                    booking_id: bookingId,
+                    pasien_id: pasienId,
+                    rating,
+                    komentar,
+                });
 
-        if (pasienError || !pasienData) {
-          setError("Data profil pasien Anda tidak ditemukan. Silakan lengkapi profil Anda.");
-          setLoading(false);
-          navigate("/profil-pasien");
-          return;
+            if (feedbackInsertError) {
+                throw feedbackInsertError;
+            }
+
+            // 2. Update status feedback_submitted via Edge Function
+            const { data: { session } } = await supabase.auth.getSession();
+
+            const response = await fetch('https://ppakjdgfzuvirtrjfnwg.functions.supabase.co/update-feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session?.access_token}`,
+                },
+                body: JSON.stringify({ id: bookingId }),
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.error || 'Gagal update status feedback.');
+            }
+
+            setMessage('Feedback berhasil dikirim! Terima kasih.');
+            setTimeout(() => {
+                navigate('/profil-pasien');
+            }, 2000);
+
+        } catch (err) {
+            console.error('Error submitting feedback:', err.message);
+            setError(err.message || 'Terjadi kesalahan saat mengirim feedback.');
+        } finally {
+            setLoading(false);
         }
-        setPasienId(pasienData.id);
-      } catch (err) {
-        console.error("Error fetching pasien ID in FeedbackForm:", err.message);
-        setError("Gagal memuat data pasien: " + err.message);
-      } finally {
-        setLoading(false);
-      }
     };
 
-    fetchPasienId();
-  }, [navigate]);
+    // Render bintang rating
+    const renderStars = (currentRating) => {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+            stars.push(
+                <Star
+                    key={i}
+                    className={`w-9 h-9 cursor-pointer transition-colors duration-200 ${
+                        i <= currentRating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                    } hover:text-yellow-500 hover:fill-current`}
+                    onClick={() => setRating(i)}
+                />
+            );
+        }
+        return <div className="flex justify-center space-x-1">{stars}</div>;
+    };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true); // Mulai loading saat submit
-    setError(null);
-
-    if (rating === 0) {
-      setError('Mohon berikan rating bintang.');
-      setIsSubmitting(false);
-      return;
+    if (loading && !bookingDetails) { // Hanya tampilkan loading penuh jika belum ada detail booking
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-pink-50">
+                <div className="flex flex-col items-center">
+                    <Loader2 className="animate-spin w-16 h-16 text-pink-500 mb-4" />
+                    <div className="text-pink-600 text-lg font-semibold">
+                        Memuat formulir feedback...
+                    </div>
+                </div>
+            </div>
+        );
     }
-    if (!bookingId) {
-      setError('ID Booking tidak ditemukan. Tidak dapat mengirim feedback.');
-      setIsSubmitting(false);
-      return;
+
+    if (error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-pink-50 p-6">
+                <div className="text-center bg-white p-8 rounded-xl shadow-lg border border-red-200 max-w-md">
+                    <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+                    <h3 className="text-2xl font-bold text-red-700 mb-4">Terjadi Kesalahan!</h3>
+                    <p className="text-gray-700 mb-6">{error}</p>
+                    <button onClick={() => navigate('/profil-pasien')} className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 shadow-md">
+                        Kembali ke Profil
+                    </button>
+                </div>
+            </div>
+        );
     }
-    if (!pasienId) {
-      setError('ID Pasien tidak ditemukan. Silakan coba lagi.');
-      setIsSubmitting(false);
-      return;
-    }
 
-    try {
-      // 1. Masukkan feedback ke tabel 'feedback'
-      const { error: feedbackError } = await supabase.from('feedback').insert([
-        {
-          booking_id: bookingId,
-          pasien_id: pasienId,
-          rating: rating,
-          komentar: komentar,
-        },
-      ]);
-
-      if (feedbackError) {
-        throw feedbackError;
-      }
-
-      // 2. Perbarui status 'feedback_submitted' di tabel 'booking'
-      const { error: updateBookingError } = await supabase
-        .from('booking')
-        .update({ feedback_submitted: true })
-        .eq('id', bookingId);
-
-      if (updateBookingError) {
-        console.error('Gagal memperbarui status feedback di booking:', updateBookingError.message);
-      }
-
-      setSubmitted(true);
-      alert('Terima kasih atas feedback Anda!');
-      // Arahkan ke halaman profil pasien
-      navigate("/profil-pasien", { replace: true });
-    } catch (err) {
-      console.error('Gagal mengirim feedback:', err.message);
-      setError('Gagal mengirim feedback: ' + err.message);
-    } finally {
-      setIsSubmitting(false); // Selesai loading
-    }
-  };
-
-  if (loading) {
-    return <div className="text-center mt-20 text-lg text-pink-600 font-semibold">Memuat formulir feedback...</div>;
-  }
-
-  if (error) {
-    return <div className="text-center mt-20 text-lg text-red-600 font-semibold">Error: {error}</div>;
-  }
-
-  if (submitted) {
     return (
-      <div className="bg-green-50 border border-green-200 text-green-700 p-4 rounded-lg text-center">
-        Feedback Anda telah diterima! Terima kasih.
-      </div>
-    );
-  }
-
-  return (
-    <div className="bg-white p-6 rounded-xl shadow-md border border-pink-100 max-w-md mx-auto mt-10">
-      <h3 className="text-xl font-semibold text-pink-600 mb-4">Berikan Feedback Anda</h3>
-      {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Rating</label>
-          <div className="flex space-x-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <StarIcon
-                key={star}
-                className={`w-8 h-8 cursor-pointer ${
-                  star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                }`}
-                onClick={() => setRating(star)}
-              />
-            ))}
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Komentar (Opsional)</label>
-          <textarea
-            value={komentar}
-            onChange={(e) => setKomentar(e.target.value)}
-            rows="3"
-            placeholder="Bagaimana pengalaman Anda?"
-            className="w-full p-3 border border-gray-300 rounded-xl bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-300"
-          ></textarea>
-        </div>
-        <button
-          type="submit"
-          disabled={isSubmitting || rating === 0}
-          className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+        <div
+            className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center relative"
+            style={{
+                backgroundImage: `url('/bg1.jpg')` // Path ke gambar di folder public
+            }}
         >
-          {isSubmitting ? 'Mengirim...' : 'Kirim Feedback'}
-        </button>
-      </form>
-    </div>
-  );
+            {/* Overlay untuk efek blur pada latar belakang dan warna pink transparan */}
+            <div
+                className="absolute inset-0"
+                style={{
+                    backdropFilter: 'blur(10px)', // Sesuaikan nilai blur sesuai keinginan
+                    WebkitBackdropFilter: 'blur(10px)', // Untuk kompatibilitas browser
+                    backgroundColor: 'rgba(255, 192, 203, 0.3)' // Overlay pink transparan (pink muda dengan opasitas 0.3)
+                }}
+            ></div>
+
+            <div className="bg-white/70 backdrop-blur-md p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-xl border border-pink-100 transform transition-all duration-300 hover:scale-[1.01] z-10">
+                <div className="text-center mb-8">
+                    <h2 className="text-4xl font-extrabold text-pink-700 mb-2">Berikan Feedback</h2>
+                    <p className="text-gray-600 text-lg">Bagikan pengalaman Anda tentang layanan kami.</p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Rating Section */}
+                    <div>
+                        <label className="block text-gray-700 text-lg font-semibold mb-3 text-center">Seberapa puas Anda?</label>
+                        {renderStars(rating)}
+                    </div>
+
+                    {/* Komentar Section */}
+                    <div>
+                        <label htmlFor="komentar" className="block text-gray-700 text-lg font-semibold mb-2">Komentar Anda</label>
+                        <textarea
+                            id="komentar"
+                            className="w-full px-4 py-3 border border-pink-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition-all duration-200 text-gray-800 resize-y"
+                            value={komentar}
+                            onChange={(e) => setKomentar(e.target.value)}
+                            rows="5"
+                            placeholder="Tulis komentar Anda di sini..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    {error && (
+                        <p className="text-red-500 text-sm text-center bg-red-100 p-3 rounded-lg border border-red-200">
+                            {error}
+                        </p>
+                    )}
+                    {message && (
+                        <p className="text-green-500 text-sm text-center bg-green-100 p-3 rounded-lg border border-green-200">
+                            {message}
+                        </p>
+                    )}
+
+                    <div className="flex items-center justify-center pt-4">
+                        <button
+                            type="submit"
+                            className="w-full bg-gradient-to-r from-pink-500 to-rose-400 text-white font-bold py-3.5 px-6 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-pink-300 focus:ring-opacity-75"
+                            disabled={loading || rating === 0}
+                        >
+                            {loading ? (
+                                <>
+                                    <Loader2 className="animate-spin h-5 w-5 mr-3 text-white" />
+                                    Mengirim...
+                                </>
+                            ) : (
+                                <>
+                                    <Send className="w-5 h-5 mr-2" /> Kirim Feedback
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
 };
 
 export default FeedbackForm;

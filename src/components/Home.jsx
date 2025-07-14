@@ -1,33 +1,53 @@
-// src/components/Home.jsx
 import React from "react";
 import { motion } from "framer-motion";
-import { useOutletContext, useNavigate } from "react-router-dom"; // Import useNavigate
-// Header tidak perlu di-import di sini jika sudah dari PublicLayout
+import { useOutletContext, useNavigate } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+import HomeTentangKamiSection from './HomeTentangKamiSection';
+import HomeLayananKamiSection from './HomeLayananKamiSection';
+import HomeKontakSection from './HomeKontakSection';
+import FaqSection from "./FaqSection";
+import TestimoniSection from "./TestimoniSection";
 
 const Home = () => {
-  // Mengambil isLoggedIn dan userRole dari context Outlet PublicLayout
-  const { isLoggedIn, userRole } = useOutletContext();
-  const navigate = useNavigate(); // Untuk navigasi programatis
+  const context = useOutletContext?.() || {};
+  const { isLoggedIn = false, userRole = null } = context;
+  const navigate = useNavigate();
 
-  // Tentukan teks dan tujuan tombol berdasarkan status login dan peran
+  React.useEffect(() => {
+    AOS.init({ duration: 1000, easing: 'ease-in-out', once: true });
+  }, []);
+
+  const handleButtonClick = () => {
+    if (isLoggedIn) {
+      if (userRole === 'Pasien') {
+        console.log("Home: User is Pasien, navigating to /booking");
+        navigate("/booking");
+      } else if (['Admin', 'Dokter', 'Staf'].includes(userRole)) {
+        console.log("Home: User is Admin/Dokter/Staf, navigating to /dashboard");
+        navigate("/dashboard");
+      } else {
+        console.log("Home: User is logged in but role is unknown, navigating to /");
+        navigate("/");
+      }
+    } else {
+      console.log("Home: User not logged in, navigating to /login");
+      navigate("/login");
+    }
+  };
+
   let buttonText = "Login / Daftar";
-  let buttonHref = "/login"; // Default ke halaman login
-
   if (isLoggedIn) {
     if (userRole === 'Pasien') {
       buttonText = "Buat Janji Sekarang";
-      buttonHref = "/booking";
     } else if (['Admin', 'Dokter', 'Staf'].includes(userRole)) {
       buttonText = "Ke Dashboard";
-      buttonHref = "/dashboard";
     }
   }
 
   return (
     <>
-      {/* Header sudah dipanggil di PublicLayout, jadi ini bisa dihapus */}
-      {/* <Header /> */}
-
       <section id="home" style={styles.heroSection}>
         <div style={styles.overlay} />
 
@@ -55,21 +75,22 @@ const Home = () => {
             Make you Smile.
           </motion.p>
 
-          <motion.a
-            // Gunakan buttonHref yang dinamis
-            href={buttonHref}
+          <motion.button
+            onClick={handleButtonClick}
             style={styles.btnBooking}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            // Tambahkan onClick untuk navigasi programatis jika diperlukan,
-            // tapi href sudah cukup untuk elemen <a>
           >
-            {buttonText} {/* Gunakan buttonText yang dinamis */}
-          </motion.a>
+            {buttonText}
+          </motion.button>
         </motion.div>
       </section>
 
-      {/* Footer dihapus karena sudah dipanggil di PublicLayout */}
+      <HomeTentangKamiSection />
+      <HomeLayananKamiSection />
+      <FaqSection />
+      <TestimoniSection />
+      <HomeKontakSection />
     </>
   );
 };
@@ -89,7 +110,7 @@ const styles = {
   overlay: {
     position: "absolute",
     inset: 0,
-    background: "rgba(255, 182, 193, 0.45)", // Soft pink overlay
+    background: "rgba(255, 182, 193, 0.45)",
     zIndex: 1,
   },
   heroContent: {
@@ -112,7 +133,7 @@ const styles = {
     opacity: 0.95,
   },
   btnBooking: {
-    background: "#db2777", // Tailwind pink-600
+    background: "#db2777",
     color: "#fff",
     padding: "0.75rem 1.5rem",
     borderRadius: 30,
@@ -120,6 +141,8 @@ const styles = {
     fontWeight: 600,
     display: "inline-block",
     marginTop: 20,
+    border: 'none',
+    cursor: 'pointer',
   },
 };
 
