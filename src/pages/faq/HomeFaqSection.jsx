@@ -94,7 +94,7 @@ const HomeFaqSection = () => {
         <section className="bg-white pb-20 text-center relative overflow-hidden">
             {/* Hero Section - Gambar Besar Full Layar */}
             <section style={heroStyles.heroSection}>
-                <img src="/image/faq-hero.jpg" alt="FAQ Background" style={heroStyles.heroImage} />
+                <img src="/image/bg2.jpg" alt="FAQ Background" style={heroStyles.heroImage} />
                 <div style={heroStyles.heroOverlay} data-aos="zoom-in">
                     <h2 className="text-5xl md:text-6xl font-extrabold mb-4 leading-tight" data-aos="fade-up" data-aos-delay="300">
                         <span className="text-rose-300">Pertanyaan</span> Umum

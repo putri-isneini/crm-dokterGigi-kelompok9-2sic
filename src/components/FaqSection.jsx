@@ -46,32 +46,37 @@ const FaqSection = () => {
     const heroStyles = {
         heroSection: {
             width: "100%",
-            minHeight: "300px", // Tinggi minimum untuk hero section
+            minHeight: "350px", // Tinggi minimum untuk hero section, sedikit lebih tinggi
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
             textAlign: "center",
             padding: "96px 1.5rem 64px", // Padding atas disesuaikan dengan tinggi header tetap
-            backgroundColor: "#FCE4EC", // Warna latar belakang pink soft
+            backgroundColor: "#FCE4EC", // Warna latar belakang pink soft (akan tertutup gambar)
             color: "#EC407A", // Warna teks judul
             position: "relative", // Tetap relatif untuk konten
             overflow: "hidden", // Tetap hidden untuk mencegah scroll
+            backgroundImage: `url(https://placehold.co/1200x400/FCE7F3/BE185D?text=FAQ+Background)`, // Gambar latar belakang
+            backgroundSize: "cover", // Menutupi seluruh area
+            backgroundPosition: "center", // Pusatkan gambar
+            backgroundRepeat: "no-repeat", // Jangan ulangi gambar
         },
     };
 
     return (
         <section className="bg-white pb-20 text-center relative overflow-hidden">
-            {/* Hero Section - Tanpa Gambar Latar Belakang dan tanpa lingkaran dekoratif */}
+            {/* Hero Section */}
             <section style={heroStyles.heroSection}>
-                {/* Decorative background circles removed */}
-                {/* <div className="absolute top-10 left-10 w-24 h-24 bg-pink-200 rounded-full mix-blend-multiply opacity-30 animate-pulse-slow"></div>
-                <div className="absolute bottom-20 right-20 w-32 h-32 bg-rose-200 rounded-full mix-blend-multiply opacity-30 animate-pulse-slow delay-500"></div> */}
+                {/* Overlay untuk gambar latar belakang agar teks lebih terbaca */}
+                <div className="absolute inset-0 bg-pink-100 opacity-75"></div>
 
-                <h2 className="text-5xl md:text-6xl font-extrabold mb-4 leading-tight" data-aos="fade-up" data-aos-delay="100">
+                {/* Konten Hero Section (pastikan z-index lebih tinggi dari overlay) */}
+                <h2 className="text-5xl md:text-7xl font-extrabold mb-4 leading-tight text-pink-800 relative z-10" data-aos="fade-up" data-aos-delay="100"> {/* Increased font size and added text-pink-800 */}
                     Pertanyaan <span className="text-rose-600">Umum</span>
+                    <HelpCircle className="inline-block ml-4 text-pink-500 relative z-10" size={70} /> {/* Increased icon size */}
                 </h2>
-                <p className="text-xl md:text-2xl mb-8 font-medium leading-relaxed max-w-3xl mx-auto text-pink-700" data-aos="fade-up" data-aos-delay="200">
+                <p className="text-xl md:text-2xl mb-8 font-medium leading-relaxed max-w-3xl mx-auto text-pink-700 relative z-10" data-aos="fade-up" data-aos-delay="200">
                     Temukan jawaban atas pertanyaan yang sering diajukan mengenai layanan dan prosedur kami.
                 </p>
             </section>
