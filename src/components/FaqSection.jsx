@@ -57,7 +57,7 @@ const FaqSection = () => {
             color: "#EC407A", // Warna teks judul
             position: "relative", // Tetap relatif untuk konten
             overflow: "hidden", // Tetap hidden untuk mencegah scroll
-            backgroundImage: `url(https://placehold.co/1200x400/FCE7F3/BE185D?text=FAQ+Background)`, // Gambar latar belakang
+            // backgroundImage: `url(https://placehold.co/1200x400/FCE7F3/BE185D?text=FAQ+Background)`, // Gambar latar belakang
             backgroundSize: "cover", // Menutupi seluruh area
             backgroundPosition: "center", // Pusatkan gambar
             backgroundRepeat: "no-repeat", // Jangan ulangi gambar
